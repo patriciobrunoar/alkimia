@@ -47,6 +47,8 @@ img{max-width:100%;display:block}
 .hero-bg-layer.l5{background-image:url("assets/bg5.jpg");animation-delay:24s}
 .hero-bg-layer.l6{background-image:url("assets/bg6.jpg");animation-delay:30s}
 @keyframes heroFade{0%{opacity:0;transform:scale(1.03)}5.6%{opacity:1}16.7%{opacity:1;transform:scale(1.07)}22.3%{opacity:0;transform:scale(1.1)}100%{opacity:0}}
+.hero-spotlight{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:0;transition:opacity .5s ease;background:radial-gradient(360px circle at var(--sx,50%) var(--sy,50%),rgba(255,255,255,.25),transparent 65%);mix-blend-mode:soft-light}
+.hero:hover .hero-spotlight{opacity:1}
 .hero-inner{position:relative;z-index:3;display:flex;flex-direction:column;align-items:center;will-change:transform,opacity}
 .hero .brand{color:#fff;width:380px;max-width:78vw;margin-bottom:26px}
 .hero .brand .alk-logo{width:100%;height:auto}
@@ -67,6 +69,7 @@ img{max-width:100%;display:block}
 /* Scroll reveal */
 .reveal{opacity:0;transform:translateY(28px);transition:opacity .7s cubic-bezier(.22,.61,.36,1),transform .7s cubic-bezier(.22,.61,.36,1)}
 .reveal.in{opacity:1;transform:none}
+.h2-wipe{clip-path:inset(0 100% 0 0);opacity:.25;will-change:clip-path,opacity}
 .cards .card:nth-child(2){transition-delay:.1s}
 .cards .card:nth-child(3){transition-delay:.2s}
 
@@ -82,12 +85,16 @@ img{max-width:100%;display:block}
 
 /* Core services cards */
 .core-list{margin:40px 0 8px;font-size:14px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--alk-heading)}
-.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:24px}
-.card{background:var(--alk-lavender);border-radius:18px;padding:32px 30px;transition:transform var(--transition-base),box-shadow var(--transition-base)}
-.card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
+.cards{display:grid;grid-template-columns:1.3fr 1fr;grid-template-rows:repeat(2,1fr);gap:22px;margin-top:24px}
+.card{background:var(--alk-lavender);border-radius:18px;padding:32px 30px;transition:transform .15s ease-out,box-shadow .2s ease;transform-style:preserve-3d}
+.card:hover{box-shadow:var(--shadow-lg)}
 .card .tm{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--alk-purple);margin-bottom:14px}
 .card h3{font-size:20px;font-weight:700;color:var(--alk-heading);line-height:1.25;margin-bottom:12px}
 .card p{font-size:15px;line-height:1.55;color:var(--alk-body)}
+.cards .card:nth-child(1){grid-row:1/3;display:flex;flex-direction:column;justify-content:center;padding:44px 38px}
+.cards .card:nth-child(1) h3{font-size:26px}
+.cards .card:nth-child(2){grid-column:2;grid-row:1}
+.cards .card:nth-child(3){grid-column:2;grid-row:2}
 
 /* Detailed service blocks */
 .services-detail{background:var(--alk-lavender-2)}
@@ -127,11 +134,11 @@ img{max-width:100%;display:block}
 .form input,.form textarea{font-family:inherit;font-size:15px;color:var(--alk-heading);padding:15px 18px;border:1px solid #d8d2e6;border-radius:var(--radius-md);background:#fff;transition:border-color var(--transition-base)}
 .form input:focus,.form textarea:focus{outline:none;border-color:var(--alk-purple)}
 .form textarea{min-height:132px;resize:vertical}
-.form button{background:var(--alk-purple);color:#fff;font-family:inherit;font-size:16px;font-weight:600;border:none;border-radius:var(--radius-md);padding:15px;cursor:pointer;transition:background var(--transition-base)}
+.form button{background:var(--alk-purple);color:#fff;font-family:inherit;font-size:16px;font-weight:600;border:none;border-radius:var(--radius-md);padding:15px;cursor:pointer;transition:background var(--transition-base),transform .25s cubic-bezier(.22,.61,.36,1)}
 .form button:hover{background:var(--alk-purple-deep)}
 .contact-alt h3{font-size:20px;font-weight:700;color:var(--alk-heading);margin-bottom:20px}
 .contact-alt .links{display:flex;flex-direction:column;gap:12px}
-.contact-alt a{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--alk-purple);color:#fff;font-size:15px;font-weight:500;padding:15px;border-radius:var(--radius-md);transition:background var(--transition-base)}
+.contact-alt a{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--alk-purple);color:#fff;font-size:15px;font-weight:500;padding:15px;border-radius:var(--radius-md);transition:background var(--transition-base),transform .25s cubic-bezier(.22,.61,.36,1)}
 .contact-alt a:hover{background:var(--alk-purple-deep)}
 
 /* Footer */
@@ -150,7 +157,10 @@ img{max-width:100%;display:block}
   .nav a.active{border-bottom-color:rgba(255,255,255,.12)}
   .nav-toggle{display:block}
   .section,.consult{padding:70px 24px}
-  .cards{grid-template-columns:1fr}
+  .cards{grid-template-columns:1fr;grid-template-rows:none}
+  .cards .card:nth-child(1){grid-row:auto;grid-column:auto;display:block;padding:32px 30px}
+  .cards .card:nth-child(1) h3{font-size:20px}
+  .cards .card:nth-child(2),.cards .card:nth-child(3){grid-column:auto;grid-row:auto}
   .service{grid-template-columns:1fr;gap:32px;padding:56px 24px}
   .consult-grid{grid-template-columns:1fr;gap:40px}
   .experience .exp-grid{grid-template-columns:1fr}
@@ -165,6 +175,9 @@ img{max-width:100%;display:block}
   .hero h1 .line{animation:none;opacity:0;transform:none}
   .hero h1 .line:first-child{opacity:1}
   .marquee-track{animation:none}
+  .h2-wipe{clip-path:none;opacity:1}
+  .hero-spotlight{display:none}
+  .card{transition:none!important;transform:none!important}
 }
 </style>
 </head>
@@ -213,6 +226,7 @@ img{max-width:100%;display:block}
     <div class="hero-bg-layer l5"></div>
     <div class="hero-bg-layer l6"></div>
   </div>
+  <div class="hero-spotlight"></div>
   <div class="hero-inner">
     <div class="brand"><svg class="alk-logo" viewBox="0 0 416.29 206.88"><use href="#alkimiaLockup"/></svg></div>
     <h1>
@@ -226,7 +240,7 @@ img{max-width:100%;display:block}
 
 <section class="section" id="services">
   <div class="eyebrow reveal"><div class="marks"><span></span><span></span></div><div class="label">Services &amp; Capabilities</div></div>
-  <h2 class="reveal">We are the strategic extension of your agency.</h2>
+  <h2 class="h2-wipe">We are the strategic extension of your agency.</h2>
   <p class="lead reveal">We provide senior expertise, creative leadership, and scalable execution that helps you deliver exceptional work while growing your business.</p>
   <div class="core-list reveal">Our core services</div>
   <div class="cards">
@@ -307,7 +321,7 @@ img{max-width:100%;display:block}
 
 <section class="section experience" id="experience">
   <div class="eyebrow reveal"><div class="marks"><span></span><span></span></div><div class="label">Our Experience</div></div>
-  <h2 class="reveal">We Leverage this Experience to Guide our Clients</h2>
+  <h2 class="h2-wipe">We Leverage this Experience to Guide our Clients</h2>
   <div class="exp-grid reveal">
     <ul>
       <li>20+ Years of Experience in Marketing</li>
@@ -325,7 +339,7 @@ img{max-width:100%;display:block}
 <section class="brands-band">
   <div class="brands-bg"></div>
   <div class="section-inner">
-    <h2 class="reveal">We learned with these brands</h2>
+    <h2 class="h2-wipe">We learned with these brands</h2>
     <div class="marquee">
       <div class="marquee-track">
         <img src="assets/brands/santander.png" alt="Santander">
@@ -363,7 +377,7 @@ img{max-width:100%;display:block}
 
 <section class="consult" id="consultation">
   <div class="eyebrow reveal"><div class="marks"><span></span><span></span></div><div class="label">Contact</div></div>
-  <h2 class="reveal" style="color:var(--alk-heading);font-size:clamp(30px,3.6vw,46px);font-weight:700;letter-spacing:-.015em;margin-bottom:8px">Free Consultation</h2>
+  <h2 class="h2-wipe" style="color:var(--alk-heading);font-size:clamp(30px,3.6vw,46px);font-weight:700;letter-spacing:-.015em;margin-bottom:8px">Free Consultation</h2>
   <div class="consult-grid">
     <form class="form" onsubmit="event.preventDefault();this.reset();this.querySelector('button').textContent='Thank you — we\'ll be in touch.'">
       <input type="text" placeholder="Name" required>
@@ -431,6 +445,63 @@ if(hero&&heroInner&&heroBg&&!reduceMotion){
   }
   window.addEventListener('scroll',onHeroScroll,{passive:true});
   onHeroScroll();
+}
+
+const canHover=window.matchMedia('(hover:hover)').matches;
+
+// Cursor spotlight in the hero
+const heroSpotlight=document.querySelector('.hero-spotlight');
+if(hero&&heroSpotlight&&canHover&&!reduceMotion){
+  hero.addEventListener('mousemove',e=>{
+    const r=hero.getBoundingClientRect();
+    heroSpotlight.style.setProperty('--sx',((e.clientX-r.left)/r.width*100).toFixed(2)+'%');
+    heroSpotlight.style.setProperty('--sy',((e.clientY-r.top)/r.height*100).toFixed(2)+'%');
+  });
+}
+
+// Scroll-progress text reveal for section headings
+const wipeEls=[...document.querySelectorAll('.h2-wipe')];
+if(wipeEls.length&&!reduceMotion){
+  function updateWipes(){
+    const vh=window.innerHeight;
+    const start=vh*0.92,end=vh*0.42;
+    wipeEls.forEach(el=>{
+      const r=el.getBoundingClientRect();
+      let p=(start-r.top)/(start-end);
+      p=Math.max(0,Math.min(1,p));
+      el.style.clipPath=`inset(0 ${((1-p)*100).toFixed(2)}% 0 0)`;
+      el.style.opacity=String(0.25+0.75*p);
+    });
+  }
+  window.addEventListener('scroll',updateWipes,{passive:true});
+  window.addEventListener('resize',updateWipes);
+  updateWipes();
+}
+
+// Magnetic hover buttons
+if(canHover&&!reduceMotion){
+  document.querySelectorAll('.form button, .contact-alt a').forEach(el=>{
+    el.addEventListener('mousemove',e=>{
+      const r=el.getBoundingClientRect();
+      const x=(e.clientX-r.left-r.width/2)*0.25;
+      const y=(e.clientY-r.top-r.height/2)*0.35;
+      el.style.transform=`translate(${x.toFixed(2)}px,${y.toFixed(2)}px)`;
+    });
+    el.addEventListener('mouseleave',()=>{el.style.transform='';});
+  });
+}
+
+// 3D tilt on service cards
+if(canHover&&!reduceMotion){
+  document.querySelectorAll('.cards .card').forEach(card=>{
+    card.addEventListener('mousemove',e=>{
+      const r=card.getBoundingClientRect();
+      const px=(e.clientX-r.left)/r.width-0.5;
+      const py=(e.clientY-r.top)/r.height-0.5;
+      card.style.transform=`perspective(800px) rotateX(${(-py*10).toFixed(2)}deg) rotateY(${(px*10).toFixed(2)}deg) translateY(-4px) scale(1.02)`;
+    });
+    card.addEventListener('mouseleave',()=>{card.style.transform='';});
+  });
 }
 </script>
 </body>
