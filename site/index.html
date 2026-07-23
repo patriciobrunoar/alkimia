@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alkimia — Brand Transformation Alchemists</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+:root{
+  --alk-purple:#6b4fa1;
+  --alk-purple-deep:#5a4287;
+  --alk-header:#7c6ba6;
+  --alk-heading:#5c4a8b;
+  --alk-body:#5c5670;
+  --alk-lavender:#e9e4f4;
+  --alk-lavender-2:#f3f0fa;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--font-family-body);color:var(--alk-body);background:#fff;-webkit-font-smoothing:antialiased}
+a{text-decoration:none;color:inherit}
+.alk-logo{fill:#fff;display:block}
+.alk-logo use{fill:#fff}
+img{max-width:100%;display:block}
+
+/* Header */
+.header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:14px 48px;background:rgba(124,107,166,.92);backdrop-filter:blur(8px);color:#fff}
+.header .brand{color:#fff;width:112px;flex:0 0 auto}
+.header .brand .alk-logo{width:100%;height:auto}
+.nav{display:flex;gap:34px;align-items:center}
+.nav a{color:#fff;font-size:15px;font-weight:500;letter-spacing:.01em;padding:6px 0;border-bottom:2px solid transparent;transition:border-color var(--transition-base),opacity var(--transition-base)}
+.nav a:hover{opacity:.82}
+.nav a.active{border-bottom-color:#fff}
+.nav-toggle{display:none;background:none;border:none;color:#fff;font-size:24px;cursor:pointer}
+
+/* Hero */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:140px 24px 90px;color:#fff;position:relative;background:linear-gradient(150deg,rgba(107,79,161,.86),rgba(74,48,112,.94)),url("assets/bg-dock.jpg") center/cover no-repeat}
+.hero .brand{color:#fff;width:380px;max-width:78vw;margin-bottom:26px}
+.hero .brand .alk-logo{width:100%;height:auto}
+.hero h1{font-size:clamp(26px,3.4vw,46px);font-weight:700;line-height:1.18;max-width:900px;margin-bottom:22px;letter-spacing:-.01em}
+.hero p{font-size:clamp(15px,1.35vw,19px);font-weight:400;line-height:1.6;max-width:720px;opacity:.92}
+
+/* Section shell */
+.section{padding:100px 48px;max-width:1200px;margin:0 auto}
+.eyebrow{display:flex;align-items:center;gap:10px;margin-bottom:22px}
+.eyebrow .marks{display:flex;gap:3px}
+.eyebrow .marks span{width:13px;height:13px;background:var(--alk-purple)}
+.eyebrow .marks span:last-child{opacity:.45}
+.eyebrow .label{font-size:13px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--alk-heading)}
+.section h2{font-size:clamp(30px,3.6vw,46px);font-weight:700;line-height:1.14;color:var(--alk-heading);letter-spacing:-.015em;margin-bottom:26px;max-width:900px}
+.lead{font-size:19px;line-height:1.6;max-width:760px;color:var(--alk-body)}
+
+/* Core services cards */
+.core-list{margin:40px 0 8px;font-size:14px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--alk-heading)}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:24px}
+.card{background:var(--alk-lavender);border-radius:18px;padding:32px 30px;transition:transform var(--transition-base),box-shadow var(--transition-base)}
+.card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
+.card .tm{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--alk-purple);margin-bottom:14px}
+.card h3{font-size:20px;font-weight:700;color:var(--alk-heading);line-height:1.25;margin-bottom:12px}
+.card p{font-size:15px;line-height:1.55;color:var(--alk-body)}
+
+/* Detailed service blocks */
+.services-detail{background:var(--alk-lavender-2)}
+.service{max-width:1100px;margin:0 auto;padding:78px 48px;display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start;border-bottom:1px solid rgba(107,79,161,.13)}
+.service:last-child{border-bottom:none}
+.service .s-name{font-size:clamp(24px,2.6vw,34px);font-weight:700;color:var(--alk-heading);line-height:1.15;letter-spacing:-.01em;margin-bottom:18px}
+.service blockquote{border-left:3px solid var(--alk-purple);padding-left:18px;font-size:18px;font-style:italic;line-height:1.5;color:var(--alk-heading);margin-bottom:22px}
+.service .s-desc{font-size:16px;line-height:1.62;color:var(--alk-body)}
+.service .s-case{display:inline-block;margin-top:22px;background:var(--alk-purple);color:#fff;font-size:13px;font-weight:600;letter-spacing:.03em;padding:7px 16px;border-radius:var(--radius-full)}
+.cap-title{font-size:13px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--alk-purple);margin-bottom:16px}
+.cap-list{list-style:none;display:flex;flex-direction:column;gap:0}
+.cap-list li{font-size:16px;font-weight:500;color:var(--alk-heading);padding:14px 0;border-bottom:1px solid rgba(107,79,161,.14);display:flex;align-items:center;gap:12px}
+.cap-list li:last-child{border-bottom:none}
+.cap-list li::before{content:"";width:8px;height:8px;background:var(--alk-purple);border-radius:2px;flex:0 0 auto;transform:rotate(45deg)}
+
+/* Consultation */
+.consult{max-width:1100px;margin:0 auto;padding:100px 48px}
+.consult-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:64px;margin-top:20px}
+.form{display:flex;flex-direction:column;gap:16px}
+.form input,.form textarea{font-family:inherit;font-size:15px;color:var(--alk-heading);padding:15px 18px;border:1px solid #d8d2e6;border-radius:var(--radius-md);background:#fff;transition:border-color var(--transition-base)}
+.form input:focus,.form textarea:focus{outline:none;border-color:var(--alk-purple)}
+.form textarea{min-height:132px;resize:vertical}
+.form button{background:var(--alk-purple);color:#fff;font-family:inherit;font-size:16px;font-weight:600;border:none;border-radius:var(--radius-md);padding:15px;cursor:pointer;transition:background var(--transition-base)}
+.form button:hover{background:var(--alk-purple-deep)}
+.contact-alt h3{font-size:20px;font-weight:700;color:var(--alk-heading);margin-bottom:20px}
+.contact-alt .links{display:flex;flex-direction:column;gap:12px}
+.contact-alt a{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--alk-purple);color:#fff;font-size:15px;font-weight:500;padding:15px;border-radius:var(--radius-md);transition:background var(--transition-base)}
+.contact-alt a:hover{background:var(--alk-purple-deep)}
+
+/* Footer */
+.footer{background:var(--alk-purple-deep);color:rgba(255,255,255,.9);text-align:center;padding:26px 24px;font-size:14px}
+.footer .brand{color:#fff;width:96px;margin:0 auto 16px}
+.footer .brand .alk-logo{width:100%;height:auto}
+.footer .sep{opacity:.4;margin:0 8px}
+.footer a{color:rgba(255,255,255,.75)}
+.footer a:hover{color:#fff}
+
+@media(max-width:860px){
+  .header{padding:12px 22px}
+  .nav{display:none;position:absolute;top:100%;left:0;right:0;flex-direction:column;gap:0;background:rgba(124,107,166,.98);padding:10px 22px 20px}
+  .nav.open{display:flex}
+  .nav a{padding:12px 0;border-bottom:1px solid rgba(255,255,255,.12)}
+  .nav a.active{border-bottom-color:rgba(255,255,255,.12)}
+  .nav-toggle{display:block}
+  .section,.consult{padding:70px 24px}
+  .cards{grid-template-columns:1fr}
+  .service{grid-template-columns:1fr;gap:32px;padding:56px 24px}
+  .consult-grid{grid-template-columns:1fr;gap:40px}
+}
+</style>
+</head>
+<body>
+
+<template id="__bundler_thumbnail">
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect width="100" height="100" fill="#5a4287"/><g transform="translate(50 50) scale(0.16) translate(-208 -103)" fill="#fff"><path d="M209.84,3.18c13.21,0,25.63,5.14,34.97,14.49,9.34,9.34,14.49,21.76,14.49,34.97s-5.14,25.63-14.49,34.97c-9.34,9.34-21.76,14.49-34.97,14.49s-25.63-5.14-34.97-14.49c-9.34-9.34-14.49-21.76-14.49-34.97s5.14-25.63,14.49-34.97c9.34-9.34,21.76-14.49,34.97-14.49M209.84,0c-29.07,0-52.64,23.57-52.64,52.64s23.57,52.64,52.64,52.64,52.64-23.57,52.64-52.64S238.92,0,209.84,0h0Z"/><path d="M209.89,9.06l38.76,67.13h-77.52L209.89,9.06M209.89,2.7l-44.27,76.68h88.54L209.89,2.7h0Z"/><path d="M227.26,41.65v34.57h-34.57v-34.57h34.57M230.44,38.47h-40.93v40.93h40.93v-40.93h0Z"/><path d="M209.84,46.2c7.12,0,12.92,5.8,12.92,12.92s-5.8,12.92-12.92,12.92-12.92-5.8-12.92-12.92,5.8-12.92,12.92-12.92M209.84,43.01c-8.89,0-16.1,7.21-16.1,16.1s7.21,16.1,16.1,16.1,16.1-7.21,16.1-16.1-7.21-16.1-16.1-16.1h0Z"/></g></svg>
+</template>
+
+<!-- Reusable Alkimia lockup (mark + wordmark) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="alkimiaLockup" viewBox="0 0 416.29 206.88" fill="#fff">
+    <g fill="#fff">
+    <path d="M209.84,3.18c13.21,0,25.63,5.14,34.97,14.49,9.34,9.34,14.49,21.76,14.49,34.97s-5.14,25.63-14.49,34.97c-9.34,9.34-21.76,14.49-34.97,14.49s-25.63-5.14-34.97-14.49c-9.34-9.34-14.49-21.76-14.49-34.97s5.14-25.63,14.49-34.97c9.34-9.34,21.76-14.49,34.97-14.49M209.84,0c-29.07,0-52.64,23.57-52.64,52.64s23.57,52.64,52.64,52.64,52.64-23.57,52.64-52.64S238.92,0,209.84,0h0Z"/>
+    <path d="M209.89,9.06l38.76,67.13h-77.52L209.89,9.06M209.89,2.7l-44.27,76.68h88.54L209.89,2.7h0Z"/>
+    <path d="M227.26,41.65v34.57h-34.57v-34.57h34.57M230.44,38.47h-40.93v40.93h40.93v-40.93h0Z"/>
+    <path d="M209.84,46.2c7.12,0,12.92,5.8,12.92,12.92s-5.8,12.92-12.92,12.92-12.92-5.8-12.92-12.92,5.8-12.92,12.92-12.92M209.84,43.01c-8.89,0-16.1,7.21-16.1,16.1s7.21,16.1,16.1,16.1,16.1-7.21,16.1-16.1-7.21-16.1-16.1-16.1h0Z"/>
+    <path d="M84.84,136.01h10.12v62.06h38.37v8.81h-48.5v-70.87Z"/>
+    <path d="M166.8,175.4l-12.96,13.16v18.33h-10.12v-70.87h10.12v39.59l38.47-39.59h11.54l-30.27,31.89,32.2,38.98h-11.85l-27.13-31.49Z"/>
+    <path d="M215.87,136.01h10.12v70.87h-10.12v-70.87Z"/>
+    <path d="M301.61,206.88l-.1-57.94-25.61,15.9h-4.66l-25.61-15.59v57.64h-9.72v-70.87h8.3l29.56,18.26,29.16-18.26h8.3l.1,70.87h-9.72Z"/>
+    <path d="M321.23,136.01h10.12v70.87h-10.12v-70.87Z"/>
+    <polygon points="42.12 136.01 32.09 136.01 0 206.88 10.43 206.88 21.78 181.07 21.77 181.07 37.06 146.34 52.34 181.07 52.33 181.07 63.68 206.88 74.31 206.88 42.12 136.01"/>
+    <polygon points="384.1 136.01 374.07 136.01 341.98 206.88 352.41 206.88 363.76 181.07 363.75 181.07 379.03 146.34 394.32 181.07 394.31 181.07 405.66 206.88 416.29 206.88 384.1 136.01"/>
+    </g>
+  </symbol>
+</svg>
+
+<header class="header">
+  <a href="#home" class="brand" aria-label="Alkimia home"><svg class="alk-logo" viewBox="0 0 416.29 206.88"><use href="#alkimiaLockup"/></svg></a>
+  <button class="nav-toggle" aria-label="Menu" onclick="document.getElementById('nav').classList.toggle('open')">☰</button>
+  <nav class="nav" id="nav">
+    <a href="#home" class="active">Home</a>
+    <a href="#services">Services &amp; Capabilities</a>
+    <a href="#consultation">Free Consultation</a>
+  </nav>
+</header>
+
+<section class="hero" id="home">
+  <div class="brand"><svg class="alk-logo" viewBox="0 0 416.29 206.88"><use href="#alkimiaLockup"/></svg></div>
+  <h1>We are Alchemists. We transform your business. We turn complexity into scalable growth.</h1>
+  <p>Applying our main elements: strategy, business intelligence, data, creativity and execution as our core capabilities, we partner with organizations to solve their most critical growth challenges.</p>
+</section>
+
+<section class="section" id="services">
+  <div class="eyebrow"><div class="marks"><span></span><span></span></div><div class="label">Services &amp; Capabilities</div></div>
+  <h2>We are the strategic extension of your agency.</h2>
+  <p class="lead">We provide senior expertise, creative leadership, and scalable execution that helps you deliver exceptional work while growing your business.</p>
+  <div class="core-list">Our core services</div>
+  <div class="cards">
+    <div class="card">
+      <div class="tm">Franchise Growth Systems™</div>
+      <h3>Scale your franchise with confidence.</h3>
+      <p>Grow your franchise network while maintaining brand consistency, operational excellence, and local relevance.</p>
+    </div>
+    <div class="card">
+      <div class="tm">Public Impact Communications™</div>
+      <h3>Build trust through strategic communication.</h3>
+      <p>Communicate public initiatives clearly while increasing awareness, engagement and participation.</p>
+    </div>
+    <div class="card">
+      <div class="tm">Growth Studio™</div>
+      <h3>Senior strategy, seamlessly integrated with your team.</h3>
+      <p>Senior strategic and creative expertise without increasing permanent overhead.</p>
+    </div>
+  </div>
+</section>
+
+<section class="services-detail">
+  <div class="service">
+    <div>
+      <div class="s-name">Franchise Growth Systems™</div>
+      <blockquote>“Grow your franchise network while maintaining brand consistency, operational excellence, and local relevance.”</blockquote>
+      <p class="s-desc">We transform franchise marketing into scalable business systems, enabling franchisors to grow faster while maintaining brand consistency, operational excellence, and local market performance.</p>
+      <span class="s-case">Case: Oakberry</span>
+    </div>
+    <div>
+      <div class="cap-title">Capabilities</div>
+      <ul class="cap-list">
+        <li>Franchise Marketing Systems</li>
+        <li>Go-to-Market Playbooks</li>
+        <li>Local Store Marketing</li>
+        <li>Franchise Enablement</li>
+        <li>Process Automation and Standardization</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="service">
+    <div>
+      <div class="s-name">Public Impact Communications™</div>
+      <blockquote>“Communicate public initiatives clearly while increasing awareness, engagement and participation.”</blockquote>
+      <p class="s-desc">We collaborate with public institutions to transform complex initiatives into clear, inclusive, and measurable communication strategies, creativity and executions that build trust and drive community engagement.</p>
+    </div>
+    <div>
+      <div class="cap-title">Capabilities</div>
+      <ul class="cap-list">
+        <li>Public Sector Strategic Communication</li>
+        <li>Multicultural Community Outreach</li>
+        <li>Storytelling Creative Development</li>
+        <li>Impact Awareness Campaigns</li>
+        <li>Performance Measurement</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="service">
+    <div>
+      <div class="s-name">Growth Studio™</div>
+      <blockquote>“Senior strategic and creative expertise without increasing permanent overhead.”</blockquote>
+      <p class="s-desc">We become the strategic back-office of your agency. In collaboration with your current team, we provide high-level strategy, creative direction, and technical execution that helps you deliver exceptional work while growing your business.</p>
+    </div>
+    <div>
+      <div class="cap-title">Capabilities</div>
+      <ul class="cap-list">
+        <li>Executive Creative Leadership</li>
+        <li>Research &amp; Intelligence</li>
+        <li>Pitch &amp; Business Development</li>
+        <li>Delivery Acceleration</li>
+        <li>Innovation &amp; AI</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="consult" id="consultation">
+  <div class="eyebrow"><div class="marks"><span></span><span></span></div><div class="label">Contact</div></div>
+  <h2 style="color:var(--alk-heading);font-size:clamp(30px,3.6vw,46px);font-weight:700;letter-spacing:-.015em;margin-bottom:8px">Free Consultation</h2>
+  <div class="consult-grid">
+    <form class="form" onsubmit="event.preventDefault();this.reset();this.querySelector('button').textContent='Thank you — we\'ll be in touch.'">
+      <input type="text" placeholder="Name" required>
+      <input type="email" placeholder="Email" required>
+      <textarea placeholder="Message"></textarea>
+      <button type="submit">Send</button>
+    </form>
+    <div class="contact-alt">
+      <h3>Other ways to contact us:</h3>
+      <div class="links">
+        <a href="#">Book a 30 Minute Meeting</a>
+        <a href="mailto:mariela@myalkimia.com">mariela@myalkimia.com</a>
+        <a href="#">/company/myalkimia</a>
+        <a href="#">WhatsApp</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="brand"><svg class="alk-logo" viewBox="0 0 416.29 206.88"><use href="#alkimiaLockup"/></svg></div>
+  <div>© 2025 Alkimia. All rights reserved worldwide.<span class="sep">|</span><a href="mailto:contact@myalkimia.com">contact@myalkimia.com</a></div>
+</footer>
+
+<script>
+const links=[...document.querySelectorAll('.nav a')];
+const secs=links.map(a=>document.querySelector(a.getAttribute('href')));
+function onScroll(){
+  let i=secs.length-1;
+  const y=window.scrollY+140;
+  for(let k=0;k<secs.length;k++){if(secs[k]&&secs[k].offsetTop<=y)i=k;}
+  links.forEach((a,k)=>a.classList.toggle('active',k===i));
+}
+window.addEventListener('scroll',onScroll);onScroll();
+document.querySelectorAll('.nav a').forEach(a=>a.addEventListener('click',()=>document.getElementById('nav').classList.remove('open')));
+</script>
+</body>
+</html>
