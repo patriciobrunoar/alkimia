@@ -24,7 +24,8 @@ a{text-decoration:none;color:inherit}
 img{max-width:100%;display:block}
 
 /* Header */
-.header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:14px 48px;background:rgba(124,107,166,.92);backdrop-filter:blur(8px);color:#fff}
+.header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:14px 48px;background:rgba(124,107,166,.92);backdrop-filter:blur(8px);color:#fff;border-bottom:1px solid rgba(255,255,255,0);box-shadow:0 1px 0 rgba(255,255,255,0);transition:border-color .5s ease,box-shadow .5s ease}
+.header.scrolled{border-bottom-color:rgba(255,255,255,.22)}
 .header .brand{color:#fff;width:112px;flex:0 0 auto}
 .header .brand .alk-logo{width:100%;height:auto}
 .nav{display:flex;gap:34px;align-items:center}
@@ -37,14 +38,14 @@ img{max-width:100%;display:block}
 .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:140px 24px 90px;color:#fff;position:relative;overflow:hidden}
 .hero-bg{position:absolute;inset:0;z-index:0;will-change:transform}
 .hero-bg::after{content:"";position:absolute;inset:0;z-index:2;background:linear-gradient(150deg,rgba(107,79,161,.84),rgba(58,38,92,.93))}
-.hero-bg-layer{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;animation:heroFade 36s infinite}
-.hero-bg-layer.l1{background-image:url("assets/bg6.jpg");animation-delay:0s}
-.hero-bg-layer.l2{background-image:url("assets/bg5.jpg");animation-delay:6s}
-.hero-bg-layer.l3{background-image:url("assets/bg.jpg");animation-delay:12s}
-.hero-bg-layer.l4{background-image:url("assets/bg2.jpg");animation-delay:18s}
-.hero-bg-layer.l5{background-image:url("assets/bg4.jpg");animation-delay:24s}
-.hero-bg-layer.l6{background-image:url("assets/bg3.jpg");animation-delay:30s}
-@keyframes heroFade{0%{opacity:0;transform:scale(1.06)}3%{opacity:1}14%{opacity:1}17%{opacity:0;transform:scale(1.12)}100%{opacity:0}}
+.hero-bg-layer{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;animation:heroFade 36s infinite linear}
+.hero-bg-layer.l1{background-image:url("assets/bg.jpg");animation-delay:0s}
+.hero-bg-layer.l2{background-image:url("assets/bg2.jpg");animation-delay:6s}
+.hero-bg-layer.l3{background-image:url("assets/bg3.jpg");animation-delay:12s}
+.hero-bg-layer.l4{background-image:url("assets/bg4.jpg");animation-delay:18s}
+.hero-bg-layer.l5{background-image:url("assets/bg5.jpg");animation-delay:24s}
+.hero-bg-layer.l6{background-image:url("assets/bg6.jpg");animation-delay:30s}
+@keyframes heroFade{0%{opacity:0;transform:scale(1.03)}5.6%{opacity:1}16.7%{opacity:1;transform:scale(1.07)}22.3%{opacity:0;transform:scale(1.1)}100%{opacity:0}}
 .hero-inner{position:relative;z-index:3;display:flex;flex-direction:column;align-items:center;will-change:transform,opacity}
 .hero .brand{color:#fff;width:380px;max-width:78vw;margin-bottom:26px}
 .hero .brand .alk-logo{width:100%;height:auto}
@@ -102,9 +103,9 @@ img{max-width:100%;display:block}
 .brands-band .section-inner{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:0 48px}
 .brands-band h2{font-size:clamp(24px,3vw,36px);font-weight:700;margin-bottom:44px;max-width:700px}
 .marquee{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
-.marquee-track{display:flex;align-items:center;gap:64px;width:max-content;animation:marqueeScroll 26s linear infinite}
+.marquee-track{display:flex;align-items:center;gap:64px;width:max-content;animation:marqueeScroll 42s linear infinite}
 .marquee:hover .marquee-track{animation-play-state:paused}
-.marquee-track span{font-size:22px;font-weight:700;letter-spacing:.02em;white-space:nowrap;opacity:.92}
+.marquee-track img{height:34px;width:auto;max-width:140px;object-fit:contain;opacity:.92}
 @keyframes marqueeScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
 /* Consultation */
@@ -147,7 +148,7 @@ img{max-width:100%;display:block}
 @media(prefers-reduced-motion:reduce){
   .reveal{transition:none;opacity:1;transform:none}
   .hero-bg-layer{animation:none;opacity:0}
-  .hero-bg-layer.l3{opacity:1}
+  .hero-bg-layer.l1{opacity:1}
   .hero-inner{transition:none!important;transform:none!important}
   .marquee-track{animation:none}
 }
@@ -309,8 +310,34 @@ img{max-width:100%;display:block}
     <h2 class="reveal">We learned with these brands</h2>
     <div class="marquee">
       <div class="marquee-track">
-        <span>Santander</span><span>L&rsquo;Or&eacute;al</span><span>Mastercard</span><span>Money Blinks</span><span>XX Lager</span><span>MediaMath</span><span>Vanguard</span><span>Nokia</span>
-        <span aria-hidden="true">Santander</span><span aria-hidden="true">L&rsquo;Or&eacute;al</span><span aria-hidden="true">Mastercard</span><span aria-hidden="true">Money Blinks</span><span aria-hidden="true">XX Lager</span><span aria-hidden="true">MediaMath</span><span aria-hidden="true">Vanguard</span><span aria-hidden="true">Nokia</span>
+        <img src="assets/brands/santander.png" alt="Santander">
+        <img src="assets/brands/loreal.png" alt="L'Oréal">
+        <img src="assets/brands/mastercard.png" alt="Mastercard">
+        <img src="assets/brands/moneyblinks.png" alt="Money Blinks">
+        <img src="assets/brands/xxlager.png" alt="XX Lager">
+        <img src="assets/brands/mediamath.png" alt="MediaMath">
+        <img src="assets/brands/vanguard.png" alt="Vanguard">
+        <img src="assets/brands/nokia.png" alt="Nokia">
+        <img src="assets/brands/amex.png" alt="American Express">
+        <img src="assets/brands/cocacola.png" alt="Coca-Cola">
+        <img src="assets/brands/diageo.png" alt="Diageo">
+        <img src="assets/brands/kc.png" alt="Kimberly-Clark">
+        <img src="assets/brands/macdonalds.png" alt="McDonald's">
+        <img src="assets/brands/unilever.png" alt="Unilever">
+        <img src="assets/brands/santander.png" alt="" aria-hidden="true">
+        <img src="assets/brands/loreal.png" alt="" aria-hidden="true">
+        <img src="assets/brands/mastercard.png" alt="" aria-hidden="true">
+        <img src="assets/brands/moneyblinks.png" alt="" aria-hidden="true">
+        <img src="assets/brands/xxlager.png" alt="" aria-hidden="true">
+        <img src="assets/brands/mediamath.png" alt="" aria-hidden="true">
+        <img src="assets/brands/vanguard.png" alt="" aria-hidden="true">
+        <img src="assets/brands/nokia.png" alt="" aria-hidden="true">
+        <img src="assets/brands/amex.png" alt="" aria-hidden="true">
+        <img src="assets/brands/cocacola.png" alt="" aria-hidden="true">
+        <img src="assets/brands/diageo.png" alt="" aria-hidden="true">
+        <img src="assets/brands/kc.png" alt="" aria-hidden="true">
+        <img src="assets/brands/macdonalds.png" alt="" aria-hidden="true">
+        <img src="assets/brands/unilever.png" alt="" aria-hidden="true">
       </div>
     </div>
   </div>
@@ -346,11 +373,13 @@ img{max-width:100%;display:block}
 <script>
 const links=[...document.querySelectorAll('.nav a')];
 const secs=links.map(a=>document.querySelector(a.getAttribute('href')));
+const header=document.querySelector('.header');
 function onScroll(){
   let i=secs.length-1;
   const y=window.scrollY+140;
   for(let k=0;k<secs.length;k++){if(secs[k]&&secs[k].offsetTop<=y)i=k;}
   links.forEach((a,k)=>a.classList.toggle('active',k===i));
+  header.classList.toggle('scrolled',window.scrollY>4);
 }
 window.addEventListener('scroll',onScroll);onScroll();
 document.querySelectorAll('.nav a').forEach(a=>a.addEventListener('click',()=>document.getElementById('nav').classList.remove('open')));
