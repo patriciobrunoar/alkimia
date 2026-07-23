@@ -24,8 +24,9 @@ a{text-decoration:none;color:inherit}
 img{max-width:100%;display:block}
 
 /* Header */
-.header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:14px 48px;background:rgba(124,107,166,.92);backdrop-filter:blur(8px);color:#fff;border-bottom:1px solid rgba(255,255,255,0);opacity:0;pointer-events:none;transition:opacity .5s ease,border-color .5s ease}
-.header.scrolled{opacity:1;pointer-events:auto;border-bottom-color:rgba(255,255,255,.22)}
+.header{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:14px 48px;color:#fff}
+.header::before{content:"";position:absolute;inset:0;z-index:-1;background:rgba(124,107,166,.92);backdrop-filter:blur(8px);border-bottom:1px solid rgba(255,255,255,0);opacity:0;transition:opacity .5s ease,border-color .5s ease}
+.header.scrolled::before{opacity:1;border-bottom-color:rgba(255,255,255,.22)}
 .header .brand{color:#fff;width:112px;flex:0 0 auto}
 .header .brand .alk-logo{width:100%;height:auto}
 .nav{display:flex;gap:34px;align-items:center}
@@ -103,9 +104,9 @@ img{max-width:100%;display:block}
 .brands-band .section-inner{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:0 48px}
 .brands-band h2{font-size:clamp(24px,3vw,36px);font-weight:700;margin-bottom:44px;max-width:700px}
 .marquee{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
-.marquee-track{display:flex;align-items:center;gap:64px;width:max-content;animation:marqueeScroll 42s linear infinite}
+.marquee-track{display:flex;align-items:center;gap:96px;width:max-content;animation:marqueeScroll 42s linear infinite}
 .marquee:hover .marquee-track{animation-play-state:paused}
-.marquee-track img{height:64px;width:auto;max-width:220px;object-fit:contain;opacity:.95}
+.marquee-track img{height:128px;width:auto;max-width:280px;object-fit:contain;opacity:.95}
 @keyframes marqueeScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
 /* Consultation */
