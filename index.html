@@ -50,12 +50,18 @@ img{max-width:100%;display:block}
 .hero-inner{position:relative;z-index:3;display:flex;flex-direction:column;align-items:center;will-change:transform,opacity}
 .hero .brand{color:#fff;width:380px;max-width:78vw;margin-bottom:26px}
 .hero .brand .alk-logo{width:100%;height:auto}
-.hero h1{font-size:clamp(26px,3.4vw,46px);font-weight:700;line-height:1.18;max-width:900px;margin-bottom:22px;letter-spacing:-.01em}
-.hero h1 .line{display:block;opacity:0;transform:translateY(26px);animation:heroLineIn .9s cubic-bezier(.22,.61,.36,1) forwards}
-.hero h1 .line:nth-child(1){animation-delay:.15s}
-.hero h1 .line:nth-child(2){animation-delay:.5s}
-.hero h1 .line:nth-child(3){animation-delay:.85s}
-@keyframes heroLineIn{to{opacity:1;transform:none}}
+.hero h1{position:relative;width:100%;font-size:clamp(26px,3.4vw,46px);font-weight:700;line-height:1.18;max-width:900px;min-height:2.4em;margin-bottom:22px;letter-spacing:-.01em}
+.hero h1 .line{position:absolute;left:0;right:0;top:0;display:block;opacity:0;transform:translateY(16px);animation:phraseCycle 12s cubic-bezier(.22,.61,.36,1) infinite}
+.hero h1 .line:nth-child(1){animation-delay:0s}
+.hero h1 .line:nth-child(2){animation-delay:4s}
+.hero h1 .line:nth-child(3){animation-delay:8s}
+@keyframes phraseCycle{
+  0%{opacity:0;transform:translateY(16px)}
+  5%{opacity:1;transform:none}
+  28%{opacity:1;transform:none}
+  33%{opacity:0;transform:translateY(-16px)}
+  100%{opacity:0}
+}
 .hero p{font-size:clamp(15px,1.35vw,19px);font-weight:400;line-height:1.6;max-width:720px;opacity:.92}
 
 /* Scroll reveal */
@@ -156,7 +162,8 @@ img{max-width:100%;display:block}
   .hero-bg-layer{animation:none;opacity:0}
   .hero-bg-layer.l1{opacity:1}
   .hero-inner{transition:none!important;transform:none!important}
-  .hero h1 .line{animation:none;opacity:1;transform:none}
+  .hero h1 .line{animation:none;opacity:0;transform:none}
+  .hero h1 .line:first-child{opacity:1}
   .marquee-track{animation:none}
 }
 </style>
