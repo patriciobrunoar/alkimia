@@ -37,13 +37,14 @@ img{max-width:100%;display:block}
 .hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:140px 24px 90px;color:#fff;position:relative;overflow:hidden}
 .hero-bg{position:absolute;inset:0;z-index:0;will-change:transform}
 .hero-bg::after{content:"";position:absolute;inset:0;z-index:2;background:linear-gradient(150deg,rgba(107,79,161,.84),rgba(58,38,92,.93))}
-.hero-bg-layer{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;animation:heroFade 30s infinite}
-.hero-bg-layer.l1{background-image:url("assets/hero-1-splash.jpg"),linear-gradient(160deg,#241a12,#6b5636 55%,#140f0a);animation-delay:0s}
-.hero-bg-layer.l2{background-image:url("assets/hero-2-clouds.jpg"),linear-gradient(160deg,#173040,#e07c3e 55%,#123246);animation-delay:6s}
-.hero-bg-layer.l3{background-image:url("assets/hero-3-dock.jpg"),linear-gradient(160deg,#2c3b57,#b95a6a 55%,#1c2740);animation-delay:12s}
-.hero-bg-layer.l4{background-image:url("assets/hero-4-planet.jpg"),linear-gradient(160deg,#03040a,#0d2c4d 45%,#a5490f 90%);animation-delay:18s}
-.hero-bg-layer.l5{background-image:url("assets/hero-5-mountains.jpg"),linear-gradient(160deg,#3c3652,#867693 50%,#d68c57 92%);animation-delay:24s}
-@keyframes heroFade{0%{opacity:0;transform:scale(1.06)}4%{opacity:1}18%{opacity:1}22%{opacity:0;transform:scale(1.12)}100%{opacity:0}}
+.hero-bg-layer{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;animation:heroFade 36s infinite}
+.hero-bg-layer.l1{background-image:url("assets/bg6.jpg");animation-delay:0s}
+.hero-bg-layer.l2{background-image:url("assets/bg5.jpg");animation-delay:6s}
+.hero-bg-layer.l3{background-image:url("assets/bg.jpg");animation-delay:12s}
+.hero-bg-layer.l4{background-image:url("assets/bg2.jpg");animation-delay:18s}
+.hero-bg-layer.l5{background-image:url("assets/bg4.jpg");animation-delay:24s}
+.hero-bg-layer.l6{background-image:url("assets/bg3.jpg");animation-delay:30s}
+@keyframes heroFade{0%{opacity:0;transform:scale(1.06)}3%{opacity:1}14%{opacity:1}17%{opacity:0;transform:scale(1.12)}100%{opacity:0}}
 .hero-inner{position:relative;z-index:3;display:flex;flex-direction:column;align-items:center;will-change:transform,opacity}
 .hero .brand{color:#fff;width:380px;max-width:78vw;margin-bottom:26px}
 .hero .brand .alk-logo{width:100%;height:auto}
@@ -97,7 +98,7 @@ img{max-width:100%;display:block}
 
 /* We learned with these brands */
 .brands-band{position:relative;overflow:hidden;padding:90px 0;color:#fff}
-.brands-band .brands-bg{position:absolute;inset:0;z-index:0;background:linear-gradient(150deg,rgba(90,66,135,.88),rgba(58,38,92,.94)),url("assets/hero-5-mountains.jpg") center/cover;background-color:#5a4287}
+.brands-band .brands-bg{position:absolute;inset:0;z-index:0;background:linear-gradient(150deg,rgba(90,66,135,.88),rgba(58,38,92,.94)),url("assets/bg4.jpg") center/cover;background-color:#5a4287}
 .brands-band .section-inner{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:0 48px}
 .brands-band h2{font-size:clamp(24px,3vw,36px);font-weight:700;margin-bottom:44px;max-width:700px}
 .marquee{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
@@ -195,6 +196,7 @@ img{max-width:100%;display:block}
     <div class="hero-bg-layer l3"></div>
     <div class="hero-bg-layer l4"></div>
     <div class="hero-bg-layer l5"></div>
+    <div class="hero-bg-layer l6"></div>
   </div>
   <div class="hero-inner">
     <div class="brand"><svg class="alk-logo" viewBox="0 0 416.29 206.88"><use href="#alkimiaLockup"/></svg></div>
