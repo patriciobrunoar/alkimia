@@ -379,10 +379,13 @@ img{max-width:100%;display:block}
   <div class="eyebrow reveal"><div class="marks"><span></span><span></span></div><div class="label">Contact</div></div>
   <h2 class="h2-wipe" style="color:var(--alk-heading);font-size:clamp(30px,3.6vw,46px);font-weight:700;letter-spacing:-.015em;margin-bottom:8px">Free Consultation</h2>
   <div class="consult-grid">
-    <form class="form" onsubmit="event.preventDefault();this.reset();this.querySelector('button').textContent='Thank you — we\'ll be in touch.'">
-      <input type="text" placeholder="Name" required>
-      <input type="email" placeholder="Email" required>
-      <textarea placeholder="Message"></textarea>
+    <form class="form" id="consultForm">
+      <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_ACCESS_KEY">
+      <input type="hidden" name="subject" value="New message from myalkimia.com contact form">
+      <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
+      <input type="text" name="name" placeholder="Name" required>
+      <input type="email" name="email" placeholder="Email" required>
+      <textarea name="message" placeholder="Message"></textarea>
       <button type="submit">Send</button>
     </form>
     <div class="contact-alt">
@@ -501,6 +504,38 @@ if(canHover&&!reduceMotion){
       card.style.transform=`perspective(800px) rotateX(${(-py*10).toFixed(2)}deg) rotateY(${(px*10).toFixed(2)}deg) translateY(-4px) scale(1.02)`;
     });
     card.addEventListener('mouseleave',()=>{card.style.transform='';});
+  });
+}
+
+// Free consultation form -> Web3Forms
+const consultForm=document.getElementById('consultForm');
+if(consultForm){
+  consultForm.addEventListener('submit',async(e)=>{
+    e.preventDefault();
+    const btn=consultForm.querySelector('button');
+    const originalText=btn.textContent;
+    btn.disabled=true;
+    btn.textContent='Sending…';
+    try{
+      const res=await fetch('https://api.web3forms.com/submit',{
+        method:'POST',
+        headers:{'Accept':'application/json'},
+        body:new FormData(consultForm)
+      });
+      const data=await res.json();
+      if(data.success){
+        consultForm.reset();
+        btn.textContent='Thank you — we\'ll be in touch.';
+      }else{
+        btn.disabled=false;
+        btn.textContent=originalText;
+        alert('Something went wrong sending your message. Please try again or email patricio@myalkimia.com directly.');
+      }
+    }catch(err){
+      btn.disabled=false;
+      btn.textContent=originalText;
+      alert('Something went wrong sending your message. Please try again or email patricio@myalkimia.com directly.');
+    }
   });
 }
 </script>
