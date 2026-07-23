@@ -51,6 +51,11 @@ img{max-width:100%;display:block}
 .hero .brand{color:#fff;width:380px;max-width:78vw;margin-bottom:26px}
 .hero .brand .alk-logo{width:100%;height:auto}
 .hero h1{font-size:clamp(26px,3.4vw,46px);font-weight:700;line-height:1.18;max-width:900px;margin-bottom:22px;letter-spacing:-.01em}
+.hero h1 .line{display:block;opacity:0;transform:translateY(26px);animation:heroLineIn .9s cubic-bezier(.22,.61,.36,1) forwards}
+.hero h1 .line:nth-child(1){animation-delay:.15s}
+.hero h1 .line:nth-child(2){animation-delay:.5s}
+.hero h1 .line:nth-child(3){animation-delay:.85s}
+@keyframes heroLineIn{to{opacity:1;transform:none}}
 .hero p{font-size:clamp(15px,1.35vw,19px);font-weight:400;line-height:1.6;max-width:720px;opacity:.92}
 
 /* Scroll reveal */
@@ -151,6 +156,7 @@ img{max-width:100%;display:block}
   .hero-bg-layer{animation:none;opacity:0}
   .hero-bg-layer.l1{opacity:1}
   .hero-inner{transition:none!important;transform:none!important}
+  .hero h1 .line{animation:none;opacity:1;transform:none}
   .marquee-track{animation:none}
 }
 </style>
@@ -202,7 +208,11 @@ img{max-width:100%;display:block}
   </div>
   <div class="hero-inner">
     <div class="brand"><svg class="alk-logo" viewBox="0 0 416.29 206.88"><use href="#alkimiaLockup"/></svg></div>
-    <h1>We are Alchemists. We transform your business. We turn complexity into scalable growth.</h1>
+    <h1>
+      <span class="line">We are Alchemists.</span>
+      <span class="line">We transform your business.</span>
+      <span class="line">We turn complexity into scalable growth.</span>
+    </h1>
     <p>Applying our main elements: strategy, business intelligence, data, creativity and execution as our core capabilities, we partner with organizations to solve their most critical growth challenges.</p>
   </div>
 </section>
