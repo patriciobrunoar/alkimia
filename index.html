@@ -90,6 +90,10 @@ img{max-width:100%;display:block}
 .h2-wipe{clip-path:inset(0 100% 0 0);opacity:.25;will-change:clip-path,opacity}
 .cards .card:nth-child(2){transition-delay:.1s}
 .cards .card:nth-child(3){transition-delay:.2s}
+.elements-grid .element-card:nth-child(2){transition-delay:.1s}
+.elements-grid .element-card:nth-child(3){transition-delay:.2s}
+.elements-grid .element-card:nth-child(4){transition-delay:.3s}
+.elements-grid .element-card:nth-child(5){transition-delay:.4s}
 
 /* Section shell */
 .section{padding:100px 48px;max-width:1200px;margin:0 auto}
@@ -116,10 +120,12 @@ img{max-width:100%;display:block}
 
 /* Our Core Elements */
 .elements-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:32px}
-.element-card{background:var(--alk-lavender);border-radius:18px;padding:32px 30px;display:flex;gap:24px;align-items:flex-start}
+.element-card{background:var(--alk-lavender);border-radius:18px;padding:32px 30px;display:flex;gap:24px;align-items:flex-start;transition:transform .15s ease-out,box-shadow .2s ease;transform-style:preserve-3d}
+.element-card:hover{box-shadow:var(--shadow-lg)}
 .element-card.wide{grid-column:1/-1}
-.element-icon{flex:0 0 auto;width:56px;height:56px;color:var(--alk-purple)}
+.element-icon{flex:0 0 auto;width:56px;height:56px;color:var(--alk-purple);transition:transform .3s cubic-bezier(.22,.61,.36,1)}
 .element-icon svg{width:100%;height:100%}
+.element-card:hover .element-icon{transform:translateZ(24px) scale(1.08)}
 .element-card h3{font-size:19px;font-weight:700;color:var(--alk-heading);line-height:1.25;margin-bottom:10px;display:flex;align-items:center;gap:10px}
 .element-card p{font-size:15px;line-height:1.55;color:var(--alk-body)}
 .element-badge{font-size:11px;font-weight:700;letter-spacing:.04em;color:#fff;background:var(--alk-purple);padding:3px 9px;border-radius:var(--radius-full)}
@@ -207,6 +213,7 @@ img{max-width:100%;display:block}
   .h2-wipe{clip-path:none;opacity:1}
   .hero-spotlight{display:none}
   .card{transition:none!important;transform:none!important}
+  .element-card,.element-icon{transition:none!important;transform:none!important}
 }
 </style>
 </head>
@@ -624,7 +631,7 @@ if(canHover&&!reduceMotion){
 
 // 3D tilt on service cards
 if(canHover&&!reduceMotion){
-  document.querySelectorAll('.cards .card').forEach(card=>{
+  document.querySelectorAll('.cards .card, .elements-grid .element-card').forEach(card=>{
     card.addEventListener('mousemove',e=>{
       const r=card.getBoundingClientRect();
       const px=(e.clientX-r.left)/r.width-0.5;
