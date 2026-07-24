@@ -119,14 +119,19 @@ img{max-width:100%;display:block}
 .cards .card:nth-child(3){grid-column:2;grid-row:2}
 
 /* Our Core Elements */
-.elements-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:32px}
-.element-card{background:var(--alk-lavender);border-radius:18px;padding:32px 30px;display:flex;gap:24px;align-items:flex-start;transition:transform .15s ease-out,box-shadow .2s ease;transform-style:preserve-3d}
+.elements-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:32px}
+.element-card{background:var(--alk-lavender);border-radius:18px;padding:34px 32px;display:flex;flex-direction:column;align-items:flex-start;position:relative;overflow:hidden;transition:transform .15s ease-out,box-shadow .2s ease;transform-style:preserve-3d}
+.element-card::before{content:"";position:absolute;top:-42px;right:-42px;width:150px;height:150px;border-radius:50%;background:var(--alk-purple);opacity:.05;filter:blur(30px);transition:opacity .35s ease;pointer-events:none}
 .element-card:hover{box-shadow:var(--shadow-lg)}
-.element-card.wide{grid-column:1/-1}
-.element-icon{flex:0 0 auto;width:56px;height:56px;color:var(--alk-purple);transition:transform .3s cubic-bezier(.22,.61,.36,1)}
+.element-card:hover::before{opacity:.22}
+.element-card.wide{grid-column:span 2}
+.element-icon{position:relative;z-index:1;flex:0 0 auto;width:52px;height:52px;box-sizing:border-box;padding:12px;margin-bottom:20px;color:var(--alk-purple);background:#fff;border:1px solid rgba(107,79,161,.18);border-radius:12px;transition:transform .3s cubic-bezier(.22,.61,.36,1)}
 .element-icon svg{width:100%;height:100%}
-.element-card:hover .element-icon{transform:translateZ(24px) scale(1.08)}
+.element-card.wide .element-icon{width:60px;height:60px;padding:14px}
+.element-card:hover .element-icon{transform:translateZ(24px) scale(1.06)}
+.element-body{position:relative;z-index:1}
 .element-card h3{font-size:19px;font-weight:700;color:var(--alk-heading);line-height:1.25;margin-bottom:10px;display:flex;align-items:center;gap:10px}
+.element-card.wide h3{font-size:24px}
 .element-card p{font-size:15px;line-height:1.55;color:var(--alk-body)}
 .element-badge{font-size:11px;font-weight:700;letter-spacing:.04em;color:#fff;background:var(--alk-purple);padding:3px 9px;border-radius:var(--radius-full)}
 
@@ -183,6 +188,11 @@ img{max-width:100%;display:block}
 .footer a{color:rgba(255,255,255,.75)}
 .footer a:hover{color:#fff}
 
+@media(max-width:1100px) and (min-width:861px){
+  .elements-grid{grid-template-columns:1fr 1fr}
+  .element-card.wide{grid-column:1/-1}
+}
+
 @media(max-width:860px){
   .header{padding:12px 22px}
   .nav{display:none;position:absolute;top:100%;left:0;right:0;flex-direction:column;gap:0;background:rgba(124,107,166,.98);padding:10px 22px 20px}
@@ -192,6 +202,7 @@ img{max-width:100%;display:block}
   .nav-toggle{display:block}
   .section,.consult{padding:70px 24px}
   .elements-grid{grid-template-columns:1fr}
+  .element-card.wide{grid-column:1/-1}
   .cards{grid-template-columns:1fr;grid-template-rows:none}
   .cards .card:nth-child(1){grid-row:auto;grid-column:auto;display:block;padding:32px 30px}
   .cards .card:nth-child(1) h3{font-size:20px}
@@ -280,7 +291,7 @@ img{max-width:100%;display:block}
   <h2 class="h2-wipe">Our Core Elements</h2>
   <p class="lead reveal">The capabilities we combine to move your brand from strategy to execution.</p>
   <div class="elements-grid">
-    <div class="element-card reveal">
+    <div class="element-card wide reveal">
       <div class="element-icon" aria-hidden="true">
         <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
           <rect x="4" y="8" width="32" height="22" rx="2"/>
@@ -291,7 +302,7 @@ img{max-width:100%;display:block}
           <path d="M31 11l4-3M31 15h5M29 8l3-4"/>
         </svg>
       </div>
-      <div>
+      <div class="element-body">
         <h3>Strategic Planning</h3>
         <p>Digital Marketing Strategy, Consulting, Social Listening, Consumer Insights, Research &amp; Benchmarking, Competitive Review.</p>
       </div>
@@ -308,7 +319,7 @@ img{max-width:100%;display:block}
           <path d="M6 34c1.5-1.4 3.5-1.4 5 0" />
         </svg>
       </div>
-      <div>
+      <div class="element-body">
         <h3>Creative &amp; Content</h3>
         <p>Digital Art Direction &amp; Design, Copywriting, Content Creation &amp; Digital Audiovisual Production.</p>
       </div>
@@ -326,7 +337,7 @@ img{max-width:100%;display:block}
           <line x1="12" y1="38" x2="18" y2="28"/>
         </svg>
       </div>
-      <div>
+      <div class="element-body">
         <h3>Media &amp; Activation</h3>
         <p>Paid Media Management, Mix Media Analysis, Campaign Production and Execution.</p>
       </div>
@@ -345,12 +356,12 @@ img{max-width:100%;display:block}
           <circle cx="38" cy="20" r="1" fill="currentColor" stroke="none"/>
         </svg>
       </div>
-      <div>
+      <div class="element-body">
         <h3>Technology &amp; Innovation</h3>
         <p>UX/UI Design, Frontend &amp; Backend Development, E-commerce Platforms Implementation.</p>
       </div>
     </div>
-    <div class="element-card wide reveal">
+    <div class="element-card reveal">
       <div class="element-icon" aria-hidden="true">
         <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
           <rect x="10" y="14" width="22" height="18" rx="6"/>
@@ -366,9 +377,9 @@ img{max-width:100%;display:block}
           <path d="M37 27v3.5h-3.5"/>
         </svg>
       </div>
-      <div>
+      <div class="element-body">
         <h3>AI &amp; Automation <span class="element-badge">2026</span></h3>
-        <p>AI Strategy &amp; Implementation, Workflow &amp; Marketing Automation, Custom AI Agents &amp; Copilots, AI-Powered Content Tools, Predictive Analytics.</p>
+        <p>AI Strategy, Workflow &amp; Marketing Automation, Custom AI Agents &amp; Copilots, AI-Powered Content Tools, Predictive Analytics.</p>
       </div>
     </div>
   </div>
