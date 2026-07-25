@@ -134,7 +134,10 @@ img{max-width:100%;display:block}
 .element-body{position:relative;z-index:1}
 .element-card h3{font-size:19px;font-weight:700;color:var(--alk-heading);line-height:1.25;margin-bottom:10px;display:flex;align-items:center;gap:10px}
 .element-card.wide h3{font-size:24px}
-.element-card p{font-size:15px;line-height:1.55;color:var(--alk-body)}
+.card-bullets{list-style:none;display:flex;flex-direction:column;gap:9px}
+.card-bullets li{font-size:14.5px;font-weight:500;color:var(--alk-body);padding-left:17px;position:relative;line-height:1.4}
+.card-bullets li::before{content:"";position:absolute;left:0;top:6px;width:6px;height:6px;background:var(--alk-purple);border-radius:2px;transform:rotate(45deg)}
+.element-card.wide .card-bullets{display:grid;grid-template-columns:1fr 1fr;column-gap:24px;row-gap:9px}
 .element-badge{font-size:11px;font-weight:700;letter-spacing:.04em;color:#fff;background:var(--alk-purple);padding:3px 9px;border-radius:var(--radius-full)}
 
 /* Detailed service blocks */
@@ -221,6 +224,7 @@ img{max-width:100%;display:block}
   .cards .card:nth-child(2),.cards .card:nth-child(3){grid-column:auto;grid-row:auto}
   .service{grid-template-columns:1fr;gap:32px;padding:56px 24px}
   .founder-grid{grid-template-columns:1fr;gap:32px}
+  .element-card.wide .card-bullets{grid-template-columns:1fr}
   .consult-grid{grid-template-columns:1fr;gap:40px}
   .experience .exp-grid{grid-template-columns:1fr}
   .brands-band .section-inner{padding:0 24px}
@@ -318,7 +322,14 @@ img{max-width:100%;display:block}
       </div>
       <div class="element-body">
         <h3>Strategic Planning</h3>
-        <p>Digital Marketing Strategy, Consulting, Social Listening, Consumer Insights, Research &amp; Benchmarking, Competitive Review.</p>
+        <ul class="card-bullets">
+          <li>Digital Marketing Strategy</li>
+          <li>Consulting</li>
+          <li>Social Listening</li>
+          <li>Consumer Insights</li>
+          <li>Research &amp; Benchmarking</li>
+          <li>Competitive Review</li>
+        </ul>
       </div>
     </div>
     <div class="element-card reveal">
@@ -335,7 +346,11 @@ img{max-width:100%;display:block}
       </div>
       <div class="element-body">
         <h3>Creative &amp; Content</h3>
-        <p>Digital Art Direction &amp; Design, Copywriting, Content Creation &amp; Digital Audiovisual Production.</p>
+        <ul class="card-bullets">
+          <li>Digital Art Direction &amp; Design</li>
+          <li>Copywriting</li>
+          <li>Content Creation &amp; Digital Audiovisual Production</li>
+        </ul>
       </div>
     </div>
     <div class="element-card reveal">
@@ -353,7 +368,11 @@ img{max-width:100%;display:block}
       </div>
       <div class="element-body">
         <h3>Media &amp; Activation</h3>
-        <p>Paid Media Management, Mix Media Analysis, Campaign Production and Execution.</p>
+        <ul class="card-bullets">
+          <li>Paid Media Management</li>
+          <li>Mix Media Analysis</li>
+          <li>Campaign Production and Execution</li>
+        </ul>
       </div>
     </div>
     <div class="element-card reveal">
@@ -372,7 +391,11 @@ img{max-width:100%;display:block}
       </div>
       <div class="element-body">
         <h3>Technology &amp; Innovation</h3>
-        <p>UX/UI Design, Frontend &amp; Backend Development, E-commerce Platforms Implementation.</p>
+        <ul class="card-bullets">
+          <li>UX/UI Design</li>
+          <li>Frontend &amp; Backend Development</li>
+          <li>E-commerce Platforms Implementation</li>
+        </ul>
       </div>
     </div>
     <div class="element-card reveal">
@@ -393,7 +416,13 @@ img{max-width:100%;display:block}
       </div>
       <div class="element-body">
         <h3>AI &amp; Automation <span class="element-badge">2026</span></h3>
-        <p>AI Strategy, Workflow &amp; Marketing Automation, Custom AI Agents &amp; Copilots, AI-Powered Content Tools, Predictive Analytics.</p>
+        <ul class="card-bullets">
+          <li>AI Strategy</li>
+          <li>Workflow &amp; Marketing Automation</li>
+          <li>Custom AI Agents &amp; Copilots</li>
+          <li>AI-Powered Content Tools</li>
+          <li>Predictive Analytics</li>
+        </ul>
       </div>
     </div>
   </div>
