@@ -51,6 +51,8 @@ img{max-width:100%;display:block}
 .nav a{color:#fff;font-size:15px;font-weight:500;letter-spacing:.01em;padding:6px 0;border-bottom:2px solid transparent;transition:border-color var(--transition-base),opacity var(--transition-base)}
 .nav a:hover{opacity:.82}
 .nav a.active{border-bottom-color:#fff}
+.nav a.nav-cta{background:#fff;color:var(--alk-purple-deep);padding:9px 20px;border-radius:var(--radius-full);border-bottom:none}
+.nav a.nav-cta:hover{opacity:1;background:var(--alk-lavender)}
 .nav-toggle{display:none;background:none;border:none;color:#fff;font-size:24px;cursor:pointer}
 
 /* Hero */
@@ -83,6 +85,12 @@ img{max-width:100%;display:block}
   100%{opacity:0}
 }
 .hero p{font-size:clamp(15px,1.35vw,19px);font-weight:400;line-height:1.6;max-width:720px;opacity:.92}
+.hero-cta-group{display:flex;flex-wrap:wrap;gap:16px;justify-content:center;margin-top:34px}
+.hero-cta{display:inline-flex;align-items:center;justify-content:center;padding:14px 28px;border-radius:var(--radius-full);font-size:15px;font-weight:600;letter-spacing:.01em;transition:background var(--transition-base),border-color var(--transition-base),transform .25s cubic-bezier(.22,.61,.36,1)}
+.hero-cta.primary{background:#fff;color:var(--alk-purple-deep)}
+.hero-cta.primary:hover{background:var(--alk-lavender)}
+.hero-cta.secondary{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.55)}
+.hero-cta.secondary:hover{border-color:#fff;background:rgba(255,255,255,.08)}
 
 /* Scroll reveal */
 .reveal{opacity:0;transform:translateY(28px);transition:opacity .7s cubic-bezier(.22,.61,.36,1),transform .7s cubic-bezier(.22,.61,.36,1)}
@@ -139,6 +147,8 @@ img{max-width:100%;display:block}
 .card-bullets li::before{content:"";position:absolute;left:0;top:6px;width:6px;height:6px;background:var(--alk-purple);border-radius:2px;transform:rotate(45deg)}
 .element-card.wide .card-bullets{display:grid;grid-template-columns:1fr 1fr;column-gap:24px;row-gap:9px}
 .element-badge{font-size:11px;font-weight:700;letter-spacing:.04em;color:#fff;background:var(--alk-purple);padding:3px 9px;border-radius:var(--radius-full)}
+.section-cta{display:inline-flex;align-items:center;justify-content:center;margin-top:40px;background:var(--alk-purple);color:#fff;font-size:15px;font-weight:600;letter-spacing:.01em;padding:15px 30px;border-radius:var(--radius-full);transition:background var(--transition-base),transform .25s cubic-bezier(.22,.61,.36,1)}
+.section-cta:hover{background:var(--alk-purple-deep)}
 
 /* Detailed service blocks */
 .services-detail{background:var(--alk-lavender-2)}
@@ -214,6 +224,7 @@ img{max-width:100%;display:block}
   .nav.open{display:flex}
   .nav a{padding:12px 0;border-bottom:1px solid rgba(255,255,255,.12)}
   .nav a.active{border-bottom-color:rgba(255,255,255,.12)}
+  .nav a.nav-cta{margin-top:12px;padding:12px 0;text-align:center;border-bottom:none}
   .nav-toggle{display:block}
   .section,.consult{padding:70px 24px}
   .elements-grid{grid-template-columns:1fr}
@@ -280,6 +291,7 @@ img{max-width:100%;display:block}
     <a href="#experience">Experience</a>
     <a href="#founder">About the founder</a>
     <a href="#consultation">Contact</a>
+    <a href="https://calendly.com/myalkimia/30min" target="_blank" rel="noopener" class="nav-cta">Book an Introductory Call</a>
   </nav>
 </header>
 
@@ -301,6 +313,10 @@ img{max-width:100%;display:block}
       <span class="line">We turn complexity into scalable growth.</span>
     </h1>
     <p>Our main elements are: strategy, business intelligence, data, creativity and execution. We partner with organizations to solve their most critical growth challenges using these core capabilities.</p>
+    <div class="hero-cta-group">
+      <a href="#core-elements" class="hero-cta primary">Our Core Elements</a>
+      <a href="https://calendly.com/myalkimia/30min" target="_blank" rel="noopener" class="hero-cta secondary">Book an Introductory Call</a>
+    </div>
   </div>
 </section>
 
@@ -426,6 +442,7 @@ img{max-width:100%;display:block}
       </div>
     </div>
   </div>
+  <a href="https://calendly.com/myalkimia/30min" target="_blank" rel="noopener" class="section-cta reveal">Book an Introductory Call</a>
 </section>
 
 <section class="section" id="capabilities">
@@ -450,6 +467,7 @@ img{max-width:100%;display:block}
       <p>Senior strategic and creative expertise without increasing permanent overhead.</p>
     </div>
   </div>
+  <a href="https://calendly.com/myalkimia/30min" target="_blank" rel="noopener" class="section-cta reveal">Book an Introductory Call</a>
 </section>
 
 <section class="services-detail">
@@ -592,7 +610,7 @@ img{max-width:100%;display:block}
       <input type="text" name="name" placeholder="Name" required>
       <input type="email" name="email" placeholder="Email" required>
       <textarea name="message" placeholder="Message"></textarea>
-      <button type="submit">Send</button>
+      <button type="submit">Book an Introductory Call</button>
     </form>
     <div class="contact-alt">
       <h3>Other ways to contact us:</h3>
@@ -624,7 +642,7 @@ img{max-width:100%;display:block}
 </footer>
 
 <script>
-const links=[...document.querySelectorAll('.nav a')];
+const links=[...document.querySelectorAll('.nav a:not(.nav-cta)')];
 const secs=links.map(a=>document.querySelector(a.getAttribute('href')));
 const header=document.querySelector('.header');
 function onScroll(){
