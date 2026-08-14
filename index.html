@@ -190,6 +190,13 @@ img{max-width:100%;display:block}
 .marquee-track img{height:166px;width:auto;max-width:364px;object-fit:contain;opacity:.95}
 @keyframes marqueeScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
+/* Success Cases */
+.case-video{margin-top:32px;border-radius:18px;overflow:hidden;box-shadow:var(--shadow-lg);background:#000;max-width:900px}
+.case-video video{width:100%;display:block;aspect-ratio:16/9;background:#000}
+.case-video-info{margin-top:28px;max-width:760px}
+.case-video-info h3{font-size:22px;font-weight:700;color:var(--alk-heading);line-height:1.3;margin-bottom:10px}
+.case-video-info p{font-size:16px;line-height:1.6;color:var(--alk-body)}
+
 /* Consultation */
 .consult{max-width:1100px;margin:0 auto;padding:100px 48px}
 .consult-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:64px;margin-top:20px}
@@ -289,6 +296,7 @@ img{max-width:100%;display:block}
     <a href="#core-elements">Core Elements</a>
     <a href="#capabilities">Capabilities</a>
     <a href="#experience">Experience</a>
+    <a href="#success-cases">Success Cases</a>
     <a href="#founder">About the founder</a>
     <a href="#consultation">Contact</a>
     <a href="https://calendly.com/myalkimia/30min" target="_blank" rel="noopener" class="nav-cta">Book an Introductory Call</a>
@@ -579,6 +587,21 @@ img{max-width:100%;display:block}
         <img src="assets/brands/unilever.png" alt="" aria-hidden="true">
       </div>
     </div>
+  </div>
+</section>
+
+<section class="section success-cases" id="success-cases">
+  <div class="eyebrow reveal"><div class="marks"><span></span><span></span></div><div class="label">Success Cases</div></div>
+  <h2 class="h2-wipe">Our latest success case</h2>
+  <div class="case-video reveal">
+    <video controls playsinline preload="metadata">
+      <source src="https://myalkimia.com/assets/cases/988.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="case-video-info reveal">
+    <!-- TODO: replace with the real case title and description -->
+    <h3>[Add case title here]</h3>
+    <p>[Add a 1–2 sentence description of this case here.]</p>
   </div>
 </section>
 
