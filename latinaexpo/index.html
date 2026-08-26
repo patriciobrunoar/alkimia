@@ -46,11 +46,11 @@ img{max-width:100%;display:block}
 .expo-card{width:100%;max-width:1040px;background:#fff;border-radius:22px;box-shadow:var(--shadow-xl);display:grid;grid-template-columns:1fr 1fr;overflow:hidden}
 
 .expo-intro{padding:52px 44px;background:var(--alk-lavender-2,#f3f0fa);display:flex;flex-direction:column;gap:20px}
-.expo-avatar{display:flex;align-items:center;gap:20px}
-.expo-avatar img{width:140px;height:140px;border-radius:50%;object-fit:cover;box-shadow:var(--shadow-lg)}
+.expo-avatar{display:flex;flex-direction:column;align-items:flex-start;gap:16px}
+.expo-avatar img{width:280px;max-width:100%;aspect-ratio:1/1;height:auto;border-radius:50%;object-fit:cover;box-shadow:var(--shadow-lg)}
 .expo-avatar .name{font-size:17px;font-weight:700;color:var(--alk-heading)}
 .expo-avatar .role{font-size:14px;color:var(--alk-body)}
-.expo-partner-logo{height:58px;width:auto;align-self:flex-start}
+.expo-partner-logo{width:267px;max-width:100%;height:auto;align-self:flex-start}
 .expo-intro p{font-size:16px;line-height:1.65;color:var(--alk-body)}
 .expo-intro p strong{color:var(--alk-heading)}
 
@@ -123,8 +123,8 @@ img{max-width:100%;display:block}
         <input type="text" name="full_name" placeholder="Nombre completo" required autocomplete="name">
         <input type="email" name="email" placeholder="Correo electrónico" required autocomplete="email">
         <input type="text" name="company" placeholder="Nombre de la empresa" required autocomplete="organization">
-        <input type="url" name="website" placeholder="Sitio web" autocomplete="url">
-        <input type="text" name="instagram" placeholder="Usuario de Instagram (@)" autocomplete="off">
+        <input type="text" name="website" value="https://" placeholder="Sitio web" autocomplete="url">
+        <input type="text" name="instagram" value="@" placeholder="Usuario de Instagram" autocomplete="off">
         <input type="tel" name="phone" placeholder="Número de teléfono" autocomplete="tel">
         <button type="submit">Solicitar mi evaluación gratuita</button>
       </form>
