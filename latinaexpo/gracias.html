@@ -39,7 +39,7 @@ img{max-width:100%;display:block}
 
 .expo-bg{position:fixed;inset:0;z-index:-1;background:linear-gradient(150deg,rgba(90,66,135,.9),rgba(58,38,92,.96)),url("../assets/bg2.jpg") center/cover;background-color:#5a4287}
 
-.expo-logo{position:fixed;top:24px;left:24px;width:104px;z-index:5}
+.expo-logo{position:fixed;top:24px;left:24px;width:104px;z-index:5;transition:opacity .2s linear}
 .expo-logo .alk-logo{width:100%;height:auto}
 
 .expo-main{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:120px 24px 60px}
@@ -119,5 +119,22 @@ img{max-width:100%;display:block}
   </div>
 </main>
 
+<script>
+const expoLogo=document.querySelector('.expo-logo');
+const mobileQuery=window.matchMedia('(max-width:600px)');
+function onExpoLogoScroll(){
+  if(mobileQuery.matches){
+    const op=Math.max(1-window.scrollY/80,0);
+    expoLogo.style.opacity=String(op);
+    expoLogo.style.pointerEvents=op===0?'none':'';
+  }else{
+    expoLogo.style.opacity='';
+    expoLogo.style.pointerEvents='';
+  }
+}
+window.addEventListener('scroll',onExpoLogoScroll,{passive:true});
+mobileQuery.addEventListener('change',onExpoLogoScroll);
+onExpoLogoScroll();
+</script>
 </body>
 </html>
