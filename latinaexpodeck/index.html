@@ -119,8 +119,12 @@ body.on-light .deck-counter{color:var(--alk-heading)}
 .divider-text{font-size:clamp(28px,4.6vw,52px);font-weight:700;line-height:1.25;max-width:960px}
 .divider-text .arrow-sep{opacity:.55;margin:0 6px}
 
-/* Slide 1 — intro */
-.intro-grid{display:flex;flex-direction:column;width:100%;max-width:980px;text-align:left}
+/* Slide 2 — presenter / global proof */
+.intro-grid{display:flex;flex-direction:column;width:100%;max-width:1140px;text-align:left}
+.intro-proof{display:grid;grid-template-columns:.82fr 1.18fr;gap:64px;align-items:center;width:100%}
+.mariela-photo{width:100%;max-width:380px;border-radius:24px;overflow:hidden;aspect-ratio:1/1;box-shadow:0 30px 70px -20px rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.18)}
+.mariela-photo img{width:100%;height:100%;object-fit:cover;display:block}
+.intro-proof-copy{display:flex;flex-direction:column}
 .intro-flags{display:flex;flex-wrap:wrap;gap:12px;margin:24px 0 32px}
 .flag-pill{display:inline-flex;align-items:center;gap:10px;padding:9px 18px 9px 10px;border-radius:var(--radius-full);background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.24);font-size:16px;font-weight:600}
 .flag-pill svg{width:28px;height:19px;border-radius:3px;flex:0 0 auto;box-shadow:0 0 0 1px rgba(255,255,255,.5)}
@@ -214,8 +218,9 @@ body.on-light .deck-dot.active{background:var(--alk-purple)}
 
 @media(max-width:900px){
   .slide{padding:90px 6vw 130px}
-  .pillar-layout,.asesoria-layout{grid-template-columns:1fr;gap:30px}
+  .pillar-layout,.asesoria-layout,.intro-proof{grid-template-columns:1fr;gap:30px}
   .slide-inner.left.intro-grid{align-items:center;text-align:center;margin:0 auto}
+  .mariela-photo{max-width:280px;margin:0 auto}
   .intro-flags,.intro-logos-row{justify-content:center}
   .intro-logos-row img{height:64px}
   .qr-card{margin-top:10px;padding:32px}
@@ -290,36 +295,49 @@ body.on-light .deck-dot.active{background:var(--alk-purple)}
 
 <main class="deck" id="deck">
 
-  <!-- 1. INTRO -->
+  <!-- 1. INTRO — title -->
   <section class="slide" data-theme="dark" style="--bgimg:url('../assets/bg4.jpg')">
     <div class="slide-bg"></div>
-    <div class="slide-inner left intro-grid">
-      <div>
-        <p class="eyebrow reveal r1">LatinaExpo · Charla</p>
-        <h1 class="slide-title reveal r2">Conectar con nuestras audiencias<br>de manera no intrusiva</h1>
-        <p class="slide-sub reveal r3">Mariela — Alkimia, Brand Transformation Alchemists</p>
-        <div class="intro-flags reveal r4">
-          <span class="flag-pill"><svg viewBox="0 0 24 16"><use href="#flag-ar"/></svg>Argentina</span>
-          <span class="flag-pill"><svg viewBox="0 0 24 16"><use href="#flag-mx"/></svg>México</span>
-          <span class="flag-pill"><svg viewBox="0 0 24 16"><use href="#flag-us"/></svg>USA</span>
-          <span class="flag-pill"><svg viewBox="0 0 24 16"><use href="#flag-es"/></svg>España</span>
-          <span class="flag-pill"><svg viewBox="0 0 24 16"><use href="#flag-eu"/></svg>Unión Europea</span>
-        </div>
-        <div class="intro-logos reveal r5">
-          <p class="intro-logos-label">Marcas con las que trabajamos</p>
-          <div class="intro-logos-row">
-            <img src="../assets/brands/santander.png" alt="Santander"><img src="../assets/brands/cocacola.png" alt="Coca-Cola">
-            <img src="../assets/brands/mastercard.png" alt="Mastercard"><img src="../assets/brands/unilever.png" alt="Unilever">
-            <img src="../assets/brands/loreal.png" alt="L'Oréal"><img src="../assets/brands/amex.png" alt="American Express">
-            <img src="../assets/brands/diageo.png" alt="Diageo"><img src="../assets/brands/nokia.png" alt="Nokia">
-          </div>
-        </div>
-      </div>
+    <div class="slide-inner">
+      <p class="eyebrow reveal r1">LatinaExpo · Charla</p>
+      <h1 class="slide-title reveal r2">Conectar con nuestras audiencias<br>de manera no intrusiva</h1>
+      <p class="slide-sub reveal r3">Mariela Guarino — Alkimia, Brand Transformation Alchemists</p>
     </div>
     <div class="nav-hint" id="navHint">Usá ← → o deslizá para navegar</div>
   </section>
 
-  <!-- 2. CORE ELEMENTS -->
+  <!-- 2. INTRO — presenter / global proof -->
+  <section class="slide" data-theme="dark" style="--bgimg:url('../assets/bg2.jpg')">
+    <div class="slide-bg"></div>
+    <div class="slide-inner left intro-grid">
+      <div class="intro-proof">
+        <div class="mariela-photo reveal r1">
+          <img src="../assets/mariela.jpg" alt="Mariela Guarino, founder de Alkimia, en el evento Women Who Transform Florida">
+        </div>
+        <div class="intro-proof-copy">
+          <p class="eyebrow reveal r2">Mariela Guarino — Alkimia</p>
+          <div class="intro-flags reveal r3">
+            <span class="flag-pill"><svg viewBox="0 0 24 16"><use href="#flag-ar"/></svg>Argentina</span>
+            <span class="flag-pill"><svg viewBox="0 0 24 16"><use href="#flag-mx"/></svg>México</span>
+            <span class="flag-pill"><svg viewBox="0 0 24 16"><use href="#flag-us"/></svg>USA</span>
+            <span class="flag-pill"><svg viewBox="0 0 24 16"><use href="#flag-es"/></svg>España</span>
+            <span class="flag-pill"><svg viewBox="0 0 24 16"><use href="#flag-eu"/></svg>Unión Europea</span>
+          </div>
+          <div class="intro-logos reveal r4">
+            <p class="intro-logos-label">Marcas con las que trabajamos</p>
+            <div class="intro-logos-row">
+              <img src="../assets/brands/diageo.png" alt="Diageo"><img src="../assets/brands/nokia.png" alt="Nokia">
+              <img src="../assets/brands/amex.png" alt="American Express"><img src="../assets/brands/macdonalds.png" alt="McDonald's">
+              <img src="../assets/brands/unilever.png" alt="Unilever"><img src="../assets/brands/loreal.png" alt="L'Oréal">
+              <img src="../assets/brands/jcs.svg" alt="JCS">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. CORE ELEMENTS -->
   <section class="slide" data-theme="light" data-build-total="5">
     <div class="slide-glow"></div>
     <div class="slide-inner left">
@@ -340,7 +358,7 @@ body.on-light .deck-dot.active{background:var(--alk-purple)}
     </div>
   </section>
 
-  <!-- 3. QUOTE: De invadir a conectar -->
+  <!-- 4. QUOTE: De invadir a conectar -->
   <section class="slide" data-theme="dark" style="--bgimg:url('../assets/bg5.jpg')">
     <div class="slide-bg"></div>
     <div class="slide-inner">
@@ -349,7 +367,7 @@ body.on-light .deck-dot.active{background:var(--alk-purple)}
     </div>
   </section>
 
-  <!-- 4. Statement + 3 pilares intro -->
+  <!-- 5. Statement + 3 pilares intro -->
   <section class="slide" data-theme="dark" style="--bgimg:url('../assets/bg3.jpg')">
     <div class="slide-bg"></div>
     <div class="slide-inner">
@@ -366,7 +384,7 @@ body.on-light .deck-dot.active{background:var(--alk-purple)}
     </div>
   </section>
 
-  <!-- 5. Caso 988 -->
+  <!-- 6. Caso 988 -->
   <section class="slide" data-theme="dark" style="--bgimg:url('../assets/bg6.jpg')">
     <div class="slide-bg"></div>
     <div class="slide-inner">
@@ -383,7 +401,7 @@ body.on-light .deck-dot.active{background:var(--alk-purple)}
     </div>
   </section>
 
-  <!-- 6. Divider -->
+  <!-- 7. Divider -->
   <section class="slide" data-theme="dark" style="--bgimg:url('../assets/bg.jpg')">
     <div class="slide-bg"></div>
     <div class="slide-inner">
@@ -391,7 +409,7 @@ body.on-light .deck-dot.active{background:var(--alk-purple)}
     </div>
   </section>
 
-  <!-- 7. Pilar 1 - ENTENDER -->
+  <!-- 8. Pilar 1 - ENTENDER -->
   <section class="slide" data-theme="light">
     <div class="slide-glow"></div>
     <div class="slide-inner left pillar-layout">
@@ -423,7 +441,7 @@ body.on-light .deck-dot.active{background:var(--alk-purple)}
     </div>
   </section>
 
-  <!-- 8. Pilar 2 - APORTAR VALOR -->
+  <!-- 9. Pilar 2 - APORTAR VALOR -->
   <section class="slide" data-theme="light">
     <div class="slide-glow"></div>
     <div class="slide-inner left pillar-layout">
@@ -455,7 +473,7 @@ body.on-light .deck-dot.active{background:var(--alk-purple)}
     </div>
   </section>
 
-  <!-- 9. Pilar 3 - CONECTAR -->
+  <!-- 10. Pilar 3 - CONECTAR -->
   <section class="slide" data-theme="light">
     <div class="slide-glow"></div>
     <div class="slide-inner left pillar-layout">
@@ -488,7 +506,7 @@ body.on-light .deck-dot.active{background:var(--alk-purple)}
     </div>
   </section>
 
-  <!-- 10. Divider: Y ahora? -->
+  <!-- 11. Divider: Y ahora? -->
   <section class="slide" data-theme="dark" style="--bgimg:url('../assets/bg2.jpg')">
     <div class="slide-bg"></div>
     <div class="slide-inner">
@@ -496,7 +514,7 @@ body.on-light .deck-dot.active{background:var(--alk-purple)}
     </div>
   </section>
 
-  <!-- 11. Asesoria digital inicial -->
+  <!-- 12. Asesoria digital inicial -->
   <section class="slide" data-theme="light">
     <div class="slide-glow"></div>
     <div class="slide-inner left asesoria-layout">
@@ -520,7 +538,7 @@ body.on-light .deck-dot.active{background:var(--alk-purple)}
     </div>
   </section>
 
-  <!-- 12. Gracias -->
+  <!-- 13. Gracias -->
   <section class="slide" data-theme="dark" style="--bgimg:url('../assets/bg4.jpg')">
     <div class="slide-bg"></div>
     <div class="slide-inner">
