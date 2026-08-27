@@ -87,9 +87,10 @@ body.on-light .deck-counter{color:var(--alk-heading)}
 .slide.active .reveal.r6{animation-delay:.55s}
 @keyframes revealUp{to{opacity:1;transform:translateY(0)}}
 
-/* Build items (revealed one-by-one via next/prev, e.g. slide 2 cards) */
+/* Build items (revealed one-by-one via next/prev, e.g. slide 3 cards, slide 7 words) */
 .build-item{opacity:0;transform:translateY(18px) scale(.97);pointer-events:none;transition:opacity .5s cubic-bezier(.22,.61,.36,1),transform .5s cubic-bezier(.22,.61,.36,1)}
 .build-item.shown{opacity:1;transform:translateY(0) scale(1);pointer-events:auto}
+.build-item.word{display:inline-block}
 
 .eyebrow{font-size:16px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;opacity:.78;margin-bottom:16px}
 .slide-title{font-size:clamp(34px,5vw,62px);font-weight:700;line-height:1.12;letter-spacing:-.01em;margin-bottom:20px}
@@ -388,10 +389,14 @@ body.on-light .deck-dot.active{background:var(--alk-purple)}
   </section>
 
   <!-- 7. Divider -->
-  <section class="slide" data-theme="dark" style="--bgimg:url('../assets/bg.jpg')">
+  <section class="slide" data-theme="dark" data-build-total="3" style="--bgimg:url('../assets/bg.jpg')">
     <div class="slide-bg"></div>
     <div class="slide-inner">
-      <p class="divider-text reveal r1">Entender<span class="arrow-sep">→</span>Aportar valor<span class="arrow-sep">→</span>Conectar</p>
+      <p class="divider-text">
+        <span class="build-item word" data-build-index="0">Entender<span class="arrow-sep">→</span></span>
+        <span class="build-item word" data-build-index="1">Aportar valor<span class="arrow-sep">→</span></span>
+        <span class="build-item word" data-build-index="2">Conectar</span>
+      </p>
     </div>
   </section>
 
