@@ -77,7 +77,7 @@ Aplicando acciones concretas explicadas en estos 3 pilares:
 
 ---
 
-## Caso 988 — Jewish Community Center
+## Caso 988 — Jewish Community Services
 
 ![inline fill](988es.mp4)
 
@@ -165,7 +165,7 @@ Escaneando este QR e ingresando a **myalkimia.com/latinaexpo** vas a llegar a un
 - Brand & Message Consistency
 - Opportunities for Improvement
 
-Una vez recibamos tu solicitud y confirmemos por correo, nuestro equipo se tomará 72hs hábiles en completar la Asesoría Digital Inicial y enviar un reporte con la escala de valoración de 0-100.
+
 
 [.column]
 ![inline 70%](../assets/latinaexpo-qr.svg)
