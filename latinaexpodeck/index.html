@@ -128,7 +128,12 @@ body.on-light .deck-counter{color:var(--alk-heading)}
 .mariela-photo{width:100%;max-width:380px;border-radius:24px;overflow:hidden;aspect-ratio:1/1;box-shadow:0 30px 70px -20px rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.18)}
 .mariela-photo img{width:100%;height:100%;object-fit:cover;display:block}
 .intro-proof-copy{display:flex;flex-direction:column}
+.intro-name{font-size:clamp(18px,2vw,24px);font-weight:400}
+.intro-name-bold{font-weight:700;letter-spacing:.04em;text-transform:uppercase;font-size:.85em}
 .intro-flags{display:flex;flex-wrap:wrap;gap:12px;margin:24px 0 32px}
+.intro-summary{list-style:none;display:flex;flex-direction:column;gap:10px;margin:0 0 32px;font-size:clamp(17px,1.7vw,20px);line-height:1.5}
+.intro-summary li{padding-left:22px;position:relative}
+.intro-summary li::before{content:"";position:absolute;left:0;top:.55em;width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.8}
 .flag-pill{display:inline-flex;align-items:center;gap:10px;padding:9px 18px 9px 10px;border-radius:var(--radius-full);background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.24);font-size:16px;font-weight:600}
 .flag-pill svg{width:28px;height:19px;border-radius:3px;flex:0 0 auto;box-shadow:0 0 0 1px rgba(255,255,255,.5)}
 .intro-cta-row{display:flex;gap:14px;margin-top:8px}
@@ -147,8 +152,8 @@ body.on-light .deck-counter{color:var(--alk-heading)}
 .card li::before{content:"";position:absolute;left:0;top:8px;width:5px;height:5px;border-radius:50%;background:var(--alk-purple)}
 
 /* Case video slide */
-.case-video-wrap{width:100%;max-width:1120px;border-radius:18px;overflow:hidden;box-shadow:0 30px 70px -20px rgba(0,0,0,.6);background:#000;border:1px solid rgba(255,255,255,.14)}
-.case-video-wrap video{width:100%;display:block;aspect-ratio:16/9;background:#000}
+.case-video-wrap{width:min(100%,calc((100vh - 300px) * 16 / 9));max-width:1300px;aspect-ratio:16/9;border-radius:18px;overflow:hidden;box-shadow:0 30px 70px -20px rgba(0,0,0,.6);background:#000;border:1px solid rgba(255,255,255,.14)}
+.case-video-wrap video{width:100%;height:100%;display:block;background:#000}
 
 /* Pillar detail slide (8-10) — single column */
 .pillar-layout{display:flex;flex-direction:column;gap:28px;width:100%;max-width:820px;text-align:left;align-items:stretch;margin:0 auto}
@@ -212,6 +217,8 @@ body.on-light .deck-dot.active{background:var(--alk-purple)}
   .slide-inner.left.intro-grid{align-items:center;text-align:center;margin:0 auto}
   .mariela-photo{max-width:280px;margin:0 auto}
   .intro-flags,.intro-logos-row{justify-content:center}
+  .intro-summary{align-items:center}
+  .intro-summary li{text-align:left}
   .intro-logos-row img{height:64px}
   .qr-card{margin-top:10px;padding:32px}
   .qr-card img{width:220px;height:220px}
@@ -306,12 +313,16 @@ body.on-light .deck-dot.active{background:var(--alk-purple)}
           <img src="../assets/mariela.jpg" alt="Mariela Guarino, founder de Alkimia, en el evento Women Who Transform Florida">
         </div>
         <div class="intro-proof-copy">
-          <p class="eyebrow reveal r2">Mariela Guarino — Alkimia</p>
+          <p class="intro-name reveal r2"><span class="intro-name-bold">Mariela Guarino —</span> Founder and CEO of Alkimia</p>
           <div class="intro-flags reveal r3">
             <span class="flag-pill"><svg viewBox="0 0 24 16"><use href="#flag-ar"/></svg>Argentina</span>
             <span class="flag-pill"><svg viewBox="0 0 24 16"><use href="#flag-mx"/></svg>México</span>
             <span class="flag-pill"><svg viewBox="0 0 24 16"><use href="#flag-us"/></svg>USA</span>
           </div>
+          <ul class="intro-summary reveal r3">
+            <li>Marketing digital y publicidad en Estados Unidos y Latinoamérica.</li>
+            <li>Agencias creativas y clientes globales, liderando creatividad, insights, contenido, medios y tecnología.</li>
+          </ul>
           <div class="intro-logos reveal r4">
             <div class="intro-logos-row">
               <img src="../assets/brands/unilever.png" alt="Unilever"><img src="../assets/brands/loreal.png" alt="L'Oréal">
