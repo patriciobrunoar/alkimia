@@ -124,26 +124,21 @@
     color:var(--crit);
     font-size:14px;
   }
-  .overlap-demo{
-    position:relative;
-    height:110px;
-    background:linear-gradient(120deg,#b9d3bd,#dfe9df);
+  .shot{
+    display:block;
+    max-width:100%;
+    border:1px solid var(--border);
     border-radius:10px;
-    overflow:hidden;
-    margin:14px 0;
+    margin:14px 0 4px;
+    box-shadow:0 1px 4px rgba(0,0,0,.08);
   }
-  .overlap-demo .logo-sig{
-    position:absolute;top:14px;left:16px;
-    font-family:"Brush Script MT",cursive;
-    font-size:22px;
-    color:#fff;
-    opacity:.9;
-  }
-  .overlap-demo .headline{
-    position:absolute;top:22px;left:14px;
-    font-size:30px;
-    font-weight:800;
-    color:#fff;
+  .shot-row{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start;margin:14px 0 4px;}
+  .shot-row .shot{margin:0;}
+  .shot-row figure{margin:0;flex:1 1 220px;}
+  .caption{
+    font-size:12.5px;
+    color:var(--muted);
+    margin:4px 0 10px;
   }
   .badge-count{
     display:inline-block;
@@ -321,6 +316,8 @@
     <h4>El enlace de WhatsApp roto aparece justo en el momento de reservar</h4>
     <p>El link roto (<code>wa.me/message/GB7WNKYFRPDYM1</code>) no es un caso aislado: es el mismo código muerto que se usa en <strong>tres ubicaciones</strong> — la página de agendamiento, y dos veces en la FAQ ("WhatsApp Customer Service" y "download the attached PDF here… contact us"). Un visitante con dudas justo antes de pagar, que hace clic para preguntar algo, cae en una página de error de WhatsApp. Es probable que este código haya pertenecido a una cuenta de WhatsApp Business que fue eliminada o migrada.</p>
     <div class="evidence">Verificado navegando directamente a <code>https://wa.me/message/GB7WNKYFRPDYM1</code>: WhatsApp responde "Link no longer valid."</div>
+    <img class="shot" src="img/whatsapp-link-invalid.png" alt="Página de WhatsApp mostrando 'Link no longer valid'">
+    <p class="caption">Captura real del enlace roto <code>wa.me/message/GB7WNKYFRPDYM1</code>.</p>
   </div>
 
   <div class="finding high">
@@ -385,11 +382,15 @@
     <span class="tag med">Medio</span>
     <h4>Resaltados de texto que rompen la paleta de marca</h4>
     <p>En la página de reservas, la frase "The maximum time to cancel the session is 24 hours before the session" está en <strong>naranja</strong>, y la palabra "whatsapp" tiene un <strong>resaltador verde neón</strong> (estilo marcador fluorescente) que no aparece en ningún otro lugar del sitio. Da la sensación de texto pegado desde un editor sin revisar el estilo final.</p>
+    <img class="shot" src="img/scheduling-highlighted-text.png" alt="Texto de política de cancelación en naranja y la palabra 'whatsapp' con resaltador verde neón en /scheduling/">
+    <p class="caption">Bloque "General Information" en /scheduling/.</p>
   </div>
   <div class="finding med">
     <span class="tag med">Medio</span>
     <h4>El menú móvil no oscurece el contenido de fondo</h4>
     <p>El menú hamburguesa se abre como un panel lateral que cubre solo una parte del ancho de pantalla, dejando el contenido de la página totalmente visible y legible detrás, sin ningún overlay oscuro. No es un error técnico, pero visualmente es confuso: se leen dos capas de texto superpuestas al mismo tiempo.</p>
+    <img class="shot" src="img/mobile-menu-overlay.png" alt="Menú móvil abierto en 375px, con el contenido de la página aún visible y legible detrás del panel">
+    <p class="caption">Menú abierto a 375px: el contenido de fondo sigue legible.</p>
   </div>
   <div class="finding low">
     <span class="tag low">Bajo</span>
@@ -406,18 +407,25 @@
     <span class="tag crit">Crítico</span>
     <h4>El logo se superpone con el título principal en mobile</h4>
     <p>En todos los anchos de mobile probados (375px y 472px), la firma "Anaté Yepes" (el logo en cursiva) queda montada literalmente encima del texto "Find your Balance" del hero, y lo mismo vuelve a pasar más abajo, donde el título "Coaches" se cruza con la firma decorativa "Anaté Yepes" que aparece de fondo. Es lo primero que ve cualquier visitante que entra desde el celular.</p>
-    <p>Reproducción aproximada del problema (mismo texto y posición relativa que en el sitio real):</p>
-    <div class="overlap-demo">
-      <span class="logo-sig">Anaté Yepes</span>
-      <span class="headline">Find your<br>Balance</span>
+    <div class="shot-row">
+      <figure>
+        <img class="shot" src="img/mobile-hero-overlap.png" alt="Logo 'Anaté Yepes' superpuesto sobre 'Find your Balance' en el hero mobile">
+        <p class="caption">Hero, 375px de ancho.</p>
+      </figure>
+      <figure>
+        <img class="shot" src="img/mobile-coaches-overlap.png" alt="Logo 'Anaté Yepes' superpuesto sobre el título 'Coaches' en mobile">
+        <p class="caption">Sección "Coaches", mismo ancho.</p>
+      </figure>
     </div>
-    <div class="evidence">Confirmado con capturas de pantalla en 375×812 y 472×922 sobre Chrome. El problema desaparece a partir de ~972px de ancho, donde el header cambia a versión "menú hamburguesa" con el logo reposicionado correctamente arriba del título.</div>
+    <div class="evidence">Confirmado con capturas de pantalla en 375×812 sobre Chrome. El problema desaparece a partir de ~972px de ancho, donde el header cambia a versión "menú hamburguesa" con el logo reposicionado correctamente arriba del título.</div>
   </div>
 
   <div class="finding med">
     <span class="tag med">Medio</span>
     <h4>El selector de idioma desaparece en anchos intermedios (~972px, típico de tablets/notebooks chicas)</h4>
     <p>En ese rango de ancho, la barra superior pasa a mostrar solo el ícono de sobre (mail) y el resto de los íconos de idioma (banderas ES/EN) desaparecen de la vista y tampoco están dentro del menú hamburguesa. Un usuario de tablet no tiene forma de cambiar de idioma en ese breakpoint.</p>
+    <img class="shot" src="img/tablet-language-selector.png" alt="Header en ~972px mostrando solo el ícono de mail, sin banderas de idioma">
+    <p class="caption">Header a 972px de ancho: solo queda el ícono de mail.</p>
   </div>
 
   <div class="finding low">
@@ -443,6 +451,8 @@
     <span class="tag crit">Crítico</span>
     <h4>El subdominio de la Academy está caído</h4>
     <p>La FAQ explica que para comprar un workshop online hay que "Visit academy.anateyepes.com, subscribe for free, choose your preferred workshop…". Ese subdominio no existe (no resuelve DNS), por lo que <strong>toda la ruta de venta de workshops online descrita en la FAQ está rota</strong> para cualquiera que la siga al pie de la letra.</p>
+    <img class="shot" src="img/academy-dns-error.png" alt="Error DNS_PROBE_FINISHED_NXDOMAIN al navegar a academy.anateyepes.com">
+    <p class="caption">academy.anateyepes.com no resuelve.</p>
   </div>
 
   <!-- CONTRASTE -->
@@ -455,6 +465,16 @@
       <div>Texto <code>rgb(255,255,255)</code> sobre fondo <code>rgb(224,155,156)</code></div>
       <div class="ratio-badge">Contraste real: 2.25:1</div>
     </div>
+  </div>
+  <div class="shot-row">
+    <figure>
+      <img class="shot" src="img/contrast-schedule-button.png" alt="Botón flotante 'Schedule an appointment' en rosa con texto blanco de bajo contraste">
+      <p class="caption">Botón flotante, presente en todo el sitio.</p>
+    </figure>
+    <figure>
+      <img class="shot" src="img/contrast-zelle-button.png" alt="Botón 'Pay via Zelle and schedule an appointment' en rosa con texto blanco de bajo contraste">
+      <p class="caption">Botón "Pay via Zelle…" del home.</p>
+    </figure>
   </div>
   <div class="finding crit">
     <span class="tag crit">Crítico</span>
@@ -557,6 +577,8 @@
     <span class="tag high">Alto</span>
     <h4>Bug de numeración en el listado de categorías de reserva</h4>
     <p>En <code>/scheduling/</code> (y en el dominio nativo de Acuity, <code>anateservices.as.me</code>), la lista "Select Appointment Category" se ordena como texto en vez de como número: aparece <code>1, 10, 11, 12, 13, 14, 2, 3, 4, 5…</code> en vez de <code>1, 2, 3, 4…</code>. Da la impresión de un sistema mal configurado justo en la pantalla donde el usuario tiene que elegir con quién trabajar.</p>
+    <img class="shot" src="img/acuity-category-order.png" alt="Lista 'Select Appointment Category' ordenada como texto: 1, 10, 11, 12, 13, 14, 2, 3…">
+    <p class="caption">Orden real de la lista en anateservices.as.me.</p>
   </div>
   <div class="finding med">
     <span class="tag med">Medio</span>
