@@ -100,6 +100,11 @@
     flex:0 0 auto;width:8px;height:8px;border-radius:50%;
     background:var(--alk-purple);margin-top:8px;
   }
+  .point li .li-body p{margin:0;}
+  .point li .li-body .hint{
+    margin-top:6px;font-size:14px;font-style:italic;color:var(--alk-muted);
+    line-height:1.5;
+  }
   .point .closing-note{
     margin-top:24px;font-size:14.5px;color:var(--alk-muted);font-style:italic;
   }
@@ -173,11 +178,26 @@
     <h2>Rendimiento del sitio web</h2>
     <p class="point-intro">Así se siente llegar a tu sitio hoy, justo cuando alguien está por decidir si te elige.</p>
     <ul>
-      <li><span class="dot"></span>El botón de WhatsApp para pedir ayuda antes de reservar lleva a un link roto, justo en el momento de mayor intención de compra.</li>
-      <li><span class="dot"></span>En celular, tu logo se superpone con el título principal de la home y con la sección de Coaches.</li>
-      <li><span class="dot"></span>No hay ningún formulario de contacto en el sitio: todo pasa por WhatsApp, mail o el sistema de reservas.</li>
-      <li><span class="dot"></span>Los íconos de redes sociales del footer están rotos o no funcionan, así que un visitante que quiera seguirte no puede llegar a tus redes desde ahí.</li>
-      <li><span class="dot"></span>Google no tiene una descripción para mostrar en casi ninguna página en inglés, así que aparecés con un resumen automático y poco atractivo en las búsquedas.</li>
+      <li><span class="dot"></span><div class="li-body">
+        <p>El botón de WhatsApp para pedir ayuda antes de reservar lleva a un link roto, justo en el momento de mayor intención de compra: cuando alguien ya decidió agendar y solo necesita resolver una última duda antes de pagar.</p>
+        <p class="hint">Es el peor lugar del sitio para tener un error, porque es donde menos margen tenés para perder a un cliente casi convencido.</p>
+      </div></li>
+      <li><span class="dot"></span><div class="li-body">
+        <p>En celular, tu logo se superpone con el título principal de la home y con la sección de Coaches.</p>
+        <p class="hint">Esto pasa por un problema de diseño responsive (cómo se acomoda tu sitio según el tamaño de pantalla), y es justo lo primero que ve alguien que entra desde el teléfono, que hoy es la mayoría.</p>
+      </div></li>
+      <li><span class="dot"></span><div class="li-body">
+        <p>No hay ningún formulario de contacto en el sitio: todo pasa por WhatsApp, mail o el sistema de reservas.</p>
+        <p class="hint">Un formulario simple (nombre, email y mensaje) le da a alguien que todavía no está listo para reservar una forma fácil de dejarte sus datos, sin comprometerse a nada todavía.</p>
+      </div></li>
+      <li><span class="dot"></span><div class="li-body">
+        <p>Los íconos de redes sociales del header y del footer están rotos o no funcionan, así que un visitante que quiera seguirte no puede llegar a tus redes desde el sitio.</p>
+        <p class="hint">Son justamente el puente hacia las redes donde tenés más comunidad, como Instagram y YouTube (ver punto 2).</p>
+      </div></li>
+      <li><span class="dot"></span><div class="li-body">
+        <p>Google no tiene una descripción para mostrar en casi ninguna página en inglés, así que aparecés con un resumen automático y poco atractivo en las búsquedas.</p>
+        <p class="hint">Esa descripción (la meta description, parte del SEO o posicionamiento en buscadores) es lo primero que alguien lee en Google antes de decidir si hace clic en tu resultado o en el de otra persona.</p>
+      </div></li>
     </ul>
   </div>
 </section>
@@ -187,12 +207,28 @@
   <div class="point-inner">
     <div class="point-badge">02</div>
     <h2>Presencia en redes sociales</h2>
-    <p class="point-intro">Así se ve tu presencia en las redes que enlazás desde el footer de tu sitio.</p>
+    <p class="point-intro">Así se ve tu presencia en las redes que enlazás desde tu sitio.</p>
     <ul>
-      <li><span class="dot"></span>Instagram es tu red más fuerte hoy: 12,1 mil seguidores, actividad reciente (tu última publicación es de hace apenas 2 días) y una bio que refleja bien tu método y tono de marca.</li>
-      <li><span class="dot"></span>Tu canal de YouTube también está activo, con 1,1 mil suscriptores y episodios semanales de tu podcast "Giro Emocional".</li>
-      <li><span class="dot"></span>Tu Facebook está activo y con contenido bien alineado a tu marca, pero es tu red más chica: apenas 99 seguidores.</li>
-      <li><span class="dot"></span>En LinkedIn tu verdadera presencia está en tu perfil personal (1.168 seguidores, publicás cada pocos días con buen nivel de comentarios), mientras que la página de empresa "Anate Yepes" quedó casi sin uso: apenas 3 seguidores y ninguna publicación propia.</li>
+      <li><span class="dot"></span><div class="li-body">
+        <p>Instagram es tu red más fuerte hoy: 12,1 mil seguidores, actividad reciente (tu última publicación es de hace apenas 2 días) y una bio que refleja bien tu método y tono de marca.</p>
+        <p class="hint">Es donde ya tenés la comunidad más grande escuchándote, así que vale la pena que sea la puerta de entrada principal desde tu sitio, no un ícono roto en el footer.</p>
+      </div></li>
+      <li><span class="dot"></span><div class="li-body">
+        <p>Tu canal de YouTube también está activo, con 1,1 mil suscriptores y episodios semanales de tu podcast "Giro Emocional".</p>
+        <p class="hint">Un podcast semanal es contenido valioso que ya estás produciendo, pero que hoy no se ve reflejado en tu sitio ni se promociona desde tus otras redes, es una oportunidad que ya tenés hecha y no estás aprovechando del todo.</p>
+      </div></li>
+      <li><span class="dot"></span><div class="li-body">
+        <p>Tu Facebook está activo y con contenido bien alineado a tu marca, pero es tu red más chica: apenas 99 seguidores.</p>
+        <p class="hint">Puede ser una señal de que tu audiencia ya se movió a Instagram y YouTube, en cuyo caso quizás no valga la pena seguir invirtiendo el mismo esfuerzo ahí.</p>
+      </div></li>
+      <li><span class="dot"></span><div class="li-body">
+        <p>En LinkedIn tu verdadera presencia está en tu perfil personal (1.168 seguidores, publicás cada pocos días con buen nivel de comentarios), mientras que la página de empresa "Anate Yepes" quedó casi sin uso: apenas 3 seguidores y ninguna publicación propia.</p>
+        <p class="hint">Quien te busca ahí como negocio, y no como persona, se encuentra con una página vacía, justo lo contrario a la imagen activa que mostrás en el resto de tus redes.</p>
+      </div></li>
+      <li><span class="dot"></span><div class="li-body">
+        <p>Mirando el conjunto: tu comunidad se concentra fuerte en los formatos visuales y de video (Instagram, YouTube), mientras que tus espacios más "institucionales" (la página de empresa de LinkedIn, Facebook) son los más débiles.</p>
+        <p class="hint">Es un patrón común en negocios de coaching y bienestar, donde la conexión personal pesa más que la marca institucional, pero vale la pena decidir a propósito qué canales priorizar en vez de que quede así por inercia.</p>
+      </div></li>
     </ul>
   </div>
 </section>
@@ -204,10 +240,26 @@
     <h2>Consistencia de marca y mensaje</h2>
     <p class="point-intro">Tu marca tiene una identidad cálida y clara, pero no se ve igual en todos lados.</p>
     <ul>
-      <li><span class="dot"></span>El sitio carga en inglés por defecto, aunque las señales de tu propia marca (Zelle, WhatsApp de Venezuela y Argentina, nombres de tus coaches) hablan claramente a una audiencia latina.</li>
-      <li><span class="dot"></span>Hay textos resaltados en naranja y en verde neón que no forman parte de tu paleta en ningún otro lugar del sitio.</li>
-      <li><span class="dot"></span>Tu equipo público en la web muestra 2 coaches, pero el sistema de reservas ofrece 14, lo que genera dudas justo antes de pagar.</li>
-      <li><span class="dot"></span>El título de tu página repite "Anaté Yepes" dos veces, gastando espacio valioso en los resultados de Google.</li>
+      <li><span class="dot"></span><div class="li-body">
+        <p>El sitio carga en inglés por defecto, aunque las señales de tu propia marca (Zelle, WhatsApp de Venezuela y Argentina, nombres de tus coaches) hablan claramente a una audiencia latina.</p>
+        <p class="hint">La primera impresión que da tu sitio no coincide con quién sos realmente ni con quién te sigue.</p>
+      </div></li>
+      <li><span class="dot"></span><div class="li-body">
+        <p>Hay textos resaltados en naranja y en verde neón que no forman parte de tu paleta en ningún otro lugar del sitio.</p>
+        <p class="hint">Son detalles chicos, pero cada color que no pertenece a tu paleta de marca (los tonos que definen tu identidad visual, como el UI o diseño de interfaz de tu sitio) hace que tu marca se sienta un poco menos reconocible de un vistazo.</p>
+      </div></li>
+      <li><span class="dot"></span><div class="li-body">
+        <p>Tu equipo público en la web muestra 2 coaches, pero el sistema de reservas ofrece 14, lo que genera dudas justo antes de pagar.</p>
+        <p class="hint">Nadie quiere agendar y pagar con alguien que nunca vio ni conoce, aunque sea parte de tu equipo real.</p>
+      </div></li>
+      <li><span class="dot"></span><div class="li-body">
+        <p>El título de tu página repite "Anaté Yepes" dos veces, gastando espacio valioso en los resultados de Google.</p>
+        <p class="hint">Ese título (el que aparece en la pestaña del navegador y en los resultados de búsqueda) tiene un límite de caracteres, así que repetir tu nombre le quita lugar a información que sí ayuda a que te elijan a vos y no a otra persona.</p>
+      </div></li>
+      <li><span class="dot"></span><div class="li-body">
+        <p>Tu comunidad más grande y activa vive en Instagram y YouTube, pero eso no se refleja en tu sitio: los íconos que deberían llevar hasta ahí están rotos, y tu página de empresa en LinkedIn quedó casi abandonada.</p>
+        <p class="hint">Es la misma desconexión que se repite en varios lugares del sitio: la marca que mostrás en redes, donde ya tenés una comunidad fuerte, y la que se ve en anateyepes.com todavía no están del todo alineadas.</p>
+      </div></li>
     </ul>
   </div>
 </section>
@@ -219,10 +271,26 @@
     <h2>Oportunidades de mejora</h2>
     <p class="point-intro">Un pantallazo de por dónde arrancar, sin vueltas.</p>
     <ul>
-      <li><span class="dot"></span>Arreglar el link de WhatsApp roto y unificar todos los botones en un solo número oficial.</li>
-      <li><span class="dot"></span>Corregir la superposición del logo en la vista mobile.</li>
-      <li><span class="dot"></span>Sumar un formulario de contacto simple, sin necesidad de crear una cuenta para escribir.</li>
-      <li><span class="dot"></span>Completar las descripciones para Google en todas las páginas en inglés.</li>
+      <li><span class="dot"></span><div class="li-body">
+        <p>Arreglar el link de WhatsApp roto y unificar todos los botones en un solo número oficial.</p>
+        <p class="hint">Así evitás que un cliente le escriba a un chat que ya no existe, justo cuando está por decidirse.</p>
+      </div></li>
+      <li><span class="dot"></span><div class="li-body">
+        <p>Corregir la superposición del logo en la vista mobile (celular).</p>
+        <p class="hint">La mayoría de tus visitantes probablemente entra desde el teléfono, así que es lo primero que ven de vos.</p>
+      </div></li>
+      <li><span class="dot"></span><div class="li-body">
+        <p>Reparar los íconos de redes sociales del header y del footer.</p>
+        <p class="hint">Son el camino más corto entre tu sitio y la comunidad que ya construiste en Instagram y YouTube.</p>
+      </div></li>
+      <li><span class="dot"></span><div class="li-body">
+        <p>Sumar un formulario de contacto simple, sin necesidad de crear una cuenta para escribir.</p>
+        <p class="hint">Reduce la fricción, es decir, los pasos de más que hacen que alguien abandone antes de contactarte.</p>
+      </div></li>
+      <li><span class="dot"></span><div class="li-body">
+        <p>Completar las descripciones para Google (meta descriptions) en todas las páginas en inglés.</p>
+        <p class="hint">Es una mejora de SEO rápida de aplicar, que ayuda a que te encuentren mejor sin tener que tocar el diseño del sitio.</p>
+      </div></li>
     </ul>
     <p class="closing-note">Esto es solo el primer vistazo. Hay mucho más para mostrarte.</p>
   </div>
