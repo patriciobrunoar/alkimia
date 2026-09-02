@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Auditoría anateyepes.com</title>
+<style>
+  :root{
+    --navy:#4a3070;
+    --teal:#6b4fa1;
+    --pink:#e09b9c;
+    --alk-purple:#6b4fa1;
+    --alk-purple-deep:#5a4287;
+    --alk-purple-dark:#3a265c;
+    --bg:#f7f8fa;
+    --card:#ffffff;
+    --ink:#1c2733;
+    --muted:#5b6b7a;
+    --crit:#c0392b;
+    --crit-bg:#fdecea;
+    --high:#d4790a;
+    --high-bg:#fdf1e0;
+    --med:#c99a10;
+    --med-bg:#fbf5dc;
+    --low:#4a7c59;
+    --low-bg:#e9f4ec;
+    --border:#e3e7ec;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.55;
+  }
+  .wrap{max-width:900px;margin:0 auto;padding:40px 24px 100px;}
+  header.hero{
+    background:linear-gradient(135deg,var(--alk-purple-dark),var(--alk-purple));
+    color:#fff;
+    padding:40px 24px 48px;
+    border-radius:0 0 24px 24px;
+  }
+  header.hero .wrap{padding:0;max-width:900px;margin:0 auto;}
+  header.hero .brand-mark{display:flex;align-items:center;margin-bottom:22px;}
+  header.hero .brand-mark svg{width:68px;height:auto;fill:#fff;display:block;}
+  header.hero h1{font-size:28px;margin:0 0 8px;}
+  header.hero p{margin:4px 0;color:#e4dbf3;font-size:15px;}
+  .meta-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px;}
+  .pill{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);padding:6px 12px;border-radius:20px;font-size:13px;}
+  h2.section-title{
+    font-size:21px;
+    color:var(--navy);
+    margin:52px 0 6px;
+    padding-bottom:10px;
+    border-bottom:2px solid var(--border);
+  }
+  h2.section-title .num{color:var(--teal);margin-right:8px;}
+  h3{font-size:16px;color:var(--navy);margin:26px 0 8px;}
+  p{margin:10px 0;}
+  .lead{color:var(--muted);font-size:15px;}
+  .card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:18px 20px;
+    margin:14px 0;
+  }
+  .finding{
+    border-radius:10px;
+    padding:14px 16px;
+    margin:12px 0;
+    border-left:5px solid var(--border);
+  }
+  .finding.crit{background:var(--crit-bg);border-left-color:var(--crit);}
+  .finding.high{background:var(--high-bg);border-left-color:var(--high);}
+  .finding.med{background:var(--med-bg);border-left-color:var(--med);}
+  .finding.low{background:var(--low-bg);border-left-color:var(--low);}
+  .tag{
+    display:inline-block;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    padding:3px 9px;
+    border-radius:5px;
+    margin-bottom:8px;
+  }
+  .tag.crit{background:var(--crit);color:#fff;}
+  .tag.high{background:var(--high);color:#fff;}
+  .tag.med{background:var(--med);color:#2b2200;}
+  .tag.low{background:var(--low);color:#fff;}
+  .finding h4{margin:0 0 6px;font-size:15.5px;color:var(--ink);}
+  .finding .evidence{
+    font-size:13.5px;
+    color:var(--muted);
+    margin-top:8px;
+    background:rgba(0,0,0,.03);
+    border-radius:6px;
+    padding:8px 10px;
+  }
+  code, .code{
+    font-family:ui-monospace,SFMono-Regular,Consolas,monospace;
+    background:rgba(0,0,0,.06);
+    padding:1px 5px;
+    border-radius:4px;
+    font-size:13px;
+  }
+  table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14px;}
+  th,td{border:1px solid var(--border);padding:8px 10px;text-align:left;vertical-align:top;}
+  th{background:#eef1f5;color:var(--navy);}
+  .swatch-row{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin:14px 0;}
+  .swatch{
+    display:flex;align-items:center;justify-content:center;
+    border-radius:24px;
+    font-weight:600;
+    padding:10px 22px;
+    color:#fff;
+    background:rgb(224,155,156);
+    font-size:14px;
+  }
+  .ratio-badge{
+    font-weight:700;
+    color:var(--crit);
+    font-size:14px;
+  }
+  .shot{
+    display:block;
+    max-width:100%;
+    border:1px solid var(--border);
+    border-radius:10px;
+    margin:14px 0 4px;
+    box-shadow:0 1px 4px rgba(0,0,0,.08);
+  }
+  .shot-row{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start;margin:14px 0 4px;}
+  .shot-row .shot{margin:0;}
+  .shot-row figure{margin:0;flex:1 1 220px;}
+  .caption{
+    font-size:12.5px;
+    color:var(--muted);
+    margin:4px 0 10px;
+  }
+  .badge-count{
+    display:inline-block;
+    background:var(--navy);
+    color:#fff;
+    border-radius:6px;
+    padding:2px 8px;
+    font-size:12px;
+    margin-left:6px;
+  }
+  ul{padding-left:20px;}
+  li{margin:5px 0;}
+  .toc{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:16px 20px;
+    margin-top:18px;
+  }
+  .toc a{color:var(--navy);text-decoration:none;font-size:14px;}
+  .toc a:hover{text-decoration:underline;}
+  .toc ol{margin:6px 0;padding-left:20px;}
+  .summary-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+    margin:18px 0;
+  }
+  .summary-grid .box{
+    border-radius:10px;
+    padding:14px 10px;
+    text-align:center;
+  }
+  .summary-grid .box .n{font-size:26px;font-weight:800;display:block;}
+  .summary-grid .box.crit{background:var(--crit-bg);color:var(--crit);}
+  .summary-grid .box.high{background:var(--high-bg);color:var(--high);}
+  .summary-grid .box.med{background:var(--med-bg);color:#8a6a08;}
+  .summary-grid .box.low{background:var(--low-bg);color:var(--low);}
+  @media (max-width:600px){
+    .summary-grid{grid-template-columns:repeat(2,1fr);}
+  }
+  footer.end{
+    margin-top:60px;
+    padding-top:20px;
+    border-top:1px solid var(--border);
+    color:var(--muted);
+    font-size:13px;
+  }
+  .priority-list{list-style:none;padding:0;}
+  .priority-list li{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-left:5px solid var(--navy);
+    border-radius:8px;
+    padding:12px 16px;
+    margin:10px 0;
+  }
+  .priority-list .rank{
+    font-weight:800;
+    color:var(--teal);
+    margin-right:8px;
+  }
+  .to-toc{
+    display:inline-block;
+    font-size:12.5px;
+    font-weight:600;
+    color:var(--teal);
+    text-decoration:none;
+    margin:-2px 0 18px;
+  }
+  .to-toc:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="alkimiaLockup" viewBox="0 0 416.29 206.88">
+    <path d="M209.84,3.18c13.21,0,25.63,5.14,34.97,14.49,9.34,9.34,14.49,21.76,14.49,34.97s-5.14,25.63-14.49,34.97c-9.34,9.34-21.76,14.49-34.97,14.49s-25.63-5.14-34.97-14.49c-9.34-9.34-14.49-21.76-14.49-34.97s5.14-25.63,14.49-34.97c9.34-9.34,21.76-14.49,34.97-14.49M209.84,0c-29.07,0-52.64,23.57-52.64,52.64s23.57,52.64,52.64,52.64,52.64-23.57,52.64-52.64S238.92,0,209.84,0h0Z"/>
+    <path d="M209.89,9.06l38.76,67.13h-77.52L209.89,9.06M209.89,2.7l-44.27,76.68h88.54L209.89,2.7h0Z"/>
+    <path d="M227.26,41.65v34.57h-34.57v-34.57h34.57M230.44,38.47h-40.93v40.93h40.93v-40.93h0Z"/>
+    <path d="M209.84,46.2c7.12,0,12.92,5.8,12.92,12.92s-5.8,12.92-12.92,12.92-12.92-5.8-12.92-12.92,5.8-12.92,12.92-12.92M209.84,43.01c-8.89,0-16.1,7.21-16.1,16.1s7.21,16.1,16.1,16.1,16.1-7.21,16.1-16.1-7.21-16.1-16.1-16.1h0Z"/>
+    <path d="M84.84,136.01h10.12v62.06h38.37v8.81h-48.5v-70.87Z"/>
+    <path d="M166.8,175.4l-12.96,13.16v18.33h-10.12v-70.87h10.12v39.59l38.47-39.59h11.54l-30.27,31.89,32.2,38.98h-11.85l-27.13-31.49Z"/>
+    <path d="M215.87,136.01h10.12v70.87h-10.12v-70.87Z"/>
+    <path d="M301.61,206.88l-.1-57.94-25.61,15.9h-4.66l-25.61-15.59v57.64h-9.72v-70.87h8.3l29.56,18.26,29.16-18.26h8.3l.1,70.87h-9.72Z"/>
+    <path d="M321.23,136.01h10.12v70.87h-10.12v-70.87Z"/>
+    <polygon points="42.12 136.01 32.09 136.01 0 206.88 10.43 206.88 21.78 181.07 21.77 181.07 37.06 146.34 52.34 181.07 52.33 181.07 63.68 206.88 74.31 206.88 42.12 136.01"/>
+    <polygon points="384.1 136.01 374.07 136.01 341.98 206.88 352.41 206.88 363.76 181.07 363.75 181.07 379.03 146.34 394.32 181.07 394.31 181.07 405.66 206.88 416.29 206.88 384.1 136.01"/>
+  </symbol>
+</svg>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="brand-mark">
+      <svg viewBox="0 0 416.29 206.88"><use href="#alkimiaLockup"/></svg>
+    </div>
+    <h1>Auditoría integral — anateyepes.com</h1>
+    <p>Revisión de UI/UX, responsive, enlaces, formularios, funnel de conversión, WhatsApp, SEO, Open Graph, performance y errores técnicos.</p>
+    <div class="meta-row">
+      <span class="pill">Preparado por Patricio · myalkimia</span>
+      <span class="pill">2 de septiembre de 2026</span>
+      <span class="pill">Sitio en WordPress + WooCommerce + Yoast SEO + Acuity Scheduling</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <h2 class="section-title">Resumen ejecutivo</h2>
+  <p class="lead">Se revisó el sitio completo (home en inglés y español, Servicios, Sobre mí, Corporate, FAQ, Team, Scheduling, Terms, Privacy) en desktop, tablet y mobile, incluyendo el código fuente, la consola de JavaScript, las peticiones de red, el sitemap, los metadatos y cada enlace de contacto/WhatsApp. El sitio tiene una base de contenido y diseño sólida — buena narrativa de marca, fotografía cálida, paleta de color coherente — pero arrastra varios problemas técnicos que sí están afectando la conversión hoy mismo, no son cosméticos.</p>
+
+  <div class="summary-grid">
+    <div class="box crit"><span class="n">5</span>Críticos</div>
+    <div class="box high"><span class="n">6</span>Altos</div>
+    <div class="box med"><span class="n">6</span>Medios</div>
+    <div class="box low"><span class="n">4</span>Bajos</div>
+  </div>
+
+  <div class="toc" id="contenido">
+    <strong>Contenido</strong>
+    <ol>
+      <li><a href="#whatsapp">WhatsApp y canales de contacto</a></li>
+      <li><a href="#formularios">Formularios</a></li>
+      <li><a href="#funnel">Funnel de conversión</a></li>
+      <li><a href="#uiux">UI / UX</a></li>
+      <li><a href="#responsive">Responsive</a></li>
+      <li><a href="#links">Enlaces</a></li>
+      <li><a href="#contraste">Contraste</a></li>
+      <li><a href="#imagenes">Imágenes</a></li>
+      <li><a href="#textos">Textos y copywriting</a></li>
+      <li><a href="#seo">SEO</a></li>
+      <li><a href="#og">Open Graph / redes sociales</a></li>
+      <li><a href="#tecnico">Errores JS, red y programación</a></li>
+      <li><a href="#velocidad">Velocidad de carga</a></li>
+      <li><a href="#prioridades">Plan de acción priorizado</a></li>
+    </ol>
+  </div>
+
+  <!-- WHATSAPP -->
+  <h2 class="section-title" id="whatsapp"><span class="num">1.</span>WhatsApp y canales de contacto</h2>
+  <a class="to-toc" href="#contenido">↑ Volver a Contenido</a>
+  <p>Este es, con diferencia, el hallazgo más importante del informe porque afecta directamente el momento de mayor intención de compra. Rastreamos <strong>cada botón/ícono de WhatsApp del sitio</strong> hasta su destino real (sin enviar ningún mensaje) y encontramos <strong>cuatro rutas distintas</strong>, con <strong>tres números de teléfono diferentes</strong> y <strong>un enlace roto</strong>:</p>
+
+  <table>
+    <tr><th>Ubicación</th><th>Enlace</th><th>Destino real</th><th>Estado</th></tr>
+    <tr>
+      <td>Ícono WhatsApp en la barra superior (header) y en los íconos sociales del footer</td>
+      <td><code>wa.link/6jpjau</code></td>
+      <td>+58 412-8016868 (Venezuela)</td>
+      <td>✅ Abre chat, sin mensaje precargado</td>
+    </tr>
+    <tr>
+      <td>Teléfono escrito en el footer: "+1 (954) 901 6508"</td>
+      <td><code>wa.link/uvcsuw</code></td>
+      <td>+1 954 901 6508 (EE. UU.)</td>
+      <td>✅ Coincide con el número mostrado</td>
+    </tr>
+    <tr>
+      <td>Botón grande "Contact me!" en la sección "If you encountered any difficulty scheduling…" (home)</td>
+      <td><code>wa.me/5491124094771</code></td>
+      <td>+54 9 11 2409-4771 (Argentina)</td>
+      <td>✅ Abre chat</td>
+    </tr>
+    <tr>
+      <td>Enlace de texto "whatsapp" en la página <em>Book your appointment</em> (/scheduling/) <strong>y</strong> en la página <em>FAQ</em> (aparece 2 veces más: "WhatsApp Customer Service" y "here")</td>
+      <td><code>wa.me/message/GB7WNKYFRPDYM1</code></td>
+      <td>—</td>
+      <td>❌ <strong>"Link no longer valid."</strong> (roto)</td>
+    </tr>
+  </table>
+
+  <div class="finding crit">
+    <span class="tag crit">Crítico</span>
+    <h4>El enlace de WhatsApp roto aparece justo en el momento de reservar</h4>
+    <p>El link roto (<code>wa.me/message/GB7WNKYFRPDYM1</code>) no es un caso aislado: es el mismo código muerto que se usa en <strong>tres ubicaciones</strong> — la página de agendamiento, y dos veces en la FAQ ("WhatsApp Customer Service" y "download the attached PDF here… contact us"). Un visitante con dudas justo antes de pagar, que hace clic para preguntar algo, cae en una página de error de WhatsApp. Es probable que este código haya pertenecido a una cuenta de WhatsApp Business que fue eliminada o migrada.</p>
+    <div class="evidence">Verificado navegando directamente a <code>https://wa.me/message/GB7WNKYFRPDYM1</code>: WhatsApp responde "Link no longer valid."</div>
+    <img class="shot" src="img/whatsapp-link-invalid.png" alt="Página de WhatsApp mostrando 'Link no longer valid'">
+    <p class="caption">Captura real del enlace roto <code>wa.me/message/GB7WNKYFRPDYM1</code>.</p>
+  </div>
+
+  <div class="finding high">
+    <span class="tag high">Alto</span>
+    <h4>Tres números de WhatsApp distintos sin explicación de cuál usar</h4>
+    <p>Un usuario que visite el home y luego la sección de ayuda para agendar puede terminar escribiéndole a un número en Venezuela, otro en Argentina o uno en EE. UU., dependiendo de qué botón tocó — sin ningún texto que aclare "este es el WhatsApp oficial" o que distinga, por ejemplo, atención en Venezuela vs. Argentina vs. EE. UU. Esto genera desconfianza (parece poco profesional) y probablemente fragmenta la atención al cliente entre personas o dispositivos distintos.</p>
+  </div>
+
+  <div class="finding med">
+    <span class="tag med">Medio</span>
+    <h4>Ningún botón de WhatsApp trae un mensaje precargado</h4>
+    <p>Ninguno de los enlaces usa el parámetro <code>text=</code> de la API de WhatsApp. Agregar algo como <em>"Hola, quiero agendar una sesión de Integración Consciente"</em> reduce fricción y mejora la tasa de respuesta, porque el visitante no tiene que redactar desde cero.</p>
+  </div>
+
+  <!-- FORMULARIOS -->
+  <h2 class="section-title" id="formularios"><span class="num">2.</span>Formularios</h2>
+  <a class="to-toc" href="#contenido">↑ Volver a Contenido</a>
+  <p><strong>El sitio no tiene ningún formulario de contacto tradicional</strong> (nombre + email + mensaje) en ninguna página pública.</p>
+
+  <div class="finding high">
+    <span class="tag high">Alto</span>
+    <h4>No existe un formulario de contacto en todo el sitio</h4>
+    <p>Revisamos el DOM de la home, Servicios, Sobre mí, Corporate, FAQ, Team y Scheduling. El único elemento <code>&lt;form&gt;</code> presente en toda la home es el buscador nativo de WordPress (oculto, con un solo campo de texto llamado <code>s</code>). No hay Contact Form 7, WPForms, Gravity Forms ni ningún formulario de leads visible.</p>
+    <div class="evidence">Todo el "contacto" del sitio se resuelve por tres vías: (1) WhatsApp — con las inconsistencias del punto 1; (2) <code>mailto:info@anateyepes.com</code>, disponible solo como un ícono de sobre pequeño en la barra superior y en el footer; (3) el sistema de reservas (Acuity Scheduling), que exige crear una cuenta ("Sign Up") antes de ver siquiera los horarios disponibles.</div>
+  </div>
+
+  <div class="finding med">
+    <span class="tag med">Medio</span>
+    <h4>Los "lead magnets" no capturan email</h4>
+    <p>Los botones "Download more info" de <em>Coaching Alchemy</em> y <em>Balance in Action</em> abren directamente un archivo de Google Drive en una pestaña nueva, sin pedir nombre ni email antes de la descarga. Es una oportunidad de conversión perdida: cualquiera puede bajar el material sin dejar ningún dato de contacto, y el archivo se llama literalmente <code>Brochure Alquimia Coaches (1).pdf</code> — un nombre de archivo de trabajo, no un asset terminado.</p>
+  </div>
+
+  <p><strong>Recomendación concreta:</strong> lo más cercano a un "formulario" que existe en todo el sitio es el registro del sistema de reservas (Acuity) en <code>/scheduling/</code>, que crea una cuenta de cliente real en el sistema de Anaté antes de poder escribir ningún mensaje. No completamos ese registro porque implicaría crear una cuenta de cliente permanente a nombre de Patricio en la base de datos del negocio, algo que excede el alcance de "probar el formulario". Quedamos a disposición para completarlo si se autoriza explícitamente.</p>
+
+  <!-- FUNNEL -->
+  <h2 class="section-title" id="funnel"><span class="num">3.</span>Funnel de conversión</h2>
+  <a class="to-toc" href="#contenido">↑ Volver a Contenido</a>
+  <p>Así se ve el recorrido real de un visitante, de punta a punta:</p>
+  <div class="card">
+    <p><strong>1. Aterriza en <code>anateyepes.com</code></strong> → el sitio carga en inglés por defecto, aunque las señales de marca (nombres de las coaches, método de pago Zelle, números de WhatsApp en Venezuela/Argentina) apuntan a una audiencia mayormente hispanohablante/latina. Esto es una fricción sutil pero real para el público objetivo.</p>
+    <p><strong>2. Ve el CTA principal</strong> → hay dos: el botón "CONTACT ME" del menú y el botón flotante rosa "Schedule an appointment" que sigue al usuario en todo el scroll. Ambos, al hacer clic, <strong>no llevan a un formulario ni a la agenda</strong>, sino a una sección de la misma home que dice "si tuviste problemas para agendar, escribinos por WhatsApp" (el número de Argentina).</p>
+    <p><strong>3. Si en cambio busca agendar directamente</strong> → tiene que ir a <code>/scheduling/</code>, donde antes de ver un horario o un precio debe "Sign Up" (crear cuenta) o "Login". No hay reserva como invitado.</p>
+    <p><strong>4. Al elegir con quién agendar</strong> → la lista de categorías incluye 14 nombres, de los cuales solo 2 (Berenice y Gustavo) están presentados públicamente en la página "Team". El resto (Nelyest, Sharon, Yubi, Margla, Anabel, Belines, Carolina, Julio, Maria Celsa, Anastasia…) aparecen sin biografía, sin foto en el sitio y sin ninguna mención previa — genera dudas sobre quién es esa persona antes de pagar.</p>
+    <p><strong>5. Si tiene dudas y busca ayuda</strong> → el enlace de soporte de esa misma pantalla de reserva es el WhatsApp roto (punto 1).</p>
+    <p><strong>6. El pago</strong> se resuelve con Zelle, tarjeta o PayPal al momento de reservar; para Zelle además hay que volver a escribir por WhatsApp para coordinar el descuento.</p>
+  </div>
+  <div class="finding high">
+    <span class="tag high">Alto</span>
+    <h4>El funnel tiene más pasos y más fricción de la necesaria</h4>
+    <p>Entre el registro obligatorio, la falta de un formulario simple, los números de WhatsApp inconsistentes y el enlace de soporte roto, un visitante indeciso tiene demasiadas oportunidades de abandonar antes de completar una reserva. Cada fricción es pequeña por separado, pero se acumulan en la ruta crítica de conversión.</p>
+  </div>
+
+  <!-- UI/UX -->
+  <h2 class="section-title" id="uiux"><span class="num">4.</span>UI / UX</h2>
+  <a class="to-toc" href="#contenido">↑ Volver a Contenido</a>
+  <div class="finding low">
+    <span class="tag low">Positivo</span>
+    <h4>Base visual sólida</h4>
+    <p>Paleta de color coherente (verde salvia, azul petróleo, rosa palo), buena fotografía de la propia Anaté, estructura de secciones clara (dolor → método → equipo → programas → academia → comunidad → contacto) y microcopys cálidos y humanos.</p>
+  </div>
+  <div class="finding med">
+    <span class="tag med">Medio</span>
+    <h4>Resaltados de texto que rompen la paleta de marca</h4>
+    <p>En la página de reservas, la frase "The maximum time to cancel the session is 24 hours before the session" está en <strong>naranja</strong>, y la palabra "whatsapp" tiene un <strong>resaltador verde neón</strong> (estilo marcador fluorescente) que no aparece en ningún otro lugar del sitio. Da la sensación de texto pegado desde un editor sin revisar el estilo final.</p>
+    <img class="shot" src="img/scheduling-highlighted-text.png" alt="Texto de política de cancelación en naranja y la palabra 'whatsapp' con resaltador verde neón en /scheduling/">
+    <p class="caption">Bloque "General Information" en /scheduling/.</p>
+  </div>
+  <div class="finding med">
+    <span class="tag med">Medio</span>
+    <h4>El menú móvil no oscurece el contenido de fondo</h4>
+    <p>El menú hamburguesa se abre como un panel lateral que cubre solo una parte del ancho de pantalla, dejando el contenido de la página totalmente visible y legible detrás, sin ningún overlay oscuro. No es un error técnico, pero visualmente es confuso: se leen dos capas de texto superpuestas al mismo tiempo.</p>
+    <img class="shot" src="img/mobile-menu-overlay.png" alt="Menú móvil abierto en 375px, con el contenido de la página aún visible y legible detrás del panel">
+    <p class="caption">Menú abierto a 375px: el contenido de fondo sigue legible.</p>
+  </div>
+  <div class="finding low">
+    <span class="tag low">Bajo</span>
+    <h4>Registro obligatorio para reservar</h4>
+    <p>Pedir "Sign Up" antes de mostrar disponibilidad es una barrera de UX habitual en sistemas de agenda tipo Acuity, pero vale la pena evaluar si se puede mostrar al menos el calendario de disponibilidad y el precio antes de pedir el registro, para no perder gente en esa pantalla.</p>
+  </div>
+
+  <!-- RESPONSIVE -->
+  <h2 class="section-title" id="responsive"><span class="num">5.</span>Compatibilidad responsive</h2>
+  <a class="to-toc" href="#contenido">↑ Volver a Contenido</a>
+  <p>Probamos el sitio en tres anchos de pantalla: mobile (~375–472px), un ancho intermedio tipo tablet/notebook chico (~972px) y desktop (~1288px).</p>
+
+  <div class="finding crit">
+    <span class="tag crit">Crítico</span>
+    <h4>El logo se superpone con el título principal en mobile</h4>
+    <p>En todos los anchos de mobile probados (375px y 472px), la firma "Anaté Yepes" (el logo en cursiva) queda montada literalmente encima del texto "Find your Balance" del hero, y lo mismo vuelve a pasar más abajo, donde el título "Coaches" se cruza con la firma decorativa "Anaté Yepes" que aparece de fondo. Es lo primero que ve cualquier visitante que entra desde el celular.</p>
+    <div class="shot-row">
+      <figure>
+        <img class="shot" src="img/mobile-hero-overlap.png" alt="Logo 'Anaté Yepes' superpuesto sobre 'Find your Balance' en el hero mobile">
+        <p class="caption">Hero, 375px de ancho.</p>
+      </figure>
+      <figure>
+        <img class="shot" src="img/mobile-coaches-overlap.png" alt="Logo 'Anaté Yepes' superpuesto sobre el título 'Coaches' en mobile">
+        <p class="caption">Sección "Coaches", mismo ancho.</p>
+      </figure>
+    </div>
+    <div class="evidence">Confirmado con capturas de pantalla en 375×812 sobre Chrome. El problema desaparece a partir de ~972px de ancho, donde el header cambia a versión "menú hamburguesa" con el logo reposicionado correctamente arriba del título.</div>
+  </div>
+
+  <div class="finding med">
+    <span class="tag med">Medio</span>
+    <h4>El selector de idioma desaparece en anchos intermedios (~972px, típico de tablets/notebooks chicas)</h4>
+    <p>En ese rango de ancho, la barra superior pasa a mostrar solo el ícono de sobre (mail) y el resto de los íconos de idioma (banderas ES/EN) desaparecen de la vista y tampoco están dentro del menú hamburguesa. Un usuario de tablet no tiene forma de cambiar de idioma en ese breakpoint.</p>
+    <img class="shot" src="img/tablet-language-selector.png" alt="Header en ~972px mostrando solo el ícono de mail, sin banderas de idioma">
+    <p class="caption">Header a 972px de ancho: solo queda el ícono de mail.</p>
+  </div>
+
+  <div class="finding low">
+    <span class="tag low">Bajo</span>
+    <h4><code>user-scalable=0</code> en el viewport</h4>
+    <p>El <code>&lt;meta name="viewport"&gt;</code> incluye <code>maximum-scale=1, user-scalable=0</code>, lo que impide hacer zoom con los dedos en mobile. Es una práctica desaconsejada por criterios de accesibilidad (WCAG 1.4.4), sobre todo pensando en usuarios con baja visión que buscan contenido de bienestar/salud emocional.</p>
+  </div>
+
+  <!-- LINKS -->
+  <h2 class="section-title" id="links"><span class="num">6.</span>Enlaces</h2>
+  <a class="to-toc" href="#contenido">↑ Volver a Contenido</a>
+  <p>Verificamos el código de respuesta HTTP de las 16 URLs listadas en el sitemap de Yoast más los enlaces de navegación, WhatsApp, PDFs y el subdominio de la academia.</p>
+  <table>
+    <tr><th>Resultado</th><th>Detalle</th></tr>
+    <tr><td>✅ Todas las páginas del sitemap responden 200</td><td>Home, Servicios, Sobre mí, Team, FAQ, Scheduling, Terms, Privacy, Tienda, Carrito, Mi cuenta, versiones /es/, etc.</td></tr>
+    <tr><td>✅ PDF de Balance in Action</td><td><code>/wp-content/uploads/2023/11/Workshop-Equilibrio-en-accion-Anate-Yepes.pdf</code> — 200 OK</td></tr>
+    <tr><td>❌ <code>academy.anateyepes.com</code></td><td>El subdominio mencionado en la FAQ ("Visit academy.anateyepes.com…") no resuelve: <code>DNS_PROBE_FINISHED_NXDOMAIN</code>. No existe.</td></tr>
+    <tr><td>❌ <code>wa.me/message/GB7WNKYFRPDYM1</code></td><td>"Link no longer valid" (ver sección WhatsApp)</td></tr>
+    <tr><td>⚠️ La tienda de WooCommerce existe pero no se promociona</td><td><code>/tienda/</code>, <code>/carrito/</code>, <code>/finalizar-compra/</code>, <code>/mi-cuenta/</code> devuelven 200 pero no hay ningún enlace visible hacia ellas desde la navegación principal — son páginas "fantasma" que igual cargan CSS/JS de WooCommerce en todo el sitio (ver sección de velocidad).</td></tr>
+  </table>
+
+  <div class="finding crit">
+    <span class="tag crit">Crítico</span>
+    <h4>El subdominio de la Academy está caído</h4>
+    <p>La FAQ explica que para comprar un workshop online hay que "Visit academy.anateyepes.com, subscribe for free, choose your preferred workshop…". Ese subdominio no existe (no resuelve DNS), por lo que <strong>toda la ruta de venta de workshops online descrita en la FAQ está rota</strong> para cualquiera que la siga al pie de la letra.</p>
+    <img class="shot" src="img/academy-dns-error.png" alt="Error DNS_PROBE_FINISHED_NXDOMAIN al navegar a academy.anateyepes.com">
+    <p class="caption">academy.anateyepes.com no resuelve.</p>
+  </div>
+
+  <!-- CONTRASTE -->
+  <h2 class="section-title" id="contraste"><span class="num">7.</span>Contraste</h2>
+  <a class="to-toc" href="#contenido">↑ Volver a Contenido</a>
+  <p>Medimos el contraste real (fórmula WCAG 2.1) de los dos botones de llamada a la acción más importantes del sitio: el botón flotante "Schedule an appointment" (visible en todas las páginas, todo el scroll) y el botón "Pay via Zelle and schedule an appointment" del home.</p>
+  <div class="swatch-row">
+    <div class="swatch">Schedule an appointment</div>
+    <div>
+      <div>Texto <code>rgb(255,255,255)</code> sobre fondo <code>rgb(224,155,156)</code></div>
+      <div class="ratio-badge">Contraste real: 2.25:1</div>
+    </div>
+  </div>
+  <div class="shot-row">
+    <figure>
+      <img class="shot" src="img/contrast-schedule-button.png" alt="Botón flotante 'Schedule an appointment' en rosa con texto blanco de bajo contraste">
+      <p class="caption">Botón flotante, presente en todo el sitio.</p>
+    </figure>
+    <figure>
+      <img class="shot" src="img/contrast-zelle-button.png" alt="Botón 'Pay via Zelle and schedule an appointment' en rosa con texto blanco de bajo contraste">
+      <p class="caption">Botón "Pay via Zelle…" del home.</p>
+    </figure>
+  </div>
+  <div class="finding crit">
+    <span class="tag crit">Crítico</span>
+    <h4>Los dos CTA principales no cumplen el mínimo de accesibilidad</h4>
+    <p>Un contraste de <strong>2.25:1</strong> está muy por debajo de los mínimos WCAG AA: 4.5:1 para texto normal y 3:1 para texto grande/negrita. En la práctica, el texto blanco sobre ese rosa se ve tenue y cuesta leerlo, especialmente en pantallas con brillo bajo o luz solar directa — justo en los dos botones que existen para que la gente agende y pague.</p>
+    <p><strong>Sugerencia rápida:</strong> oscurecer el fondo del botón (por ejemplo a un tono más saturado de ese mismo rosa, tipo <code>#c9636a</code>) o usar texto en el azul marino de la marca (<code>#1f3a5f</code>) en vez de blanco — cualquiera de las dos opciones ya alcanza un contraste por encima de 4.5:1 sin cambiar la identidad visual.</p>
+  </div>
+
+  <!-- IMAGENES -->
+  <h2 class="section-title" id="imagenes"><span class="num">8.</span>Imágenes</h2>
+  <a class="to-toc" href="#contenido">↑ Volver a Contenido</a>
+  <div class="finding high">
+    <span class="tag high">Alto</span>
+    <h4>21 de 36 imágenes del home no tienen texto alternativo <span class="badge-count">58%</span></h4>
+    <p>Son imágenes sin atributo <code>alt</code> o con <code>alt=""</code>: afecta tanto a accesibilidad (lectores de pantalla) como al posicionamiento de esas imágenes en Google Imágenes. Las pocas que sí tienen alt (el logo, las banderas de idioma) están bien resueltas — falta extenderlo al resto: fotos de Anaté, de los coaches, de los "Allies", e íconos de las secciones de Coaching Alchemy / Balance in Action / Academy.</p>
+  </div>
+  <div class="finding low">
+    <span class="tag low">Bajo</span>
+    <h4>Imagen de Open Graph (362 KB)</h4>
+    <p>La foto usada para compartir el link en redes (<code>DSC_8526-Edit-Edit-scaled.jpg</code>) pesa 362 KB. No es grave, pero se puede bajar a menos de 150–200 KB en JPG/WebP sin pérdida visible, ya que solo se usa como miniatura de vista previa.</p>
+  </div>
+  <div class="finding low">
+    <span class="tag low">Bajo</span>
+    <h4>Estilo fotográfico mixto</h4>
+    <p>Conviven fotos profesionales muy cuidadas (Anaté en el hero) con capturas más informales tipo snapshot (foto de grupo en una cocina, testimonios). No es un error, pero homogeneizar el tratamiento (color, recorte) sumaría a la percepción de marca premium que transmite el resto del sitio.</p>
+  </div>
+
+  <!-- TEXTOS -->
+  <h2 class="section-title" id="textos"><span class="num">9.</span>Textos y copywriting</h2>
+  <a class="to-toc" href="#contenido">↑ Volver a Contenido</a>
+  <div class="finding low">
+    <span class="tag low">Positivo</span>
+    <h4>Tono de marca consistente</h4>
+    <p>El copy en inglés es cálido, en primera persona, con buen uso de negritas para las palabras clave ("emotional imprints", "conscious integration"). Los títulos de sección son claros y siguen una narrativa lógica.</p>
+  </div>
+  <div class="finding high">
+    <span class="tag high">Alto</span>
+    <h4>El idioma por defecto del dominio raíz no coincide con la audiencia real</h4>
+    <p>El dominio principal (<code>anateyepes.com</code>) carga en inglés, pero múltiples señales del propio sitio apuntan a una audiencia mayoritariamente latina/hispanohablante: pago por Zelle con "descuento especial" (mecanismo muy usado por la diáspora venezolana), números de WhatsApp de Venezuela y Argentina, nombres de las coaches, y el hecho de que la versión en español tenga mejor SEO (meta description propia) que la versión en inglés. Vale la pena revisar si el español debería ser el idioma por defecto, o al menos ofrecer una detección/sugerencia de idioma más visible.</p>
+  </div>
+  <div class="finding med">
+    <span class="tag med">Medio</span>
+    <h4>Mezcla de idiomas en materiales descargables</h4>
+    <p>El PDF del workshop corporativo enlazado desde la FAQ en inglés se llama <code>Workshop-Equilibrio-en-accion-Anate-Yepes.pdf</code> y su contenido está en español, sin aviso previo al usuario que lee la página en inglés.</p>
+  </div>
+
+  <!-- SEO -->
+  <h2 class="section-title" id="seo"><span class="num">10.</span>SEO</h2>
+  <a class="to-toc" href="#contenido">↑ Volver a Contenido</a>
+  <table>
+    <tr><th>Página</th><th>Meta description</th><th>Cantidad de &lt;h1&gt;</th></tr>
+    <tr><td>Home (EN) — anateyepes.com/</td><td>❌ Ausente</td><td>0</td></tr>
+    <tr><td>Home (ES) — /es/inicio/</td><td>✅ Presente ("Soy Anaté Yepes, especialista en Integración Consciente…")</td><td>—</td></tr>
+    <tr><td>FAQ (EN)</td><td>❌ Ausente</td><td>1 ✅</td></tr>
+    <tr><td>Team (EN)</td><td>❌ Ausente</td><td>0</td></tr>
+    <tr><td>Scheduling (EN)</td><td>❌ Ausente</td><td>0</td></tr>
+  </table>
+  <div class="finding crit">
+    <span class="tag crit">Crítico</span>
+    <h4>Casi ninguna página en inglés tiene meta description, y casi ninguna tiene H1</h4>
+    <p>El sitio tiene Yoast SEO instalado y configurado (se ve en el sitemap y en que la home en español sí tiene su descripción cargada), pero eso no se replicó en las páginas en inglés que revisamos. Sin meta description, Google genera un fragmento automático (a veces poco atractivo) en los resultados de búsqueda. Y sin H1, se pierde la señal más fuerte de "de qué trata esta página" para los buscadores — hoy el título más grande de la home es visualmente un <code>&lt;h2&gt;</code> o menor, no un <code>&lt;h1&gt;</code>.</p>
+  </div>
+  <div class="finding low">
+    <span class="tag low">Positivo</span>
+    <h4>Fundamentos técnicos correctos</h4>
+    <p><code>robots.txt</code> permite el rastreo completo (<code>Disallow:</code> vacío), el sitemap XML de Yoast está bien formado y accesible en <code>/sitemap.xml</code>, hay URL canónica declarada, y las etiquetas <code>hreflang</code>/og:locale (en_US / es_ES) están presentes.</p>
+  </div>
+  <div class="finding low">
+    <span class="tag low">Bajo</span>
+    <h4>El robots.txt no declara el sitemap</h4>
+    <p>Sería una buena práctica agregar la línea <code>Sitemap: https://anateyepes.com/sitemap_index.xml</code> al final del robots.txt.</p>
+  </div>
+  <div class="finding low">
+    <span class="tag low">Bajo</span>
+    <h4>El &lt;title&gt; repite la marca dos veces</h4>
+    <p><code>Anaté Yepes | Wellness Ecosystem - Anaté Yepes</code>: el nombre aparece al principio y al final, gastando caracteres útiles del snippet de búsqueda sin aportar información nueva.</p>
+  </div>
+
+  <!-- OG -->
+  <h2 class="section-title" id="og"><span class="num">11.</span>Open Graph / vista previa en redes sociales</h2>
+  <a class="to-toc" href="#contenido">↑ Volver a Contenido</a>
+  <table>
+    <tr><th>Etiqueta</th><th>Estado</th></tr>
+    <tr><td><code>og:title</code></td><td>✅ Presente</td></tr>
+    <tr><td><code>og:image</code></td><td>✅ Presente</td></tr>
+    <tr><td><code>og:url</code> / <code>og:type</code></td><td>✅ Presentes</td></tr>
+    <tr><td><code>og:description</code></td><td>❌ Ausente</td></tr>
+    <tr><td><code>twitter:title</code>, <code>twitter:description</code>, <code>twitter:image</code></td><td>❌ Ausentes (solo está <code>twitter:card</code>)</td></tr>
+  </table>
+  <div class="finding high">
+    <span class="tag high">Alto</span>
+    <h4>Al compartir el link no se controla el mensaje que ve la otra persona</h4>
+    <p>Sin <code>og:description</code>, cuando alguien comparte <code>anateyepes.com</code> en WhatsApp, Facebook o LinkedIn, la vista previa puede mostrar texto aleatorio tomado del cuerpo de la página en lugar de un mensaje pensado para generar clic. Es una pieza de "marketing gratis" que hoy se está desaprovechando en cada share.</p>
+  </div>
+
+  <!-- TECNICO -->
+  <h2 class="section-title" id="tecnico"><span class="num">12.</span>Errores de JavaScript, red y programación</h2>
+  <a class="to-toc" href="#contenido">↑ Volver a Contenido</a>
+  <div class="finding high">
+    <span class="tag high">Alto</span>
+    <h4>Bug de numeración en el listado de categorías de reserva</h4>
+    <p>En <code>/scheduling/</code> (y en el dominio nativo de Acuity, <code>anateservices.as.me</code>), la lista "Select Appointment Category" se ordena como texto en vez de como número: aparece <code>1, 10, 11, 12, 13, 14, 2, 3, 4, 5…</code> en vez de <code>1, 2, 3, 4…</code>. Da la impresión de un sistema mal configurado justo en la pantalla donde el usuario tiene que elegir con quién trabajar.</p>
+    <img class="shot" src="img/acuity-category-order.png" alt="Lista 'Select Appointment Category' ordenada como texto: 1, 10, 11, 12, 13, 14, 2, 3…">
+    <p class="caption">Orden real de la lista en anateservices.as.me.</p>
+  </div>
+  <div class="finding med">
+    <span class="tag med">Medio</span>
+    <h4>Dos servicios de terceros devuelven error 503 en cada carga de página</h4>
+    <p><code>https://geoip.maxmind.com/geoip/v2.1/country/me</code> y dos llamadas a <code>https://csp.secureserver.net/eventbus/web</code> (telemetría del hosting/GoDaddy) devuelven <strong>503 Service Unavailable</strong> en todas las cargas probadas. No rompen la página visualmente, pero son peticiones fallidas que consumen tiempo de carga y quedan registradas como errores en la consola de red.</p>
+  </div>
+  <div class="finding low">
+    <span class="tag low">Bajo</span>
+    <h4>Sin errores de JavaScript propios del sitio</h4>
+    <p>No se detectaron excepciones de JS lanzadas por el código del propio sitio durante la navegación por las distintas páginas. El único mensaje de error en consola provino de una extensión del navegador ajena al sitio (no aplica).</p>
+  </div>
+
+  <!-- VELOCIDAD -->
+  <h2 class="section-title" id="velocidad"><span class="num">13.</span>Velocidad de carga y peso del sitio</h2>
+  <a class="to-toc" href="#contenido">↑ Volver a Contenido</a>
+  <div class="finding high">
+    <span class="tag high">Alto</span>
+    <h4>La home dispara ~103 peticiones de red, incluyendo plugins que no se usan</h4>
+    <p>Al cargar la home contamos <strong>103 peticiones</strong>: 42 scripts y cerca de 40 hojas de estilo. Entre esas hojas de estilo se cargan <code>stripe-settings.css</code>, <code>wc-blocks.css</code> y <code>woocommerce-layout.css</code> — es decir, todo el peso de WooCommerce y Stripe se descarga en la home aunque no hay tienda visible ni carrito promocionado en ningún menú. A esto se suman <code>intlTelInput</code>, <code>countrySelect</code> y los formularios de MailerLite, también cargados de forma global.</p>
+    <div class="evidence">Tiempos medidos en esta sesión (con caché tibia): DOMContentLoaded ≈ 284 ms, load ≈ 680 ms, TTFB ≈ 19 ms — buenos en caliente, pero la cantidad de requests sugiere una carga en frío notablemente más lenta, especialmente en conexiones móviles.</div>
+  </div>
+  <p><strong>Recomendación:</strong> Si WooCommerce/Stripe no se están usando activamente (no hay tienda enlazada en ningún menú), desactivar esos plugins —o al menos su carga de assets en páginas que no son de tienda— aliviaría de forma inmediata una porción importante de las 103 peticiones.</p>
+
+  <!-- PRIORIDADES -->
+  <h2 class="section-title" id="prioridades"><span class="num">14.</span>Plan de acción priorizado</h2>
+  <a class="to-toc" href="#contenido">↑ Volver a Contenido</a>
+  <ol class="priority-list">
+    <li><span class="rank">1.</span><strong>Arreglar el enlace de WhatsApp roto</strong> (<code>wa.me/message/GB7WNKYFRPDYM1</code>) en Scheduling y FAQ — aparece en el momento de mayor intención de compra.</li>
+    <li><span class="rank">2.</span><strong>Unificar en un solo número de WhatsApp "oficial"</strong> todos los botones del sitio, o explicar claramente por qué hay más de uno.</li>
+    <li><span class="rank">3.</span><strong>Corregir la superposición del logo con el título</strong> en la vista mobile del hero y de la sección "Coaches".</li>
+    <li><span class="rank">4.</span><strong>Arreglar o quitar la referencia a <code>academy.anateyepes.com</code></strong> en la FAQ (el subdominio no existe).</li>
+    <li><span class="rank">5.</span><strong>Subir el contraste</strong> de los botones "Schedule an appointment" y "Pay via Zelle" a un mínimo de 4.5:1.</li>
+    <li><span class="rank">6.</span><strong>Agregar meta description a todas las páginas en inglés</strong> (Yoast ya está instalado, solo falta cargar el campo).</li>
+    <li><span class="rank">7.</span><strong>Sumar un H1 real</strong> en cada página, empezando por Home, Team y Scheduling.</li>
+    <li><span class="rank">8.</span><strong>Agregar <code>og:description</code></strong> y las etiquetas <code>twitter:*</code> faltantes.</li>
+    <li><span class="rank">9.</span><strong>Sumar texto alternativo</strong> a las 21 imágenes que no lo tienen.</li>
+    <li><span class="rank">10.</span><strong>Revisar el listado de coaches</strong>: alinear la página "Team" con las categorías reales del sistema de reservas, o reducir las categorías de reserva a las personas que sí están presentadas públicamente.</li>
+    <li><span class="rank">11.</span><strong>Evaluar apagar los assets de WooCommerce/Stripe</strong> si no hay tienda activa, para aligerar la carga en todas las páginas.</li>
+  </ol>
+
+  <footer class="end">
+    Auditoría realizada de forma manual sobre <strong>anateyepes.com</strong> el 2 de septiembre de 2026, navegando el sitio en vivo (desktop, tablet y mobile), inspeccionando el código fuente, la consola de JavaScript, las peticiones de red, el sitemap XML y siguiendo cada enlace de contacto/WhatsApp hasta su destino real. No se envió ningún mensaje de WhatsApp ni se completó ningún registro de cliente durante la revisión.
+  </footer>
+
+</div>
+</body>
+</html>
