@@ -5,9 +5,12 @@
 <title>Auditoría anateyepes.com</title>
 <style>
   :root{
-    --navy:#1f3a5f;
-    --teal:#2fa8b8;
+    --navy:#4a3070;
+    --teal:#6b4fa1;
     --pink:#e09b9c;
+    --alk-purple:#6b4fa1;
+    --alk-purple-deep:#5a4287;
+    --alk-purple-dark:#3a265c;
     --bg:#f7f8fa;
     --card:#ffffff;
     --ink:#1c2733;
@@ -32,14 +35,17 @@
   }
   .wrap{max-width:900px;margin:0 auto;padding:40px 24px 100px;}
   header.hero{
-    background:linear-gradient(135deg,var(--navy),#2b5a8a);
+    background:linear-gradient(135deg,var(--alk-purple-dark),var(--alk-purple));
     color:#fff;
-    padding:48px 24px;
+    padding:40px 24px 48px;
     border-radius:0 0 24px 24px;
   }
   header.hero .wrap{padding:0;max-width:900px;margin:0 auto;}
+  header.hero .brand-mark{display:flex;align-items:center;gap:10px;margin-bottom:22px;}
+  header.hero .brand-mark svg{width:34px;height:auto;fill:#fff;display:block;}
+  header.hero .brand-mark span{font-size:14px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#e4dbf3;}
   header.hero h1{font-size:28px;margin:0 0 8px;}
-  header.hero p{margin:4px 0;color:#cfe0f0;font-size:15px;}
+  header.hero p{margin:4px 0;color:#e4dbf3;font-size:15px;}
   .meta-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px;}
   .pill{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);padding:6px 12px;border-radius:20px;font-size:13px;}
   h2.section-title{
@@ -200,12 +206,41 @@
     color:var(--teal);
     margin-right:8px;
   }
+  .to-toc{
+    display:inline-block;
+    font-size:12.5px;
+    font-weight:600;
+    color:var(--teal);
+    text-decoration:none;
+    margin:-2px 0 18px;
+  }
+  .to-toc:hover{text-decoration:underline;}
 </style>
 </head>
 <body>
 
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="alkimiaLockup" viewBox="0 0 416.29 206.88">
+    <path d="M209.84,3.18c13.21,0,25.63,5.14,34.97,14.49,9.34,9.34,14.49,21.76,14.49,34.97s-5.14,25.63-14.49,34.97c-9.34,9.34-21.76,14.49-34.97,14.49s-25.63-5.14-34.97-14.49c-9.34-9.34-14.49-21.76-14.49-34.97s5.14-25.63,14.49-34.97c9.34-9.34,21.76-14.49,34.97-14.49M209.84,0c-29.07,0-52.64,23.57-52.64,52.64s23.57,52.64,52.64,52.64,52.64-23.57,52.64-52.64S238.92,0,209.84,0h0Z"/>
+    <path d="M209.89,9.06l38.76,67.13h-77.52L209.89,9.06M209.89,2.7l-44.27,76.68h88.54L209.89,2.7h0Z"/>
+    <path d="M227.26,41.65v34.57h-34.57v-34.57h34.57M230.44,38.47h-40.93v40.93h40.93v-40.93h0Z"/>
+    <path d="M209.84,46.2c7.12,0,12.92,5.8,12.92,12.92s-5.8,12.92-12.92,12.92-12.92-5.8-12.92-12.92,5.8-12.92,12.92-12.92M209.84,43.01c-8.89,0-16.1,7.21-16.1,16.1s7.21,16.1,16.1,16.1,16.1-7.21,16.1-16.1-7.21-16.1-16.1-16.1h0Z"/>
+    <path d="M84.84,136.01h10.12v62.06h38.37v8.81h-48.5v-70.87Z"/>
+    <path d="M166.8,175.4l-12.96,13.16v18.33h-10.12v-70.87h10.12v39.59l38.47-39.59h11.54l-30.27,31.89,32.2,38.98h-11.85l-27.13-31.49Z"/>
+    <path d="M215.87,136.01h10.12v70.87h-10.12v-70.87Z"/>
+    <path d="M301.61,206.88l-.1-57.94-25.61,15.9h-4.66l-25.61-15.59v57.64h-9.72v-70.87h8.3l29.56,18.26,29.16-18.26h8.3l.1,70.87h-9.72Z"/>
+    <path d="M321.23,136.01h10.12v70.87h-10.12v-70.87Z"/>
+    <polygon points="42.12 136.01 32.09 136.01 0 206.88 10.43 206.88 21.78 181.07 21.77 181.07 37.06 146.34 52.34 181.07 52.33 181.07 63.68 206.88 74.31 206.88 42.12 136.01"/>
+    <polygon points="384.1 136.01 374.07 136.01 341.98 206.88 352.41 206.88 363.76 181.07 363.75 181.07 379.03 146.34 394.32 181.07 394.31 181.07 405.66 206.88 416.29 206.88 384.1 136.01"/>
+  </symbol>
+</svg>
+
 <header class="hero">
   <div class="wrap">
+    <div class="brand-mark">
+      <svg viewBox="0 0 416.29 206.88"><use href="#alkimiaLockup"/></svg>
+      <span>Alkimia</span>
+    </div>
     <h1>Auditoría integral — anateyepes.com</h1>
     <p>Revisión de UI/UX, responsive, enlaces, formularios, funnel de conversión, WhatsApp, SEO, Open Graph, performance y errores técnicos.</p>
     <div class="meta-row">
@@ -228,7 +263,7 @@
     <div class="box low"><span class="n">4</span>Bajos</div>
   </div>
 
-  <div class="toc">
+  <div class="toc" id="contenido">
     <strong>Contenido</strong>
     <ol>
       <li><a href="#whatsapp">WhatsApp y canales de contacto</a></li>
@@ -250,7 +285,8 @@
 
   <!-- WHATSAPP -->
   <h2 class="section-title" id="whatsapp"><span class="num">1.</span>WhatsApp y canales de contacto</h2>
-  <p>Este es, con diferencia, el hallazgo más importante del informe porque afecta directamente el momento de mayor intención de compra. Rastreé <strong>cada botón/ícono de WhatsApp del sitio</strong> hasta su destino real (sin enviar ningún mensaje) y encontré <strong>cuatro rutas distintas</strong>, con <strong>tres números de teléfono diferentes</strong> y <strong>un enlace roto</strong>:</p>
+  <a class="to-toc" href="#contenido">↑ Volver a Contenido</a>
+  <p>Este es, con diferencia, el hallazgo más importante del informe porque afecta directamente el momento de mayor intención de compra. Rastreamos <strong>cada botón/ícono de WhatsApp del sitio</strong> hasta su destino real (sin enviar ningún mensaje) y encontramos <strong>cuatro rutas distintas</strong>, con <strong>tres números de teléfono diferentes</strong> y <strong>un enlace roto</strong>:</p>
 
   <table>
     <tr><th>Ubicación</th><th>Enlace</th><th>Destino real</th><th>Estado</th></tr>
@@ -301,12 +337,13 @@
 
   <!-- FORMULARIOS -->
   <h2 class="section-title" id="formularios"><span class="num">2.</span>Formularios</h2>
-  <p>Intenté completar y enviar un formulario de contacto usando el nombre Patricio y el correo <code>patricio@myalkimia.com</code>, como se me pidió. No fue posible porque <strong>el sitio no tiene ningún formulario de contacto tradicional</strong> (nombre + email + mensaje) en ninguna página pública.</p>
+  <a class="to-toc" href="#contenido">↑ Volver a Contenido</a>
+  <p>Intentamos completar y enviar un formulario de contacto usando el nombre Patricio y el correo <code>patricio@myalkimia.com</code>, como se nos pidió. No fue posible porque <strong>el sitio no tiene ningún formulario de contacto tradicional</strong> (nombre + email + mensaje) en ninguna página pública.</p>
 
   <div class="finding high">
     <span class="tag high">Alto</span>
     <h4>No existe un formulario de contacto en todo el sitio</h4>
-    <p>Revisé el DOM de la home, Servicios, Sobre mí, Corporate, FAQ, Team y Scheduling. El único elemento <code>&lt;form&gt;</code> presente en toda la home es el buscador nativo de WordPress (oculto, con un solo campo de texto llamado <code>s</code>). No hay Contact Form 7, WPForms, Gravity Forms ni ningún formulario de leads visible.</p>
+    <p>Revisamos el DOM de la home, Servicios, Sobre mí, Corporate, FAQ, Team y Scheduling. El único elemento <code>&lt;form&gt;</code> presente en toda la home es el buscador nativo de WordPress (oculto, con un solo campo de texto llamado <code>s</code>). No hay Contact Form 7, WPForms, Gravity Forms ni ningún formulario de leads visible.</p>
     <div class="evidence">Todo el "contacto" del sitio se resuelve por tres vías: (1) WhatsApp — con las inconsistencias del punto 1; (2) <code>mailto:info@anateyepes.com</code>, disponible solo como un ícono de sobre pequeño en la barra superior y en el footer; (3) el sistema de reservas (Acuity Scheduling), que exige crear una cuenta ("Sign Up") antes de ver siquiera los horarios disponibles.</div>
   </div>
 
@@ -316,10 +353,11 @@
     <p>Los botones "Download more info" de <em>Coaching Alchemy</em> y <em>Balance in Action</em> abren directamente un archivo de Google Drive en una pestaña nueva, sin pedir nombre ni email antes de la descarga. Es una oportunidad de conversión perdida: cualquiera puede bajar el material sin dejar ningún dato de contacto, y el archivo se llama literalmente <code>Brochure Alquimia Coaches (1).pdf</code> — un nombre de archivo de trabajo, no un asset terminado.</p>
   </div>
 
-  <p><strong>Recomendación concreta:</strong> ya que se me autorizó a probar un envío real, lo más cercano a un "formulario" que existe es el registro del sistema de reservas (Acuity) en <code>/scheduling/</code>, que crea una cuenta de cliente real en el sistema de Anaté antes de poder escribir ningún mensaje — no lo completé porque implicaría crear una cuenta de cliente permanente a nombre de Patricio en la base de datos del negocio, algo que va más allá de "probar el formulario" y that preferí confirmar con vos antes de hacerlo. Si querés que lo intente igual, decímelo y lo hago.</p>
+  <p><strong>Recomendación concreta:</strong> lo más cercano a un "formulario" que existe en todo el sitio es el registro del sistema de reservas (Acuity) en <code>/scheduling/</code>, que crea una cuenta de cliente real en el sistema de Anaté antes de poder escribir ningún mensaje. No completamos ese registro porque implicaría crear una cuenta de cliente permanente a nombre de Patricio en la base de datos del negocio, algo que excede el alcance de "probar el formulario". Quedamos a disposición para completarlo si se autoriza explícitamente.</p>
 
   <!-- FUNNEL -->
   <h2 class="section-title" id="funnel"><span class="num">3.</span>Funnel de conversión</h2>
+  <a class="to-toc" href="#contenido">↑ Volver a Contenido</a>
   <p>Así se ve el recorrido real de un visitante, de punta a punta:</p>
   <div class="card">
     <p><strong>1. Aterriza en <code>anateyepes.com</code></strong> → el sitio carga en inglés por defecto, aunque las señales de marca (nombres de las coaches, método de pago Zelle, números de WhatsApp en Venezuela/Argentina) apuntan a una audiencia mayormente hispanohablante/latina. Esto es una fricción sutil pero real para el público objetivo.</p>
@@ -337,6 +375,7 @@
 
   <!-- UI/UX -->
   <h2 class="section-title" id="uiux"><span class="num">4.</span>UI / UX</h2>
+  <a class="to-toc" href="#contenido">↑ Volver a Contenido</a>
   <div class="finding low">
     <span class="tag low">Positivo</span>
     <h4>Base visual sólida</h4>
@@ -360,7 +399,8 @@
 
   <!-- RESPONSIVE -->
   <h2 class="section-title" id="responsive"><span class="num">5.</span>Compatibilidad responsive</h2>
-  <p>Probé el sitio en tres anchos de pantalla: mobile (~375–472px), un ancho intermedio tipo tablet/notebook chico (~972px) y desktop (~1288px).</p>
+  <a class="to-toc" href="#contenido">↑ Volver a Contenido</a>
+  <p>Probamos el sitio en tres anchos de pantalla: mobile (~375–472px), un ancho intermedio tipo tablet/notebook chico (~972px) y desktop (~1288px).</p>
 
   <div class="finding crit">
     <span class="tag crit">Crítico</span>
@@ -388,7 +428,8 @@
 
   <!-- LINKS -->
   <h2 class="section-title" id="links"><span class="num">6.</span>Enlaces</h2>
-  <p>Verifiqué el código de respuesta HTTP de las 16 URLs listadas en el sitemap de Yoast más los enlaces de navegación, WhatsApp, PDFs y el subdominio de la academia.</p>
+  <a class="to-toc" href="#contenido">↑ Volver a Contenido</a>
+  <p>Verificamos el código de respuesta HTTP de las 16 URLs listadas en el sitemap de Yoast más los enlaces de navegación, WhatsApp, PDFs y el subdominio de la academia.</p>
   <table>
     <tr><th>Resultado</th><th>Detalle</th></tr>
     <tr><td>✅ Todas las páginas del sitemap responden 200</td><td>Home, Servicios, Sobre mí, Team, FAQ, Scheduling, Terms, Privacy, Tienda, Carrito, Mi cuenta, versiones /es/, etc.</td></tr>
@@ -406,7 +447,8 @@
 
   <!-- CONTRASTE -->
   <h2 class="section-title" id="contraste"><span class="num">7.</span>Contraste</h2>
-  <p>Medí el contraste real (fórmula WCAG 2.1) de los dos botones de llamada a la acción más importantes del sitio: el botón flotante "Schedule an appointment" (visible en todas las páginas, todo el scroll) y el botón "Pay via Zelle and schedule an appointment" del home.</p>
+  <a class="to-toc" href="#contenido">↑ Volver a Contenido</a>
+  <p>Medimos el contraste real (fórmula WCAG 2.1) de los dos botones de llamada a la acción más importantes del sitio: el botón flotante "Schedule an appointment" (visible en todas las páginas, todo el scroll) y el botón "Pay via Zelle and schedule an appointment" del home.</p>
   <div class="swatch-row">
     <div class="swatch">Schedule an appointment</div>
     <div>
@@ -423,6 +465,7 @@
 
   <!-- IMAGENES -->
   <h2 class="section-title" id="imagenes"><span class="num">8.</span>Imágenes</h2>
+  <a class="to-toc" href="#contenido">↑ Volver a Contenido</a>
   <div class="finding high">
     <span class="tag high">Alto</span>
     <h4>21 de 36 imágenes del home no tienen texto alternativo <span class="badge-count">58%</span></h4>
@@ -441,6 +484,7 @@
 
   <!-- TEXTOS -->
   <h2 class="section-title" id="textos"><span class="num">9.</span>Textos y copywriting</h2>
+  <a class="to-toc" href="#contenido">↑ Volver a Contenido</a>
   <div class="finding low">
     <span class="tag low">Positivo</span>
     <h4>Tono de marca consistente</h4>
@@ -459,6 +503,7 @@
 
   <!-- SEO -->
   <h2 class="section-title" id="seo"><span class="num">10.</span>SEO</h2>
+  <a class="to-toc" href="#contenido">↑ Volver a Contenido</a>
   <table>
     <tr><th>Página</th><th>Meta description</th><th>Cantidad de &lt;h1&gt;</th></tr>
     <tr><td>Home (EN) — anateyepes.com/</td><td>❌ Ausente</td><td>0</td></tr>
@@ -470,7 +515,7 @@
   <div class="finding crit">
     <span class="tag crit">Crítico</span>
     <h4>Casi ninguna página en inglés tiene meta description, y casi ninguna tiene H1</h4>
-    <p>El sitio tiene Yoast SEO instalado y configurado (se ve en el sitemap y en que la home en español sí tiene su descripción cargada), pero eso no se replicó en las páginas en inglés que revisé. Sin meta description, Google genera un fragmento automático (a veces poco atractivo) en los resultados de búsqueda. Y sin H1, se pierde la señal más fuerte de "de qué trata esta página" para los buscadores — hoy el título más grande de la home es visualmente un <code>&lt;h2&gt;</code> o menor, no un <code>&lt;h1&gt;</code>.</p>
+    <p>El sitio tiene Yoast SEO instalado y configurado (se ve en el sitemap y en que la home en español sí tiene su descripción cargada), pero eso no se replicó en las páginas en inglés que revisamos. Sin meta description, Google genera un fragmento automático (a veces poco atractivo) en los resultados de búsqueda. Y sin H1, se pierde la señal más fuerte de "de qué trata esta página" para los buscadores — hoy el título más grande de la home es visualmente un <code>&lt;h2&gt;</code> o menor, no un <code>&lt;h1&gt;</code>.</p>
   </div>
   <div class="finding low">
     <span class="tag low">Positivo</span>
@@ -490,6 +535,7 @@
 
   <!-- OG -->
   <h2 class="section-title" id="og"><span class="num">11.</span>Open Graph / vista previa en redes sociales</h2>
+  <a class="to-toc" href="#contenido">↑ Volver a Contenido</a>
   <table>
     <tr><th>Etiqueta</th><th>Estado</th></tr>
     <tr><td><code>og:title</code></td><td>✅ Presente</td></tr>
@@ -506,6 +552,7 @@
 
   <!-- TECNICO -->
   <h2 class="section-title" id="tecnico"><span class="num">12.</span>Errores de JavaScript, red y programación</h2>
+  <a class="to-toc" href="#contenido">↑ Volver a Contenido</a>
   <div class="finding high">
     <span class="tag high">Alto</span>
     <h4>Bug de numeración en el listado de categorías de reserva</h4>
@@ -524,16 +571,18 @@
 
   <!-- VELOCIDAD -->
   <h2 class="section-title" id="velocidad"><span class="num">13.</span>Velocidad de carga y peso del sitio</h2>
+  <a class="to-toc" href="#contenido">↑ Volver a Contenido</a>
   <div class="finding high">
     <span class="tag high">Alto</span>
     <h4>La home dispara ~103 peticiones de red, incluyendo plugins que no se usan</h4>
-    <p>Al cargar la home conté <strong>103 peticiones</strong>: 42 scripts y cerca de 40 hojas de estilo. Entre esas hojas de estilo se cargan <code>stripe-settings.css</code>, <code>wc-blocks.css</code> y <code>woocommerce-layout.css</code> — es decir, todo el peso de WooCommerce y Stripe se descarga en la home aunque no hay tienda visible ni carrito promocionado en ningún menú. A esto se suman <code>intlTelInput</code>, <code>countrySelect</code> y los formularios de MailerLite, también cargados de forma global.</p>
+    <p>Al cargar la home contamos <strong>103 peticiones</strong>: 42 scripts y cerca de 40 hojas de estilo. Entre esas hojas de estilo se cargan <code>stripe-settings.css</code>, <code>wc-blocks.css</code> y <code>woocommerce-layout.css</code> — es decir, todo el peso de WooCommerce y Stripe se descarga en la home aunque no hay tienda visible ni carrito promocionado en ningún menú. A esto se suman <code>intlTelInput</code>, <code>countrySelect</code> y los formularios de MailerLite, también cargados de forma global.</p>
     <div class="evidence">Tiempos medidos en esta sesión (con caché tibia): DOMContentLoaded ≈ 284 ms, load ≈ 680 ms, TTFB ≈ 19 ms — buenos en caliente, pero la cantidad de requests sugiere una carga en frío notablemente más lenta, especialmente en conexiones móviles.</div>
   </div>
   <p><strong>Recomendación:</strong> Si WooCommerce/Stripe no se están usando activamente (no hay tienda enlazada en ningún menú), desactivar esos plugins —o al menos su carga de assets en páginas que no son de tienda— aliviaría de forma inmediata una porción importante de las 103 peticiones.</p>
 
   <!-- PRIORIDADES -->
   <h2 class="section-title" id="prioridades"><span class="num">14.</span>Plan de acción priorizado</h2>
+  <a class="to-toc" href="#contenido">↑ Volver a Contenido</a>
   <ol class="priority-list">
     <li><span class="rank">1.</span><strong>Arreglar el enlace de WhatsApp roto</strong> (<code>wa.me/message/GB7WNKYFRPDYM1</code>) en Scheduling y FAQ — aparece en el momento de mayor intención de compra.</li>
     <li><span class="rank">2.</span><strong>Unificar en un solo número de WhatsApp "oficial"</strong> todos los botones del sitio, o explicar claramente por qué hay más de uno.</li>
