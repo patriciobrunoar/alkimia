@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Auditoría tupaquetico.com</title>
+<style>
+  :root{
+    --navy:#4a3070;
+    --teal:#6b4fa1;
+    --pink:#e09b9c;
+    --alk-purple:#6b4fa1;
+    --alk-purple-deep:#5a4287;
+    --alk-purple-dark:#3a265c;
+    --bg:#f7f8fa;
+    --card:#ffffff;
+    --ink:#1c2733;
+    --muted:#5b6b7a;
+    --crit:#c0392b;
+    --crit-bg:#fdecea;
+    --high:#d4790a;
+    --high-bg:#fdf1e0;
+    --med:#c99a10;
+    --med-bg:#fbf5dc;
+    --low:#4a7c59;
+    --low-bg:#e9f4ec;
+    --border:#e3e7ec;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.55;
+  }
+  .wrap{max-width:900px;margin:0 auto;padding:40px 24px 100px;}
+  header.hero{
+    background:linear-gradient(135deg,var(--alk-purple-dark),var(--alk-purple));
+    color:#fff;
+    padding:40px 24px 48px;
+    border-radius:0 0 24px 24px;
+  }
+  header.hero .wrap{padding:0;max-width:900px;margin:0 auto;}
+  header.hero .brand-mark{display:flex;align-items:center;margin-bottom:22px;}
+  header.hero .brand-mark svg{width:68px;height:auto;fill:#fff;display:block;}
+  header.hero h1{font-size:28px;margin:0 0 8px;}
+  header.hero p{margin:4px 0;color:#e4dbf3;font-size:15px;}
+  .meta-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px;}
+  .pill{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);padding:6px 12px;border-radius:20px;font-size:13px;}
+  h2.section-title{
+    font-size:21px;
+    color:var(--navy);
+    margin:52px 0 6px;
+    padding-bottom:10px;
+    border-bottom:2px solid var(--border);
+  }
+  h2.section-title .num{color:var(--teal);margin-right:8px;}
+  h3{font-size:16px;color:var(--navy);margin:26px 0 8px;}
+  p{margin:10px 0;}
+  .lead{color:var(--muted);font-size:15px;}
+  .card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:18px 20px;
+    margin:14px 0;
+  }
+  .finding{
+    border-radius:10px;
+    padding:14px 16px;
+    margin:12px 0;
+    border-left:5px solid var(--border);
+  }
+  .finding.crit{background:var(--crit-bg);border-left-color:var(--crit);}
+  .finding.high{background:var(--high-bg);border-left-color:var(--high);}
+  .finding.med{background:var(--med-bg);border-left-color:var(--med);}
+  .finding.low{background:var(--low-bg);border-left-color:var(--low);}
+  .tag{
+    display:inline-block;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:.04em;
+    text-transform:uppercase;
+    padding:3px 9px;
+    border-radius:5px;
+    margin-bottom:8px;
+  }
+  .tag.crit{background:var(--crit);color:#fff;}
+  .tag.high{background:var(--high);color:#fff;}
+  .tag.med{background:var(--med);color:#2b2200;}
+  .tag.low{background:var(--low);color:#fff;}
+  .finding h4{margin:0 0 6px;font-size:15.5px;color:var(--ink);}
+  .finding .evidence{
+    font-size:13.5px;
+    color:var(--muted);
+    margin-top:8px;
+    background:rgba(0,0,0,.03);
+    border-radius:6px;
+    padding:8px 10px;
+  }
+  code, .code{
+    font-family:ui-monospace,SFMono-Regular,Consolas,monospace;
+    background:rgba(0,0,0,.06);
+    padding:1px 5px;
+    border-radius:4px;
+    font-size:13px;
+  }
+  table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14px;}
+  th,td{border:1px solid var(--border);padding:8px 10px;text-align:left;vertical-align:top;}
+  th{background:#eef1f5;color:var(--navy);}
+  .swatch-row{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin:14px 0;}
+  .swatch{
+    display:flex;align-items:center;justify-content:center;
+    border-radius:24px;
+    font-weight:600;
+    padding:10px 22px;
+    color:#041423;
+    background:rgb(179,215,29);
+    font-size:14px;
+  }
+  .ratio-badge{
+    font-weight:700;
+    color:var(--low);
+    font-size:14px;
+  }
+  .shot{
+    display:block;
+    max-width:100%;
+    border:1px solid var(--border);
+    border-radius:10px;
+    margin:14px 0 4px;
+    box-shadow:0 1px 4px rgba(0,0,0,.08);
+  }
+  .shot-row{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start;margin:14px 0 4px;}
+  .shot-row .shot{margin:0;}
+  .shot-row figure{margin:0;flex:1 1 220px;}
+  .caption{
+    font-size:12.5px;
+    color:var(--muted);
+    margin:4px 0 10px;
+  }
+  .badge-count{
+    display:inline-block;
+    background:var(--navy);
+    color:#fff;
+    border-radius:6px;
+    padding:2px 8px;
+    font-size:12px;
+    margin-left:6px;
+  }
+  ul{padding-left:20px;}
+  li{margin:5px 0;}
+  .toc{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:16px 20px;
+    margin-top:18px;
+  }
+  .toc a{color:var(--navy);text-decoration:none;font-size:14px;}
+  .toc a:hover{text-decoration:underline;}
+  .toc ol{margin:6px 0;padding-left:20px;}
+  .summary-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+    margin:18px 0;
+  }
+  .summary-grid .box{
+    border-radius:10px;
+    padding:14px 10px;
+    text-align:center;
+  }
+  .summary-grid .box .n{font-size:26px;font-weight:800;display:block;}
+  .summary-grid .box.crit{background:var(--crit-bg);color:var(--crit);}
+  .summary-grid .box.high{background:var(--high-bg);color:var(--high);}
+  .summary-grid .box.med{background:var(--med-bg);color:#8a6a08;}
+  .summary-grid .box.low{background:var(--low-bg);color:var(--low);}
+  @media (max-width:600px){
+    .summary-grid{grid-template-columns:repeat(2,1fr);}
+  }
+  footer.end{
+    margin-top:60px;
+    padding-top:20px;
+    border-top:1px solid var(--border);
+    color:var(--muted);
+    font-size:13px;
+  }
+  .priority-list{list-style:none;padding:0;}
+  .priority-list li{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-left:5px solid var(--navy);
+    border-radius:8px;
+    padding:12px 16px;
+    margin:10px 0;
+  }
+  .priority-list .rank{
+    font-weight:800;
+    color:var(--teal);
+    margin-right:8px;
+  }
+  .to-toc{
+    display:inline-block;
+    font-size:12.5px;
+    font-weight:600;
+    color:var(--teal);
+    text-decoration:none;
+    margin:-2px 0 18px;
+  }
+  .to-toc:hover{text-decoration:underline;}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="alkimiaLockup" viewBox="0 0 416.29 206.88">
+    <path d="M209.84,3.18c13.21,0,25.63,5.14,34.97,14.49,9.34,9.34,14.49,21.76,14.49,34.97s-5.14,25.63-14.49,34.97c-9.34,9.34-21.76,14.49-34.97,14.49s-25.63-5.14-34.97-14.49c-9.34-9.34-14.49-21.76-14.49-34.97s5.14-25.63,14.49-34.97c9.34-9.34,21.76-14.49,34.97-14.49M209.84,0c-29.07,0-52.64,23.57-52.64,52.64s23.57,52.64,52.64,52.64,52.64-23.57,52.64-52.64S238.92,0,209.84,0h0Z"/>
+    <path d="M209.89,9.06l38.76,67.13h-77.52L209.89,9.06M209.89,2.7l-44.27,76.68h88.54L209.89,2.7h0Z"/>
+    <path d="M227.26,41.65v34.57h-34.57v-34.57h34.57M230.44,38.47h-40.93v40.93h40.93v-40.93h0Z"/>
+    <path d="M209.84,46.2c7.12,0,12.92,5.8,12.92,12.92s-5.8,12.92-12.92,12.92-12.92-5.8-12.92-12.92,5.8-12.92,12.92-12.92M209.84,43.01c-8.89,0-16.1,7.21-16.1,16.1s7.21,16.1,16.1,16.1,16.1-7.21,16.1-16.1-7.21-16.1-16.1-16.1h0Z"/>
+    <path d="M84.84,136.01h10.12v62.06h38.37v8.81h-48.5v-70.87Z"/>
+    <path d="M166.8,175.4l-12.96,13.16v18.33h-10.12v-70.87h10.12v39.59l38.47-39.59h11.54l-30.27,31.89,32.2,38.98h-11.85l-27.13-31.49Z"/>
+    <path d="M215.87,136.01h10.12v70.87h-10.12v-70.87Z"/>
+    <path d="M301.61,206.88l-.1-57.94-25.61,15.9h-4.66l-25.61-15.59v57.64h-9.72v-70.87h8.3l29.56,18.26,29.16-18.26h8.3l.1,70.87h-9.72Z"/>
+    <path d="M321.23,136.01h10.12v70.87h-10.12v-70.87Z"/>
+    <polygon points="42.12 136.01 32.09 136.01 0 206.88 10.43 206.88 21.78 181.07 21.77 181.07 37.06 146.34 52.34 181.07 52.33 181.07 63.68 206.88 74.31 206.88 42.12 136.01"/>
+    <polygon points="384.1 136.01 374.07 136.01 341.98 206.88 352.41 206.88 363.76 181.07 363.75 181.07 379.03 146.34 394.32 181.07 394.31 181.07 405.66 206.88 416.29 206.88 384.1 136.01"/>
+  </symbol>
+</svg>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="brand-mark">
+      <svg viewBox="0 0 416.29 206.88"><use href="#alkimiaLockup"/></svg>
+    </div>
+    <h1>Auditoría integral — tupaquetico.com</h1>
+    <p>Revisión de UI/UX, responsive, enlaces, formularios, funnel de conversión, WhatsApp, redes sociales, SEO, Open Graph, performance y errores técnicos.</p>
+    <div class="meta-row">
+      <span class="pill">Preparado por Patricio · myalkimia</span>
+      <span class="pill">3 de septiembre de 2026</span>
+      <span class="pill">Sitio en WordPress + Elementor</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <h2 class="section-title">Resumen ejecutivo</h2>
+  <p class="lead">Se revisó el sitio completo (home, /contact/) en desktop, tablet y mobile, incluyendo el código fuente, la consola de JavaScript, las peticiones de red, el robots.txt, el sitemap, los metadatos, y siguiendo cada canal de contacto y cada ícono social hasta su destino real. Comparado con otras auditorías de este tipo, tupaquetico.com parte de una base técnica más sana: no encontramos ningún hallazgo crítico bloqueante, la home carga liviana y rápida, los CTA principales pasan el contraste mínimo de accesibilidad sin problema, y el sitio carga en español por defecto, coincidiendo con su audiencia real. El hallazgo más importante es distinto al de otros sitios que auditamos: acá no hay un canal de WhatsApp roto, es que <strong>no existe ningún canal de WhatsApp</strong> en todo el sitio, pese a ser el canal que la propia marca ya usa activamente en Instagram para coordinar envíos.</p>
+
+  <div class="summary-grid">
+    <div class="box crit"><span class="n">0</span>Críticos</div>
+    <div class="box high"><span class="n">3</span>Altos</div>
+    <div class="box med"><span class="n">6</span>Medios</div>
+    <div class="box low"><span class="n">14</span>Bajos</div>
+  </div>
+
+  <div class="toc" id="contenido">
+    <strong>Contenido</strong>
+    <ol>
+      <li><a href="#whatsapp">WhatsApp y canales de contacto</a></li>
+      <li><a href="#formularios">Formularios</a></li>
+      <li><a href="#funnel">Funnel de conversión</a></li>
+      <li><a href="#uiux">UI / UX</a></li>
+      <li><a href="#responsive">Responsive</a></li>
+      <li><a href="#links">Enlaces</a></li>
+      <li><a href="#contraste">Contraste</a></li>
+      <li><a href="#redes">Redes sociales</a></li>
+      <li><a href="#textos">Textos y copywriting</a></li>
+      <li><a href="#seo">SEO</a></li>
+      <li><a href="#og">Open Graph / redes sociales</a></li>
+      <li><a href="#tecnico">Errores JS, red y programación</a></li>
+      <li><a href="#velocidad">Velocidad de carga</a></li>
+      <li><a href="#prioridades">Plan de acción priorizado</a></li>
+    </ol>
+  </div>
+
+  <!-- WHATSAPP -->
+  <h2 class="section-title" id="whatsapp"><span class="num">1.</span>WhatsApp y canales de contacto</h2>
+  <a class="to-toc" href="#contenido">↑ Volver a Contenido</a>
+  <p>Revisamos el código fuente completo de la home y de <code>/contact/</code> buscando cada botón, ícono y mención de WhatsApp. El resultado es directo: <strong>no existe ningún enlace de WhatsApp en todo el sitio</strong>. La única aparición de la palabra "whatsapp" en el HTML de la home es dentro de la configuración genérica del botón de compartir (AddToAny), no un canal real de contacto.</p>
+  <p>Esto llama la atención porque el propio feed de Instagram, embebido en la misma home, muestra publicaciones de la marca que dan números de WhatsApp para coordinar cargas peligrosas y consultas de envío. Todo el contacto formal del sitio se resuelve, en cambio, con <strong>7 números de teléfono</strong> (enlaces <code>tel:</code>) y un email:</p>
+
+  <table>
+    <tr><th>Oficina / ubicación</th><th>Contacto</th></tr>
+    <tr><td>EE. UU. (Miami)</td><td><code>tel:+17864837941</code>, <code>tel:+13054698555</code></td></tr>
+    <tr><td>Venezuela (Caracas)</td><td><code>tel:+582127141100</code>, <code>tel:+584241243579</code></td></tr>
+    <tr><td>China</td><td><code>tel:+8618072322977</code>, <code>tel:+8615215852930</code></td></tr>
+    <tr><td>Panamá (Colón)</td><td><code>tel:+50768273038</code> ext. 101</td></tr>
+    <tr><td>Email general</td><td><code>mailto:info@tupaquetico.com</code></td></tr>
+  </table>
+
+  <div class="finding high">
+    <span class="tag high">Alto</span>
+    <h4>No hay ningún canal de WhatsApp, pese a ser el canal real de la marca</h4>
+    <p>A diferencia de un enlace roto, acá directamente no se intentó: cero botones o íconos de WhatsApp en la home ni en <code>/contact/</code>. Sin embargo, las propias publicaciones de Instagram de Tu Paquetico (visibles en el feed embebido de la misma home) invitan explícitamente a escribir por WhatsApp a números como +1 786-483-7941 y +58 212-714-1100 / +58 424-124-3579 para coordinar cargas. El canal que la marca ya usa y promociona activamente en redes no está integrado en su propio sitio, que hoy solo ofrece llamada telefónica o formulario.</p>
+  </div>
+
+  <!-- FORMULARIOS -->
+  <h2 class="section-title" id="formularios"><span class="num">2.</span>Formularios</h2>
+  <a class="to-toc" href="#contenido">↑ Volver a Contenido</a>
+  <div class="finding low">
+    <span class="tag low">Positivo</span>
+    <h4>Formulario de contacto real y funcional, en dos lugares</h4>
+    <p>A diferencia de sitios que no tienen ningún formulario, tupaquetico.com sí ofrece uno: al pie de la home (Nombre / Apellido / Email / Teléfono / mensaje) y de nuevo en <code>/contact/</code>, junto al detalle de las 6 oficinas (China, Miami, Caracas, Colón-Panamá, Colombia, Madrid) con dirección, horario, teléfono y email de cada una. No lo enviamos, para no generar un lead real dentro del sistema del negocio.</p>
+  </div>
+  <div class="finding med">
+    <span class="tag med">Medio</span>
+    <h4>La oficina de China aparece duplicada en /contact/, con datos distintos</h4>
+    <p>La página <code>/contact/</code> lista la oficina de China dos veces. La primera aparición muestra "Horario: 9am a 5:30pm" e incluye el dato "WE CHAT: q11068888"; la segunda, más abajo en la misma página, muestra "9am a 5:00pm" y no incluye WeChat. Parece un resto de copiar y pegar más que información intencional, y deja al visitante sin saber cuál horario es el correcto.</p>
+  </div>
+  <div class="finding low">
+    <span class="tag low">Bajo</span>
+    <h4>El botón de envío del formulario dice "Send" en inglés</h4>
+    <p>Tanto en el formulario de la home como en el de <code>/contact/</code>, todas las etiquetas de los campos están en español, pero el botón final para enviar dice "Send". Es un detalle chico, pero rompe la coherencia de idioma justo en el paso final del formulario.</p>
+  </div>
+
+  <!-- FUNNEL -->
+  <h2 class="section-title" id="funnel"><span class="num">3.</span>Funnel de conversión</h2>
+  <a class="to-toc" href="#contenido">↑ Volver a Contenido</a>
+  <p>Así se ve el recorrido real de un visitante, de punta a punta:</p>
+  <div class="card">
+    <p><strong>1. Aterriza en <code>tupaquetico.com</code></strong> → el sitio carga en español por defecto (<code>lang="es-VE"</code>), lo que sí coincide con la audiencia real de la marca (envíos hacia Venezuela desde EE. UU., China y España).</p>
+    <p><strong>2. Ve los dos llamados a la acción del header</strong> → "Regístrate" (crear cuenta) y el botón "¡ENVIA HOY!" del hero, ambos con buen contraste visual (ver sección 7).</p>
+    <p><strong>3. Si quiere resolver una duda antes de decidir</strong> → sus únicas opciones son llamar a uno de los 7 teléfonos listados, escribir a <code>info@tupaquetico.com</code>, o completar el formulario de contacto. No hay chat en vivo ni WhatsApp, pese a que es el canal que la marca usa en sus propias redes (ver sección 1).</p>
+    <p><strong>4. Si busca más detalle de una oficina puntual</strong> → <code>/contact/</code> lista las 6 sedes con teléfono, dirección y horario propios, aunque la de China aparece duplicada con datos que no coinciden (ver sección 2).</p>
+  </div>
+  <p>No completamos el registro en "Regístrate" porque crearía una cuenta de cliente real en el sistema de Tu Paquetico, algo que excede el alcance de esta auditoría. Quedamos a disposición para revisar ese flujo si se autoriza explícitamente.</p>
+
+  <!-- UI/UX -->
+  <h2 class="section-title" id="uiux"><span class="num">4.</span>UI / UX</h2>
+  <a class="to-toc" href="#contenido">↑ Volver a Contenido</a>
+  <div class="finding med">
+    <span class="tag med">Medio</span>
+    <h4>El pop-up "Nos mudamos" reaparece en cada carga o navegación</h4>
+    <p>El aviso de cambio de dirección se cierra sin problema al tocar la X, pero vuelve a aparecer cada vez que se navega a otra página del sitio, incluso dentro de la misma sesión. No es un error técnico, pero interrumpe la lectura en cada clic.</p>
+  </div>
+  <div class="finding med">
+    <span class="tag med">Medio</span>
+    <h4>Casi la mitad de la home es un feed de Instagram que repite las mismas publicaciones</h4>
+    <p>El widget de Instagram embebido ocupa aproximadamente 3.500 de los 7.818 píxeles de alto de la home (cerca del 45% del scroll total) y, al recorrerlo, parece repetir en loop las mismas ~9 publicaciones. Es contenido real y a favor de la marca (ver sección 8), pero le resta protagonismo al resto del contenido propio de la página.</p>
+  </div>
+  <div class="finding low">
+    <span class="tag low">Positivo</span>
+    <h4>El menú mobile cubre todo el ancho con un panel opaco</h4>
+    <p>A diferencia de implementaciones donde el menú hamburguesa deja ver el contenido de fondo, acá el panel mobile es opaco y de ancho completo: no hay superposición de texto ni confusión visual al abrirlo.</p>
+  </div>
+
+  <!-- RESPONSIVE -->
+  <h2 class="section-title" id="responsive"><span class="num">5.</span>Compatibilidad responsive</h2>
+  <a class="to-toc" href="#contenido">↑ Volver a Contenido</a>
+  <p>Probamos el sitio en tres anchos de pantalla: desktop (~1440px), un ancho intermedio tipo tablet/notebook chica (~972px) y mobile (~500px, el ancho mínimo que permitió redimensionar la ventana del navegador en esta sesión).</p>
+
+  <div class="finding med">
+    <span class="tag med">Medio</span>
+    <h4>El menú se rompe en anchos de tablet (~972px)</h4>
+    <p>En ese ancho, el enlace "Inicio de Sesión" pasa a una segunda línea dentro del menú de navegación y queda superpuesto con el patrón decorativo en X del fondo del hero. El botón "Regístrate", al mismo tiempo, corta su propio texto en dos líneas ("Regist" / "rate") por falta de espacio.</p>
+    <img class="shot" src="img/tablet-nav-wrap.png" alt="Menú de navegación en ~972px de ancho: 'Inicio de Sesión' superpuesto con el fondo decorativo y el botón 'Regístrate' con el texto cortado en dos líneas">
+    <p class="caption">Header a ~972px de ancho.</p>
+  </div>
+
+  <div class="finding low">
+    <span class="tag low">Bajo</span>
+    <h4>El badge "World Wide Shipping" se corta en mobile</h4>
+    <p>La etiqueta flotante "World Wide Shipping", superpuesta sobre la imagen del hero, queda cortada en el borde izquierdo de la pantalla en mobile: el círculo del ícono se ve incompleto, fuera del viewport.</p>
+    <img class="shot" src="img/mobile-badge-clipped.png" alt="Badge 'World Wide Shipping' cortado en el borde izquierdo de la pantalla en mobile">
+    <p class="caption">Hero en mobile: el ícono del badge queda cortado a la izquierda.</p>
+  </div>
+
+  <!-- LINKS -->
+  <h2 class="section-title" id="links"><span class="num">6.</span>Enlaces</h2>
+  <a class="to-toc" href="#contenido">↑ Volver a Contenido</a>
+  <div class="finding med">
+    <span class="tag med">Medio</span>
+    <h4>El sitemap indexa una página de prueba duplicada</h4>
+    <p><code>sitemap_index.xml</code> es válido y está bien formado (3 sub-sitemaps), pero uno de ellos incluye <code>/inicio-prueba/</code>, titulada "INICIO PRUEBA - TuPaquetico.com": una copia de la home que parece haber quedado de una prueba, todavía pública y rastreable por Google. Es un riesgo de contenido duplicado que compite, sin necesidad, con la home real por las mismas búsquedas.</p>
+  </div>
+  <div class="finding low">
+    <span class="tag low">Positivo</span>
+    <h4>robots.txt bien formado y con buenas prácticas</h4>
+    <p><code>robots.txt</code> declara correctamente la ubicación del sitemap y bloquea el rastreo de parámetros de tracking como <code>?fbclid</code> y <code>?utm_*</code>, evitando que Google indexe URLs duplicadas por esos parámetros.</p>
+  </div>
+
+  <!-- CONTRASTE -->
+  <h2 class="section-title" id="contraste"><span class="num">7.</span>Contraste</h2>
+  <a class="to-toc" href="#contenido">↑ Volver a Contenido</a>
+  <p>Medimos el contraste real (fórmula WCAG 2.1) de los llamados a la acción principales del sitio: el botón del hero "¡ENVIA HOY!", el botón "Regístrate" del header y el botón "Send" del formulario de contacto.</p>
+  <div class="swatch-row">
+    <div class="swatch">¡ENVIA HOY!</div>
+    <div>
+      <div>Texto <code>rgb(4,20,31)</code> sobre fondo <code>rgb(179,215,29)</code></div>
+      <div class="ratio-badge">Contraste real: ≈11.2:1</div>
+    </div>
+  </div>
+  <div class="finding low">
+    <span class="tag low">Positivo</span>
+    <h4>Los CTA principales superan cómodamente el mínimo de accesibilidad</h4>
+    <p>El botón "¡ENVIA HOY!" del hero mide aproximadamente <strong>11.2:1</strong> de contraste, muy por encima del mínimo WCAG AA (4.5:1 para texto normal). El botón "Regístrate" del header, con fondo oscuro y texto negro en negrita, también queda cómodamente por encima del mínimo. Es un resultado sólido en el punto donde más importa: los botones que llevan a registrarse o pedir un envío.</p>
+  </div>
+  <div class="finding low">
+    <span class="tag low">Bajo</span>
+    <h4>El botón "Send" del formulario pasa el mínimo por muy poco margen</h4>
+    <p>El botón de envío del formulario de contacto (fondo <code>rgb(105,114,125)</code>, texto blanco) mide aproximadamente <strong>4.9:1</strong>: aprueba el mínimo WCAG AA de 4.5:1, pero por un margen chico. Un tono apenas más oscuro de ese mismo gris daría más margen de seguridad, sobre todo en pantallas con brillo bajo.</p>
+  </div>
+
+  <!-- REDES -->
+  <h2 class="section-title" id="redes"><span class="num">8.</span>Redes sociales</h2>
+  <a class="to-toc" href="#contenido">↑ Volver a Contenido</a>
+  <p>El sitio enlaza solo <strong>3 redes</strong> (Instagram, Facebook y X/Twitter), ubicadas en un bloque "Social Media" a mitad de la home, junto al feed embebido de Instagram — no hay una fila de íconos en el header ni en el footer. Verificamos cada uno navegando al enlace real: <strong>los tres funcionan</strong> y llevan al perfil correcto, sin íconos rotos.</p>
+
+  <div class="finding low">
+    <span class="tag low">Positivo</span>
+    <h4>Instagram es el canal fuerte y activo de la marca</h4>
+    <p><code>instagram.com/tupaqueticocorp</code> — 22,3 mil seguidores, 1.883 publicaciones, cuenta de empresa ("Cargo & Freight Company"). Última publicación: hace 4 horas, con contenido real y específico del negocio (clasificación de carga peligrosa, logística internacional). La bio ("Importa fácil a Venezuela 🇺🇸USA|🇨🇳China|🇪🇸España, ✈️Aéreo|🚢Marítimo|Consolidación") coincide de cerca con lo que ofrece el sitio, y enlaza a tupaquetico.com.</p>
+    <img class="shot" src="img/instagram-profile-active.png" alt="Publicación reciente de Instagram de tupaqueticocorp sobre clasificación de carga peligrosa, publicada hace 4 horas">
+    <p class="caption">Publicación de Instagram, hace 4 horas.</p>
+  </div>
+
+  <div class="finding low">
+    <span class="tag low">Bajo</span>
+    <h4>Facebook está activo, pero con una audiencia mínima</h4>
+    <p><code>facebook.com/p/Tu-Paquetico-Corp-100054226100708</code> — 206 seguidores, frente a los 22,3 mil de Instagram. Republica el mismo contenido (misma publicación sobre carga peligrosa, también hace 4 horas), pero con apenas 2 likes. La bio coincide bien con los servicios del sitio (Aéreo/Marítimo, Casillero Gratis, Repack, Seguro, Pickup), pero el alcance es mínimo comparado con el canal principal.</p>
+  </div>
+
+  <div class="finding high">
+    <span class="tag high">Alto</span>
+    <h4>La cuenta de X/Twitter enlazada está congelada desde 2015</h4>
+    <p>El ícono de X en el sitio funciona técnicamente (no está roto) y lleva a <code>x.com/tupaquetico</code>, una cuenta real de la marca con 638 seguidores — pero su <strong>última publicación es del 3 de julio de 2015</strong>, más de una década atrás. La bio ("Compra en USA y te lo enviamos a Venezuela CASILLEROS GRATIS Y SIN ENVIO MINIMO") todavía se parece al mensaje actual, pero cualquiera que haga clic ahí desde el sitio cae en una cuenta completamente inactiva, con información de hace 10 años.</p>
+    <div class="evidence">Verificado navegando directamente al perfil: último post "Envío aéreo se cobra el mayor entre peso o volumen a 5,5$ la libra", 3 de julio de 2015.</div>
+    <img class="shot" src="img/twitter-x-abandoned-2015.png" alt="Perfil de X (Twitter) de Tupaquetico mostrando publicaciones de 2015 como las más recientes">
+    <p class="caption">Perfil de X: las publicaciones más recientes son de 2015.</p>
+  </div>
+
+  <!-- TEXTOS -->
+  <h2 class="section-title" id="textos"><span class="num">9.</span>Textos y copywriting</h2>
+  <a class="to-toc" href="#contenido">↑ Volver a Contenido</a>
+  <div class="finding low">
+    <span class="tag low">Positivo</span>
+    <h4>El idioma por defecto coincide con la audiencia real</h4>
+    <p>El sitio declara <code>lang="es-VE"</code> y carga en español desde el primer momento, lo cual coincide con su audiencia real: envíos entre EE. UU., China y España hacia Venezuela. No hay una desconexión de idioma como la que sí vemos en otros sitios con audiencia similar.</p>
+  </div>
+
+  <!-- SEO -->
+  <h2 class="section-title" id="seo"><span class="num">10.</span>SEO</h2>
+  <a class="to-toc" href="#contenido">↑ Volver a Contenido</a>
+  <div class="finding low">
+    <span class="tag low">Positivo</span>
+    <h4>Metadatos básicos completos</h4>
+    <p>La home tiene meta description, title tag y URL canónica declarados correctamente — a diferencia de sitios donde faltan por completo en varias páginas.</p>
+  </div>
+  <div class="finding med">
+    <span class="tag med">Medio</span>
+    <h4>La home tiene dos etiquetas &lt;h1&gt; en vez de una</h4>
+    <p>Encontramos dos <code>&lt;h1&gt;</code> en la home: "Envíos y soluciones de Logistica Internacional confiable" y, más abajo, "ITINERARIO DE SALIDAS". Tener un solo <code>&lt;h1&gt;</code> por página ayuda a que Google entienda sin ambigüedad cuál es el tema central de esa página.</p>
+  </div>
+
+  <!-- OG -->
+  <h2 class="section-title" id="og"><span class="num">11.</span>Open Graph / vista previa en redes sociales</h2>
+  <a class="to-toc" href="#contenido">↑ Volver a Contenido</a>
+  <table>
+    <tr><th>Etiqueta</th><th>Estado</th></tr>
+    <tr><td><code>og:title</code></td><td>✅ Presente</td></tr>
+    <tr><td><code>og:description</code></td><td>✅ Presente</td></tr>
+    <tr><td><code>og:url</code> / <code>og:type</code></td><td>✅ Presentes</td></tr>
+    <tr><td><code>twitter:card</code></td><td>✅ Presente</td></tr>
+    <tr><td><code>og:image</code></td><td>❌ Ausente</td></tr>
+    <tr><td><code>twitter:image</code></td><td>❌ Ausente</td></tr>
+  </table>
+  <div class="finding high">
+    <span class="tag high">Alto</span>
+    <h4>El link no muestra ninguna imagen al compartirse</h4>
+    <p><code>og:image</code> y <code>twitter:image</code> están ambas ausentes (nulas). El resto de las etiquetas Open Graph está bien configurado, pero sin imagen, cuando alguien comparte <code>tupaquetico.com</code> en WhatsApp, Facebook o LinkedIn, la vista previa aparece sin ninguna miniatura — solo texto. Es una pieza de "marketing gratis" que hoy se pierde en cada share.</p>
+  </div>
+
+  <!-- TECNICO -->
+  <h2 class="section-title" id="tecnico"><span class="num">12.</span>Errores de JavaScript, red y programación</h2>
+  <a class="to-toc" href="#contenido">↑ Volver a Contenido</a>
+  <div class="finding low">
+    <span class="tag low">Bajo</span>
+    <h4>Un servicio de terceros devuelve 503 en cada carga</h4>
+    <p><code>https://geoip.maxmind.com/geoip/v2.1/country/me</code> responde <strong>503 Service Unavailable</strong> en todas las cargas probadas. No afecta lo que se ve en pantalla — es una llamada de geolocalización que suele venir por defecto en varios temas/plugins de WordPress — pero queda registrada como error en la consola de red.</p>
+  </div>
+  <div class="finding low">
+    <span class="tag low">Positivo</span>
+    <h4>Sin errores de JavaScript propios del sitio</h4>
+    <p>No se detectaron excepciones de JS lanzadas por el código propio del sitio durante la navegación. Los únicos mensajes de error en consola vinieron de una extensión del navegador ajena al sitio (no aplica).</p>
+  </div>
+
+  <!-- VELOCIDAD -->
+  <h2 class="section-title" id="velocidad"><span class="num">13.</span>Velocidad de carga y peso del sitio</h2>
+  <a class="to-toc" href="#contenido">↑ Volver a Contenido</a>
+  <div class="finding low">
+    <span class="tag low">Positivo</span>
+    <h4>La home carga liviana y rápida</h4>
+    <p>Contamos <strong>58 peticiones de red</strong> en la carga inicial de la home, con DOMContentLoaded ≈665 ms, load ≈898 ms y TTFB ≈435 ms. Es un resultado notablemente liviano para un sitio WordPress con Elementor y un feed de Instagram embebido.</p>
+  </div>
+
+  <!-- PRIORIDADES -->
+  <h2 class="section-title" id="prioridades"><span class="num">14.</span>Plan de acción priorizado</h2>
+  <a class="to-toc" href="#contenido">↑ Volver a Contenido</a>
+  <ol class="priority-list">
+    <li><span class="rank">1.</span><strong>Sumar un canal de WhatsApp real y visible</strong> en el sitio, el mismo que la marca ya usa en Instagram.</li>
+    <li><span class="rank">2.</span><strong>Agregar <code>og:image</code> y <code>twitter:image</code></strong> para que el link se vea bien al compartirse.</li>
+    <li><span class="rank">3.</span><strong>Revisar o desvincular la cuenta de X/Twitter</strong>, congelada desde 2015, o reactivarla con contenido actual.</li>
+    <li><span class="rank">4.</span><strong>Corregir el menú en anchos de tablet (~972px)</strong>, donde hoy se superpone y corta texto.</li>
+    <li><span class="rank">5.</span><strong>Eliminar o quitar del sitemap la página de prueba</strong> <code>/inicio-prueba/</code>.</li>
+    <li><span class="rank">6.</span><strong>Unificar los datos de la oficina de China</strong> en <code>/contact/</code> (horario y WeChat inconsistentes entre las dos apariciones).</li>
+    <li><span class="rank">7.</span><strong>Sumar un solo <code>&lt;h1&gt;</code></strong> en la home, en vez de dos compitiendo.</li>
+    <li><span class="rank">8.</span><strong>Evitar que el pop-up "Nos mudamos" se repita</strong> en cada navegación.</li>
+    <li><span class="rank">9.</span><strong>Ajustar el badge "World Wide Shipping"</strong> para que no se corte en mobile.</li>
+    <li><span class="rank">10.</span><strong>Traducir el botón "Send"</strong> del formulario a "Enviar".</li>
+  </ol>
+
+  <footer class="end">
+    Auditoría realizada de forma manual sobre <strong>tupaquetico.com</strong> el 3 de septiembre de 2026, navegando el sitio en vivo (desktop, tablet y mobile), inspeccionando el código fuente, la consola de JavaScript, las peticiones de red, el robots.txt, el sitemap XML, y siguiendo cada canal de contacto y cada ícono social hasta su destino real. No se envió ningún mensaje ni se completó ningún registro de cliente durante la revisión.
+  </footer>
+
+</div>
+</body>
+</html>

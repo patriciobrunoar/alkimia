@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Asesoría Digital Inicial, Tu Paquetico</title>
+<style>
+  @font-face{
+    font-family:"Inter";
+    src:url("../../assets/fonts/Inter-VariableFont_opsz,wght.ttf") format("truetype-variations");
+    font-weight:100 900;
+    font-style:normal;
+    font-display:swap;
+  }
+  :root{
+    --alk-purple:#6b4fa1;
+    --alk-purple-deep:#5a4287;
+    --alk-purple-dark:#3a265c;
+    --alk-heading:#3a265c;
+    --alk-body:#4a4458;
+    --alk-muted:#786f92;
+    --alk-lavender:#e9e4f4;
+    --alk-lavender-2:#f6f4fb;
+    --alk-gold:#e3b256;
+    --alk-line:#e3daf3;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    color:var(--alk-body);
+    background:#fff;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  img{max-width:100%;display:block;}
+  a{color:inherit;}
+
+  /* Hero */
+  header.hero{
+    background:linear-gradient(150deg,var(--alk-purple-dark),var(--alk-purple));
+    color:#fff;
+    padding:64px 24px 72px;
+    text-align:center;
+  }
+  header.hero .brand-mark{display:flex;justify-content:center;margin-bottom:28px;}
+  header.hero .brand-mark svg{width:64px;height:auto;fill:#fff;display:block;}
+  header.hero .eyebrow{
+    font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+    color:#e3d9f5;margin-bottom:14px;
+  }
+  header.hero h1{
+    font-size:clamp(32px,5vw,48px);font-weight:800;letter-spacing:-.01em;
+    margin-bottom:16px;
+  }
+  header.hero .subtitle{
+    max-width:560px;margin:0 auto;color:#e3d9f5;font-size:17px;line-height:1.6;
+  }
+  .meta-row{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:28px;}
+  .pill{
+    background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);
+    padding:6px 14px;border-radius:20px;font-size:12.5px;color:#f0eafa;
+  }
+
+  /* Intro strip */
+  .intro-strip{
+    max-width:640px;margin:0 auto;padding:56px 24px 8px;text-align:center;
+  }
+  .intro-strip p{font-size:19px;color:var(--alk-heading);line-height:1.65;}
+  .quicknav{
+    margin-top:18px;font-size:14.5px;font-weight:600;color:var(--alk-muted);
+  }
+  .quicknav a{color:var(--alk-purple-deep);text-decoration:none;}
+  .quicknav a:hover{text-decoration:underline;}
+
+  /* Sections */
+  section.point{
+    padding:72px 24px;
+    min-height:88vh;
+    display:flex;
+    align-items:center;
+  }
+  section.point:nth-of-type(even){background:var(--alk-lavender-2);}
+  .point-inner{max-width:680px;margin:0 auto;width:100%;}
+  .point-badge{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:44px;height:44px;border-radius:50%;
+    background:var(--alk-lavender);color:var(--alk-purple-deep);
+    font-weight:800;font-size:16px;margin-bottom:20px;
+  }
+  .point h2{
+    font-size:clamp(24px,3.4vw,32px);color:var(--alk-heading);font-weight:800;
+    margin-bottom:14px;letter-spacing:-.01em;
+  }
+  .point .point-intro{
+    font-size:17px;color:var(--alk-muted);margin-bottom:28px;max-width:520px;
+  }
+  .point ul{list-style:none;}
+  .point li{
+    display:flex;gap:14px;padding:14px 0;border-top:1px solid var(--alk-line);
+    font-size:16px;color:var(--alk-body);line-height:1.55;
+  }
+  .point li:last-child{border-bottom:1px solid var(--alk-line);}
+  .point li .dot{
+    flex:0 0 auto;width:8px;height:8px;border-radius:50%;
+    background:var(--alk-purple);margin-top:8px;
+  }
+  .point li .li-body p{margin:0;}
+  .point li .li-body .hint{
+    margin-top:6px;font-size:14px;font-style:italic;color:var(--alk-muted);
+    line-height:1.5;
+  }
+  .point .closing-note{
+    margin-top:24px;font-size:14.5px;color:var(--alk-muted);font-style:italic;
+  }
+
+  /* Closing CTA */
+  .cta-section{
+    background:linear-gradient(150deg,var(--alk-purple-dark),var(--alk-purple));
+    color:#fff;padding:80px 24px;text-align:center;
+  }
+  .cta-section .inner{max-width:600px;margin:0 auto;}
+  .cta-section h2{font-size:clamp(26px,3.6vw,34px);font-weight:800;margin-bottom:16px;}
+  .cta-section p{color:#e3d9f5;font-size:16.5px;line-height:1.65;margin-bottom:32px;}
+  .cta-buttons{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;}
+  .btn{
+    display:inline-block;padding:14px 28px;border-radius:30px;font-weight:700;
+    font-size:15px;text-decoration:none;
+  }
+  .btn.primary{background:#fff;color:var(--alk-purple-deep);}
+  .btn.secondary{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.5);}
+
+  footer.end{
+    padding:36px 24px;text-align:center;color:var(--alk-muted);font-size:13px;
+  }
+  footer.end svg{width:22px;height:auto;fill:var(--alk-muted);margin-bottom:10px;}
+
+  @media (max-width:600px){
+    section.point{padding:56px 20px;min-height:0;}
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="alkimiaLockup" viewBox="0 0 416.29 206.88">
+    <path d="M209.84,3.18c13.21,0,25.63,5.14,34.97,14.49,9.34,9.34,14.49,21.76,14.49,34.97s-5.14,25.63-14.49,34.97c-9.34,9.34-21.76,14.49-34.97,14.49s-25.63-5.14-34.97-14.49c-9.34-9.34-14.49-21.76-14.49-34.97s5.14-25.63,14.49-34.97c9.34-9.34,21.76-14.49,34.97-14.49M209.84,0c-29.07,0-52.64,23.57-52.64,52.64s23.57,52.64,52.64,52.64,52.64-23.57,52.64-52.64S238.92,0,209.84,0h0Z"/>
+    <path d="M209.89,9.06l38.76,67.13h-77.52L209.89,9.06M209.89,2.7l-44.27,76.68h88.54L209.89,2.7h0Z"/>
+    <path d="M227.26,41.65v34.57h-34.57v-34.57h34.57M230.44,38.47h-40.93v40.93h40.93v-40.93h0Z"/>
+    <path d="M209.84,46.2c7.12,0,12.92,5.8,12.92,12.92s-5.8,12.92-12.92,12.92-12.92-5.8-12.92-12.92,5.8-12.92,12.92-12.92M209.84,43.01c-8.89,0-16.1,7.21-16.1,16.1s7.21,16.1,16.1,16.1,16.1-7.21,16.1-16.1-7.21-16.1-16.1-16.1h0Z"/>
+    <path d="M84.84,136.01h10.12v62.06h38.37v8.81h-48.5v-70.87Z"/>
+    <path d="M166.8,175.4l-12.96,13.16v18.33h-10.12v-70.87h10.12v39.59l38.47-39.59h11.54l-30.27,31.89,32.2,38.98h-11.85l-27.13-31.49Z"/>
+    <path d="M215.87,136.01h10.12v70.87h-10.12v-70.87Z"/>
+    <path d="M301.61,206.88l-.1-57.94-25.61,15.9h-4.66l-25.61-15.59v57.64h-9.72v-70.87h8.3l29.56,18.26,29.16-18.26h8.3l.1,70.87h-9.72Z"/>
+    <path d="M321.23,136.01h10.12v70.87h-10.12v-70.87Z"/>
+    <polygon points="42.12 136.01 32.09 136.01 0 206.88 10.43 206.88 21.78 181.07 21.77 181.07 37.06 146.34 52.34 181.07 52.33 181.07 63.68 206.88 74.31 206.88 42.12 136.01"/>
+    <polygon points="384.1 136.01 374.07 136.01 341.98 206.88 352.41 206.88 363.76 181.07 363.75 181.07 379.03 146.34 394.32 181.07 394.31 181.07 405.66 206.88 416.29 206.88 384.1 136.01"/>
+  </symbol>
+</svg>
+
+<header class="hero">
+  <div class="brand-mark">
+    <svg viewBox="0 0 416.29 206.88"><use href="#alkimiaLockup"/></svg>
+  </div>
+  <div class="eyebrow">Un regalo para tu negocio 🎁</div>
+  <h1>Asesoría Digital Inicial</h1>
+  <p class="subtitle">Un primer vistazo, rápido, preciso y sin costo, a cómo se ve hoy tupaquetico.com. Preparado por Alkimia.</p>
+  <div class="meta-row">
+    <span class="pill">Preparado por Alkimia para Tu Paquetico</span>
+    <span class="pill">3 de septiembre de 2026</span>
+    <span class="pill">Versión inicial · gratuita</span>
+  </div>
+</header>
+
+<div class="intro-strip">
+  <p>Miramos tu sitio, tus redes y tu marca con la mirada de alguien que te conoce por primera vez, así llega hoy un cliente nuevo a vos. Te compartimos 4 puntos clave.</p>
+  <p class="quicknav"><a href="#rendimiento">Rendimiento</a> · <a href="#redes">Presencia</a> · <a href="#marca">Consistencia</a> · <a href="#oportunidades">Mejoras</a></p>
+</div>
+
+<!-- 01: Website Performance -->
+<section class="point" id="rendimiento">
+  <div class="point-inner">
+    <div class="point-badge">01</div>
+    <h2>Rendimiento del sitio web</h2>
+    <p class="point-intro">Así se siente llegar a tu sitio hoy, justo cuando alguien está evaluando si enviarte su carga.</p>
+    <ul>
+      <li><span class="dot"></span><div class="li-body">
+        <p>No hay ningún botón ni ícono de WhatsApp en todo el sitio, aunque tus propias publicaciones de Instagram invitan a escribir por ese mismo canal para coordinar un envío.</p>
+        <p class="hint">Es el canal que tu propia audiencia ya usa y espera encontrar, pero hoy alguien que llega desde tu web solo puede llamar por teléfono o completar un formulario.</p>
+      </div></li>
+      <li><span class="dot"></span><div class="li-body">
+        <p>En pantallas intermedias, tipo tablet (~972px de ancho), el menú se rompe: "Inicio de Sesión" pasa a una segunda línea y se superpone con el patrón decorativo del fondo, y el botón "Regístrate" corta su propio texto en dos líneas.</p>
+        <p class="hint">Es un ancho de pantalla muy común (notebooks chicas, tablets en horizontal), así que no es un caso aislado.</p>
+      </div></li>
+      <li><span class="dot"></span><div class="li-body">
+        <p>Cuando alguien comparte tu link en WhatsApp, Facebook o LinkedIn, no aparece ninguna imagen de vista previa.</p>
+        <p class="hint">Esto pasa porque falta la etiqueta og:image (parte del Open Graph, la información que usan las redes para armar esa vista previa), y una vista previa sin imagen se comparte y se hace clic muchas menos veces.</p>
+      </div></li>
+      <li><span class="dot"></span><div class="li-body">
+        <p>La ventana emergente "Nos mudamos" vuelve a aparecer cada vez que alguien navega de una página a otra dentro del sitio.</p>
+        <p class="hint">Un aviso puntual está bien, pero repetirlo en cada clic interrumpe la lectura y puede sentirse molesto para alguien que ya está navegando tu contenido.</p>
+      </div></li>
+      <li><span class="dot"></span><div class="li-body">
+        <p>El mapa del sitio (sitemap) que le mandás a Google todavía incluye una página de prueba duplicada, "/inicio-prueba/", una copia vieja de tu home que quedó pública.</p>
+        <p class="hint">Google puede confundirse sobre cuál de las dos versiones mostrar, y es contenido de trabajo que no debería estar indexado.</p>
+      </div></li>
+    </ul>
+  </div>
+</section>
+
+<!-- 02: Social Media Presence -->
+<section class="point" id="redes">
+  <div class="point-inner">
+    <div class="point-badge">02</div>
+    <h2>Presencia en redes sociales</h2>
+    <p class="point-intro">Así se ve tu presencia en las redes que enlazás desde tu sitio.</p>
+    <ul>
+      <li><span class="dot"></span><div class="li-body">
+        <p>Instagram es tu red más fuerte hoy: 22,3 mil seguidores, actividad muy reciente (tu última publicación es de hace apenas 4 horas) y una bio que refleja bien lo que ofrecés.</p>
+        <p class="hint">Es donde ya tenés la comunidad más grande y más activa escuchándote, con contenido real de tu operación (cargas, envíos, procesos).</p>
+      </div></li>
+      <li><span class="dot"></span><div class="li-body">
+        <p>Tu Facebook está activo y republica el mismo contenido de Instagram, pero tiene apenas 206 seguidores frente a los 22,3 mil de Instagram, con muy poco engagement (2 likes en la última publicación).</p>
+        <p class="hint">Puede ser una señal de que tu audiencia ya se movió a Instagram, en cuyo caso quizás no valga la pena seguir invirtiendo el mismo esfuerzo ahí.</p>
+      </div></li>
+      <li><span class="dot"></span><div class="li-body">
+        <p>El ícono de X (Twitter) de tu sitio funciona y no está roto, pero lleva a una cuenta congelada desde el 3 de julio de 2015: más de una década sin ninguna publicación nueva.</p>
+        <p class="hint">Un ícono que "funciona" pero lleva a una cuenta abandonada puede ser peor que uno roto, porque un visitante que llega ahí ve información y precios de hace 10 años.</p>
+      </div></li>
+      <li><span class="dot"></span><div class="li-body">
+        <p>En total solo enlazás 3 redes (Instagram, Facebook y X), ubicadas al medio de la página junto al feed de Instagram, y no en el header o el footer donde suelen buscarse.</p>
+        <p class="hint">Alguien que busca tus redes desde el celular, sin bajar hasta esa sección puntual, puede no encontrarlas.</p>
+      </div></li>
+    </ul>
+  </div>
+</section>
+
+<!-- 03: Brand & Message Consistency -->
+<section class="point" id="marca">
+  <div class="point-inner">
+    <div class="point-badge">03</div>
+    <h2>Consistencia de marca y mensaje</h2>
+    <p class="point-intro">Tu sitio tiene una base prolija, pero hay detalles que restan confianza en el momento justo.</p>
+    <ul>
+      <li><span class="dot"></span><div class="li-body">
+        <p>Tu página de contacto lista la oficina de China dos veces, con horarios distintos (una dice hasta las 5:30pm, la otra hasta las 5:00pm) y el dato de WeChat solo aparece en una de las dos.</p>
+        <p class="hint">Es el tipo de detalle que, si alguien lo nota, hace dudar de cuál dato es el correcto justo antes de escribirte.</p>
+      </div></li>
+      <li><span class="dot"></span><div class="li-body">
+        <p>El botón para enviar tu formulario de contacto dice "Send" en inglés, en un sitio que está en español en todo lo demás.</p>
+        <p class="hint">Es un detalle chico, pero rompe la sensación de que todo el sitio fue pensado como un conjunto.</p>
+      </div></li>
+      <li><span class="dot"></span><div class="li-body">
+        <p>Tu home tiene dos títulos principales compitiendo por ser el mensaje central: "Envíos y soluciones de Logística Internacional confiable" y, más abajo, "ITINERARIO DE SALIDAS".</p>
+        <p class="hint">Para Google (y para quien lee rápido) debería quedar claro cuál es el mensaje número uno de tu página.</p>
+      </div></li>
+      <li><span class="dot"></span><div class="li-body">
+        <p>Tu voz de marca es fuerte y actual en Instagram, pero al lado, con el mismo peso visual, tenés un ícono que lleva a una cuenta de X congelada desde 2015.</p>
+        <p class="hint">Un visitante que curiosea tus redes puede pasar de ver tu contenido más fresco a uno completamente desactualizado en un solo clic.</p>
+      </div></li>
+    </ul>
+  </div>
+</section>
+
+<!-- 04: Opportunities for Improvement -->
+<section class="point" id="oportunidades">
+  <div class="point-inner">
+    <div class="point-badge">04</div>
+    <h2>Oportunidades de mejora</h2>
+    <p class="point-intro">Un pantallazo de por dónde arrancar.</p>
+    <ul>
+      <li><span class="dot"></span><div class="li-body">
+        <p>Sumar un canal de WhatsApp real y visible en el sitio, el mismo que ya usás en Instagram.</p>
+        <p class="hint">Le da a tu cliente el canal que ya prefiere, sin tener que buscarlo en tus redes.</p>
+      </div></li>
+      <li><span class="dot"></span><div class="li-body">
+        <p>Agregar una imagen de vista previa (og:image) para que tu link se vea bien al compartirse en WhatsApp o redes.</p>
+        <p class="hint">Es una mejora rápida de aplicar, que ayuda a que más gente haga clic cuando alguien comparte tu sitio.</p>
+      </div></li>
+      <li><span class="dot"></span><div class="li-body">
+        <p>Corregir el menú en anchos de tablet (~972px), donde hoy se superpone y corta texto.</p>
+        <p class="hint">Es un ancho muy común en notebooks chicas y tablets, no un caso raro.</p>
+      </div></li>
+      <li><span class="dot"></span><div class="li-body">
+        <p>Revisar o desvincular la cuenta de X (Twitter), congelada desde 2015.</p>
+        <p class="hint">Mejor no enlazarla que dejar que alguien llegue ahí y vea tu marca detenida en el tiempo.</p>
+      </div></li>
+      <li><span class="dot"></span><div class="li-body">
+        <p>Unificar los datos de la oficina de China en tu página de contacto.</p>
+        <p class="hint">Un solo horario y un solo dato de contacto por oficina evita dudas justo antes de que te escriban.</p>
+      </div></li>
+    </ul>
+    <p class="closing-note">Esto es solo el primer vistazo. Hay mucho más para mostrarte.</p>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="inner">
+    <h2>¿Querés ver el análisis completo?</h2>
+    <p>Esta Asesoría Digital Inicial es un pantallazo rápido y gratuito. La <strong>Asesoría Digital Completa</strong> suma auditoría técnica completa, revisión de tu funnel de conversión, accesibilidad y SEO, capturas reales de cada hallazgo, y un plan de acción priorizado, paso a paso, para tu negocio.</p>
+    <div class="cta-buttons">
+      <a class="btn primary" href="https://calendly.com/myalkimia/30min" target="_blank" rel="noopener">Agendá una llamada</a>
+      <a class="btn secondary" href="mailto:contact@myalkimia.com">Escribinos</a>
+    </div>
+  </div>
+</section>
+
+<footer class="end">
+  <svg viewBox="0 0 416.29 206.88"><use href="#alkimiaLockup"/></svg>
+  <div>© 2026 Alkimia · myalkimia.com</div>
+</footer>
+
+</body>
+</html>
