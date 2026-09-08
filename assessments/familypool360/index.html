@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Asesoría Digital Inicial, Family Pool 360</title>
+<style>
+  @font-face{
+    font-family:"Inter";
+    src:url("../../assets/fonts/Inter-VariableFont_opsz,wght.ttf") format("truetype-variations");
+    font-weight:100 900;
+    font-style:normal;
+    font-display:swap;
+  }
+  :root{
+    --alk-purple:#6b4fa1;
+    --alk-purple-deep:#5a4287;
+    --alk-purple-dark:#3a265c;
+    --alk-heading:#3a265c;
+    --alk-body:#4a4458;
+    --alk-muted:#786f92;
+    --alk-lavender:#e9e4f4;
+    --alk-lavender-2:#f6f4fb;
+    --alk-gold:#e3b256;
+    --alk-line:#e3daf3;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    color:var(--alk-body);
+    background:#fff;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  img{max-width:100%;display:block;}
+  a{color:inherit;}
+
+  /* Hero */
+  header.hero{
+    background:linear-gradient(150deg,var(--alk-purple-dark),var(--alk-purple));
+    color:#fff;
+    padding:64px 24px 72px;
+    text-align:center;
+  }
+  header.hero .brand-mark{display:flex;justify-content:center;margin-bottom:28px;}
+  header.hero .brand-mark svg{width:64px;height:auto;fill:#fff;display:block;}
+  header.hero .eyebrow{
+    font-size:13px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+    color:#e3d9f5;margin-bottom:14px;
+  }
+  header.hero h1{
+    font-size:clamp(32px,5vw,48px);font-weight:800;letter-spacing:-.01em;
+    margin-bottom:16px;
+  }
+  header.hero .subtitle{
+    max-width:560px;margin:0 auto;color:#e3d9f5;font-size:17px;line-height:1.6;
+  }
+  .meta-row{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:28px;}
+  .pill{
+    background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.25);
+    padding:6px 14px;border-radius:20px;font-size:12.5px;color:#f0eafa;
+  }
+
+  /* Intro strip */
+  .intro-strip{
+    max-width:640px;margin:0 auto;padding:56px 24px 8px;text-align:center;
+  }
+  .intro-strip p{font-size:19px;color:var(--alk-heading);line-height:1.65;}
+  .quicknav{
+    margin-top:18px;font-size:14.5px;font-weight:600;color:var(--alk-muted);
+  }
+  .quicknav a{color:var(--alk-purple-deep);text-decoration:none;}
+  .quicknav a:hover{text-decoration:underline;}
+
+  /* Sections */
+  section.point{
+    padding:72px 24px;
+    min-height:88vh;
+    display:flex;
+    align-items:center;
+  }
+  section.point:nth-of-type(even){background:var(--alk-lavender-2);}
+  .point-inner{max-width:680px;margin:0 auto;width:100%;}
+  .point-badge{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:44px;height:44px;border-radius:50%;
+    background:var(--alk-lavender);color:var(--alk-purple-deep);
+    font-weight:800;font-size:16px;margin-bottom:20px;
+  }
+  .point h2{
+    font-size:clamp(24px,3.4vw,32px);color:var(--alk-heading);font-weight:800;
+    margin-bottom:14px;letter-spacing:-.01em;
+  }
+  .point .point-intro{
+    font-size:17px;color:var(--alk-muted);margin-bottom:28px;max-width:520px;
+  }
+  .point ul{list-style:none;}
+  .point li{
+    display:flex;gap:14px;padding:14px 0;border-top:1px solid var(--alk-line);
+    font-size:16px;color:var(--alk-body);line-height:1.55;
+  }
+  .point li:last-child{border-bottom:1px solid var(--alk-line);}
+  .point li .dot{
+    flex:0 0 auto;width:8px;height:8px;border-radius:50%;
+    background:var(--alk-purple);margin-top:8px;
+  }
+  .point li .li-body p{margin:0;}
+  .point li .li-body .hint{
+    margin-top:6px;font-size:14px;font-style:italic;color:var(--alk-muted);
+    line-height:1.5;
+  }
+  .point .closing-note{
+    margin-top:24px;font-size:14.5px;color:var(--alk-muted);font-style:italic;
+  }
+
+  /* Closing CTA */
+  .cta-section{
+    background:linear-gradient(150deg,var(--alk-purple-dark),var(--alk-purple));
+    color:#fff;padding:80px 24px;text-align:center;
+  }
+  .cta-section .inner{max-width:600px;margin:0 auto;}
+  .cta-section h2{font-size:clamp(26px,3.6vw,34px);font-weight:800;margin-bottom:16px;}
+  .cta-section p{color:#e3d9f5;font-size:16.5px;line-height:1.65;margin-bottom:32px;}
+  .cta-buttons{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;}
+  .btn{
+    display:inline-block;padding:14px 28px;border-radius:30px;font-weight:700;
+    font-size:15px;text-decoration:none;
+  }
+  .btn.primary{background:#fff;color:var(--alk-purple-deep);}
+  .btn.secondary{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.5);}
+
+  footer.end{
+    padding:36px 24px;text-align:center;color:var(--alk-muted);font-size:13px;
+  }
+  footer.end svg{width:22px;height:auto;fill:var(--alk-muted);margin-bottom:10px;}
+
+  @media (max-width:600px){
+    section.point{padding:56px 20px;min-height:0;}
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="alkimiaLockup" viewBox="0 0 416.29 206.88">
+    <path d="M209.84,3.18c13.21,0,25.63,5.14,34.97,14.49,9.34,9.34,14.49,21.76,14.49,34.97s-5.14,25.63-14.49,34.97c-9.34,9.34-21.76,14.49-34.97,14.49s-25.63-5.14-34.97-14.49c-9.34-9.34-14.49-21.76-14.49-34.97s5.14-25.63,14.49-34.97c9.34-9.34,21.76-14.49,34.97-14.49M209.84,0c-29.07,0-52.64,23.57-52.64,52.64s23.57,52.64,52.64,52.64,52.64-23.57,52.64-52.64S238.92,0,209.84,0h0Z"/>
+    <path d="M209.89,9.06l38.76,67.13h-77.52L209.89,9.06M209.89,2.7l-44.27,76.68h88.54L209.89,2.7h0Z"/>
+    <path d="M227.26,41.65v34.57h-34.57v-34.57h34.57M230.44,38.47h-40.93v40.93h40.93v-40.93h0Z"/>
+    <path d="M209.84,46.2c7.12,0,12.92,5.8,12.92,12.92s-5.8,12.92-12.92,12.92-12.92-5.8-12.92-12.92,5.8-12.92,12.92-12.92M209.84,43.01c-8.89,0-16.1,7.21-16.1,16.1s7.21,16.1,16.1,16.1,16.1-7.21,16.1-16.1-7.21-16.1-16.1-16.1h0Z"/>
+    <path d="M84.84,136.01h10.12v62.06h38.37v8.81h-48.5v-70.87Z"/>
+    <path d="M166.8,175.4l-12.96,13.16v18.33h-10.12v-70.87h10.12v39.59l38.47-39.59h11.54l-30.27,31.89,32.2,38.98h-11.85l-27.13-31.49Z"/>
+    <path d="M215.87,136.01h10.12v70.87h-10.12v-70.87Z"/>
+    <path d="M301.61,206.88l-.1-57.94-25.61,15.9h-4.66l-25.61-15.59v57.64h-9.72v-70.87h8.3l29.56,18.26,29.16-18.26h8.3l.1,70.87h-9.72Z"/>
+    <path d="M321.23,136.01h10.12v70.87h-10.12v-70.87Z"/>
+    <polygon points="42.12 136.01 32.09 136.01 0 206.88 10.43 206.88 21.78 181.07 21.77 181.07 37.06 146.34 52.34 181.07 52.33 181.07 63.68 206.88 74.31 206.88 42.12 136.01"/>
+    <polygon points="384.1 136.01 374.07 136.01 341.98 206.88 352.41 206.88 363.76 181.07 363.75 181.07 379.03 146.34 394.32 181.07 394.31 181.07 405.66 206.88 416.29 206.88 384.1 136.01"/>
+  </symbol>
+</svg>
+
+<header class="hero">
+  <div class="brand-mark">
+    <svg viewBox="0 0 416.29 206.88"><use href="#alkimiaLockup"/></svg>
+  </div>
+  <div class="eyebrow">Un regalo para tu negocio 🎁</div>
+  <h1>Asesoría Digital Inicial</h1>
+  <p class="subtitle">Un primer vistazo, rápido, preciso y sin costo, a cómo se ve hoy familypool360.com. Preparado por Alkimia.</p>
+  <div class="meta-row">
+    <span class="pill">Preparado por Alkimia para Family Pool 360</span>
+    <span class="pill">8 de septiembre de 2026</span>
+    <span class="pill">Versión inicial · gratuita</span>
+  </div>
+</header>
+
+<div class="intro-strip">
+  <p>Miramos tu sitio, tus redes y tu marca con la mirada de alguien que te conoce por primera vez, así llega hoy un cliente nuevo a ti. Te compartimos 4 puntos clave.</p>
+  <p class="quicknav"><a href="#rendimiento">Rendimiento</a> · <a href="#redes">Presencia</a> · <a href="#marca">Consistencia</a> · <a href="#oportunidades">Mejoras</a></p>
+</div>
+
+<!-- 01: Website Performance -->
+<section class="point" id="rendimiento">
+  <div class="point-inner">
+    <div class="point-badge">01</div>
+    <h2>Rendimiento del sitio web</h2>
+    <p class="point-intro">Así se siente llegar a tu sitio hoy, justo cuando alguien recién descubrió tu negocio y está decidiendo si contactarte.</p>
+    <ul>
+      <li><span class="dot"></span><div class="li-body">
+        <p>No hay ningún botón ni enlace de WhatsApp en ninguna de las 5 páginas del sitio (Inicio, Sobre Nosotros, Servicios, Premios, Contacto), aunque tu propio Facebook comparte como testimonio una conversación real de WhatsApp con un cliente.</p>
+        <p class="hint">Es el canal que ya usas para hablar con tus clientes, pero hoy alguien que llega desde la web solo puede llamar por teléfono o completar un formulario.</p>
+      </div></li>
+      <li><span class="dot"></span><div class="li-body">
+        <p>El mapa del sitio que le envías a Google, el sitemap.xml, devuelve un error 404: no existe.</p>
+        <p class="hint">Sin ese archivo, a Google le cuesta más encontrar y ordenar todas tus páginas, lo que puede afectar cuánto y cómo apareces en las búsquedas.</p>
+      </div></li>
+      <li><span class="dot"></span><div class="li-body">
+        <p>Tu página "Sobre Nosotros" es un solo bloque de texto genérico, y la de "Servicios" cierra con una galería de fotos de trabajos reales pero sin ninguna descripción.</p>
+        <p class="hint">Son las dos páginas donde alguien nuevo decide si confiar en ti, y hoy dependen de texto genérico y fotos sin contexto, en vez de mostrarte a ti y a tu equipo trabajando.</p>
+      </div></li>
+      <li><span class="dot"></span><div class="li-body">
+        <p>Todo el sitio se reduce a esas 5 páginas estáticas, sin blog ni ninguna sección que se actualice con contenido nuevo.</p>
+        <p class="hint">Google favorece a los sitios que agregan contenido con el tiempo; hoy no hay ningún lugar en tu web donde eso pueda pasar.</p>
+      </div></li>
+    </ul>
+  </div>
+</section>
+
+<!-- 02: Social Media Presence -->
+<section class="point" id="redes">
+  <div class="point-inner">
+    <div class="point-badge">02</div>
+    <h2>Presencia en redes sociales</h2>
+    <p class="point-intro">Así se ve tu presencia en las redes que ya tienes activas.</p>
+    <ul>
+      <li><span class="dot"></span><div class="li-body">
+        <p>Instagram es tu red más grande: 4.074 seguidores, una bio clara ("Licensed • Certified • Insured") y destacados bien organizados (Maintenance, Result, Cleaning, Certificates, About us, Reviews).</p>
+        <p class="hint">Es una base sólida: el problema no es la presencia, es lo que pasa después de que alguien llega.</p>
+      </div></li>
+      <li><span class="dot"></span><div class="li-body">
+        <p>Tus publicaciones promedian apenas ~20 me gusta sobre 4.074 seguidores (cerca de 0,5% de interacción), y sigues a 7.120 cuentas, casi el doble de las que te siguen a ti.</p>
+        <p class="hint">Un ratio de seguidos tan alto frente a tus seguidores puede ser señal de estrategias de seguir y dejar de seguir para crecer, algo que Instagram tiende a penalizar mostrando tu contenido a menos gente.</p>
+      </div></li>
+      <li><span class="dot"></span><div class="li-body">
+        <p>En los 16 posts propios que revisamos (8 en Instagram y 8 en Facebook) no encontramos ninguna respuesta tuya a un comentario de un cliente o seguidor, ni siquiera en el video con más comentarios.</p>
+        <p class="hint">Cada comentario sin responder es una conversación que quedó abierta, justo el tipo de intercambio que más ayuda a que el algoritmo te muestre a más gente.</p>
+      </div></li>
+      <li><span class="dot"></span><div class="li-body">
+        <p>6 de tus últimos 8 posts de Facebook son exactamente el mismo video o imagen que publicaste en Instagram el mismo día, y ahí el rendimiento es bastante más bajo: entre 0 y 4 reacciones, frente a los 14-47 me gusta que consiguen en Instagram.</p>
+        <p class="hint">Puede ser que tu audiencia de Facebook necesite un enfoque distinto, o que ya esté mayormente en Instagram y no valga la pena duplicar el mismo esfuerzo ahí.</p>
+      </div></li>
+      <li><span class="dot"></span><div class="li-body">
+        <p>Tu única reseña en Facebook es negativa (manchas, moho, un cliente que cambió de proveedor), pero la respondiste con una disculpa clara, una explicación honesta y el reembolso de un mes de servicio, y la clienta lo agradeció en el mismo hilo.</p>
+        <p class="hint">Demuestra que sabes manejar bien una conversación difícil cuando de verdad importa; el desafío es llevar esa misma atención a los comentarios de todos los días, no solo a los problemas grandes.</p>
+      </div></li>
+    </ul>
+  </div>
+</section>
+
+<!-- 03: Brand & Message Consistency -->
+<section class="point" id="marca">
+  <div class="point-inner">
+    <div class="point-badge">03</div>
+    <h2>Consistencia de marca y mensaje</h2>
+    <p class="point-intro">Tu marca tiene una base prolija (piletas transformadas, certificaciones reales, premios genuinos), pero no siempre se cuenta de forma pareja.</p>
+    <ul>
+      <li><span class="dot"></span><div class="li-body">
+        <p>Tu página de Servicios está en inglés, salvo el listado de tareas de limpieza ("La limpieza de la piscina consiste en: Cuadrícula, limpieza de azulejos, cepillado de paredes…"), que quedó sin traducir.</p>
+        <p class="hint">Es el tipo de detalle que, si alguien lo nota, hace pensar que el resto del sitio tampoco se revisó del todo.</p>
+      </div></li>
+      <li><span class="dot"></span><div class="li-body">
+        <p>La publicación fijada en tu perfil de Instagram, el primer contenido que ve cualquiera que entra por primera vez, es un repost de otra cuenta sobre la nominación de tu co-fundadora a un premio, no un mensaje propio del negocio.</p>
+        <p class="hint">Es el lugar más visible de todo tu perfil, y hoy no está usado para presentar tu servicio, tus certificaciones o tu propuesta, sino el logro de otra cuenta.</p>
+      </div></li>
+      <li><span class="dot"></span><div class="li-body">
+        <p>Tienes premios reales y verificables (Best of the Best Palm Beach County 2023, dos veces Favorito del Vecindario en Nextdoor) documentados en tu propia web, pero ninguno aparece en tu bio ni en tus destacados de Instagram.</p>
+        <p class="hint">Es prueba de confianza que ya ganaste y que hoy no se ve en el lugar donde la mayoría de tus seguidores nuevos te conoce por primera vez.</p>
+      </div></li>
+      <li><span class="dot"></span><div class="li-body">
+        <p>Tu contenido con mejor desempeño es un reel con tono humorístico ("POV: me when it's time to justify my salary", 47 me gusta), pero el resto de tu comunicación institucional, la bio, los premios, las reseñas, mantiene un tono formal y corporativo.</p>
+        <p class="hint">No hace falta elegir uno solo, pero vale la pena decidir a propósito qué tanto humor y cercanía mostrar, en vez de que el contraste sea tan marcado entre un post y el siguiente.</p>
+      </div></li>
+    </ul>
+  </div>
+</section>
+
+<!-- 04: Opportunities for Improvement -->
+<section class="point" id="oportunidades">
+  <div class="point-inner">
+    <div class="point-badge">04</div>
+    <h2>Oportunidades de mejora</h2>
+    <p class="point-intro">Un pantallazo de por dónde arrancar.</p>
+    <ul>
+      <li><span class="dot"></span><div class="li-body">
+        <p>Sumar un botón o enlace de WhatsApp visible en el sitio, el mismo canal que ya usas con tus clientes.</p>
+        <p class="hint">Le da a quien te visita el camino más corto para escribirte, sin tener que buscar tu teléfono o llenar un formulario.</p>
+      </div></li>
+      <li><span class="dot"></span><div class="li-body">
+        <p>Corregir el sitemap.xml, que hoy devuelve error 404.</p>
+        <p class="hint">Es una mejora técnica rápida de aplicar que ayuda a que Google indexe mejor todas tus páginas.</p>
+      </div></li>
+      <li><span class="dot"></span><div class="li-body">
+        <p>Definir un hábito simple para responder los comentarios de rutina en Instagram y Facebook, aunque sea con un mensaje corto.</p>
+        <p class="hint">Ya demostraste que sabes responder bien cuando algo importa de verdad; llevar esa misma atención al día a día ayuda a que más gente interactúe contigo.</p>
+      </div></li>
+      <li><span class="dot"></span><div class="li-body">
+        <p>Adaptar el contenido antes de publicarlo en Facebook, en vez de repetir el mismo video o imagen que ya subiste a Instagram el mismo día.</p>
+        <p class="hint">El rendimiento hoy es bastante más bajo ahí, así que vale la pena probar un enfoque distinto para esa audiencia.</p>
+      </div></li>
+      <li><span class="dot"></span><div class="li-body">
+        <p>Unificar el idioma en la página de Servicios y sumar tus premios (Best of Palm Beach, Nextdoor Favorite) a tu bio o destacados de Instagram.</p>
+        <p class="hint">Son detalles rápidos de corregir que suman confianza justo en los lugares donde te conocen por primera vez.</p>
+      </div></li>
+    </ul>
+    <p class="closing-note">Esto es solo el primer vistazo. Hay mucho más para mostrarte.</p>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="inner">
+    <h2>¿Quieres ver el análisis completo?</h2>
+    <p>Esta Asesoría Digital Inicial es un pantallazo rápido y gratuito. La <strong>Asesoría Digital Completa</strong> suma auditoría técnica completa, revisión de tu funnel de conversión, accesibilidad y SEO, capturas reales de cada hallazgo, y un plan de acción priorizado, paso a paso, para tu negocio.</p>
+    <div class="cta-buttons">
+      <a class="btn primary" href="https://calendly.com/myalkimia/30min" target="_blank" rel="noopener">Agenda una llamada</a>
+      <a class="btn secondary" href="mailto:contact@myalkimia.com">Escríbenos</a>
+    </div>
+  </div>
+</section>
+
+<footer class="end">
+  <svg viewBox="0 0 416.29 206.88"><use href="#alkimiaLockup"/></svg>
+  <div>© 2026 Alkimia · myalkimia.com</div>
+</footer>
+
+</body>
+</html>
