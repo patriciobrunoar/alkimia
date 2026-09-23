@@ -21,11 +21,13 @@ body.capture canvas{width:1920px;height:1080px}
 </head>
 <body>
 <canvas id="c" width="1920" height="1080"></canvas>
-<div class="bar"><button id="play">Play</button><input id="scrub" type="range" min="0" max="60" step="0.01" value="0"><span id="tc">0.00s</span></div>
+<div class="bar"><button id="play">Play</button><input id="scrub" type="range" min="0" max="60" step="0.01" value="0"><span id="tc">0.00s</span><label style="font:500 13px Inter,sans-serif;display:flex;gap:6px;align-items:center"><input id="subs" type="checkbox" checked style="flex:none">Subtitles</label></div>
 <script src="logo.js"></script>
+<script src="timeline.js"></script>
 <script>
 "use strict";
-const W = 1920, H = 1080, DUR = 60;
+const W = 1920, H = 1080, DUR = TIMELINE.duration;
+let SUBS = /subs/.test(location.hash);
 const cv = document.getElementById("c");
 const out = cv.getContext("2d");
 const layer = document.createElement("canvas"); layer.width = W; layer.height = H;
@@ -124,7 +126,7 @@ function finish(t, frame) {
   out.save(); out.globalAlpha = .045; out.globalCompositeOperation = "overlay";
   const ox = (frame * 97) % 256, oy = (frame * 57) % 256; out.translate(-ox, -oy); out.fillStyle = out.createPattern(grainC, "repeat"); out.fillRect(0, 0, W + 256, H + 256); out.restore();
   const v = out.createRadialGradient(W / 2, H / 2, H * .45, W / 2, H / 2, H * 1.05); v.addColorStop(0, "rgba(0,0,0,0)"); v.addColorStop(1, "rgba(0,0,0,0.55)"); out.fillStyle = v; out.fillRect(0, 0, W, H);
-  const fade = Math.max(1 - prog(t, 0, .35), prog(t, 59.55, 60));
+  const fade = Math.max(1 - prog(t, 0, .35), prog(t, DUR - .45, DUR));
   if (fade > 0) { out.fillStyle = `rgba(0,0,0,${fade})`; out.fillRect(0, 0, W, H); }
 }
 
@@ -226,10 +228,10 @@ function s1(lt) {
   }
   // title
   const ta = eOut(prog(lt, .9, 1.5));
-  const gr = g.createLinearGradient(0, H - 380, 0, H); gr.addColorStop(0, "rgba(11,7,21,0)"); gr.addColorStop(1, "rgba(11,7,21,0.88)"); g.fillStyle = gr; g.globalAlpha = ta; g.fillRect(0, H - 380, W, 380); g.globalAlpha = 1;
-  kicker("Franchise growth", 120, 880, ta);
-  words("Scale your framework.", 120, 970, .95, lt, { size: 96, weight: 800 });
-  g.fillStyle = C.purpleLight; g.fillRect(120, 895, 90 * ta, 4);
+  const gr = g.createLinearGradient(0, H - 420, 0, H); gr.addColorStop(0, "rgba(11,7,21,0)"); gr.addColorStop(1, "rgba(11,7,21,0.9)"); g.fillStyle = gr; g.globalAlpha = ta; g.fillRect(0, H - 420, W, 420); g.globalAlpha = 1;
+  kicker("Franchise growth", 120, 835, ta);
+  words("Scale your framework.", 120, 925, .95, lt, { size: 96, weight: 800 });
+  g.fillStyle = C.purpleLight; g.fillRect(120, 850, 90 * ta, 4);
 }
 
 /* =====================================================================
@@ -303,7 +305,7 @@ function s2(lt) {
   });
   pin(hx, hy, C.lav, ma, (lt * .8) % 1, 11); text("HQ", hx - 16, hy - 20, { size: 18, weight: 800, ls: 2, alpha: ma, align: "right" });
   // title
-  const y = 960; words("Corporate Vision ≠ Local Reality", 960, y, 1.3, lt, { size: 84, weight: 800, align: "center", gap: .1, colors: { 2: C.warm } });
+  const y = 915; words("Corporate Vision ≠ Local Reality", 960, y, 1.3, lt, { size: 84, weight: 800, align: "center", gap: .1, colors: { 2: C.warm } });
 }
 
 /* =====================================================================
@@ -397,9 +399,9 @@ function s3(lt) {
     g.restore();
     // overlay
     const oa = eOut(prog(t, .8, 1.4));
-    kicker("Introducing", 120, 745, oa);
-    g.save(); g.globalAlpha = oa; drawLockup(120 + 150, 850, 300, 1, 1); g.restore();
-    words("Franchise Growth Systems™", 120, 990, 1.1 + 5.6, lt, { size: 64, weight: 700, gap: .1 });
+    kicker("Introducing", 120, 700, oa);
+    g.save(); g.globalAlpha = oa; drawLockup(120 + 150, 805, 300, 1, 1); g.restore();
+    words("Franchise Growth Systems™", 120, 945, 1.1 + 5.6, lt, { size: 64, weight: 700, gap: .1 });
   }
 }
 
@@ -587,7 +589,7 @@ function s6(lt) {
     }
   }
   // headline
-  const hy = lt < 4.2 ? 1000 : lerp(1000, 150, eIO(prog(lt, 4.2, 4.9)));
+  const hy = lt < 4.2 ? 950 : lerp(950, 150, eIO(prog(lt, 4.2, 4.9)));
   words("Corporate + Franchisees + Agencies", 960, hy, .6, lt, { size: 60, weight: 800, align: "center", gap: .22, colors: { 1: C.lav3, 3: C.lav3 } });
   kicker("Working alongside your teams — without disrupting operations", 960, hy + 50, eOut(prog(lt, 5.2, 5.8)) * (lt > 4.9 ? 1 : 0), C.lav3, "center");
 }
@@ -612,12 +614,12 @@ function s7(lt) {
   mesh.forEach(([a, b], i) => { const p = eIO(prog(lt, 1.2 + i * .04, 2.0 + i * .04)); if (p <= 0) return; const [x1, y1] = pos[a], [x2, y2] = pos[b]; g.strokeStyle = rgba(C.lav3, .45); g.lineWidth = 1.2; g.beginPath(); g.moveTo(x1, y1); g.lineTo(lerp(x1, x2, p), lerp(y1, y2, p)); g.stroke(); });
   pos.forEach(([x, y], i) => { const on = eBack(prog(lt, .2 + i * .08, .6 + i * .08)); if (on > 0) pin(x, y, i ? C.purpleLight : C.lav, clamp(on), 0, i ? 6 * on : 10); });
   if (lock > 0) { // system locks: frame closes
-    g.save(); g.globalAlpha = lock; g.strokeStyle = rgba(C.lav, .55); g.lineWidth = 2; const fw = lerp(1800, 1560, lock), fh = lerp(980, 830, lock);
-    rrect(960 - fw / 2, 470 - fh / 2 - 30, fw, fh, 30); g.stroke();
+    g.save(); g.globalAlpha = lock; g.strokeStyle = rgba(C.lav, .55); g.lineWidth = 2; const fw = lerp(1800, 1560, lock), fh = lerp(900, 770, lock);
+    rrect(960 - fw / 2, 450 - fh / 2, fw, fh, 30); g.stroke();
     const flash = 1 - prog(lt, 3.0, 3.8); g.fillStyle = rgba(C.lav, flash * .12 * lock); g.fillRect(0, 0, W, H); g.restore();
   }
-  const gr = g.createLinearGradient(0, H - 300, 0, H); gr.addColorStop(0, "rgba(11,7,21,0)"); gr.addColorStop(1, "rgba(11,7,21,0.9)"); g.fillStyle = gr; g.fillRect(0, H - 300, W, 300);
-  words("Assess. Enable. Scale.", 960, 990, .8, lt, { size: 100, weight: 800, align: "center", gap: .85, colors: { 2: C.lav2 } });
+  const gr = g.createLinearGradient(0, H - 340, 0, H); gr.addColorStop(0, "rgba(11,7,21,0)"); gr.addColorStop(1, "rgba(11,7,21,0.9)"); g.fillStyle = gr; g.fillRect(0, H - 340, W, 340);
+  words("Assess. Enable. Scale.", 960, 935, .35, lt, { size: 100, weight: 800, align: "center", gap: 1.75, colors: { 2: C.lav2 } });
 }
 
 /* =====================================================================
@@ -644,27 +646,38 @@ function s8(lt) {
 }
 
 /* ---------- timeline ---------- */
-const SCENES = [[0, 5, s1], [5, 10, s2], [10, 20, s3], [20, 30, s4], [30, 40, s5], [40, 50, s6], [50, 55, s7], [55, 60, s8]];
+const SCENES = TIMELINE.scenes.map(([a, b, speed], i) => [a, b, speed, [s1, s2, s3, s4, s5, s6, s7, s8][i]]);
+function subtitles(t) {
+  const cue = TIMELINE.cues.find(([a, b]) => t >= a && t < b); if (!cue) return;
+  const [a, b, s] = cue, k = Math.min(prog(t, a, a + .15), 1 - prog(t, b - .15, b));
+  let size = 36; out.font = `600 ${size}px Inter`; out.letterSpacing = "0px"; let w = out.measureText(s).width;
+  if (w > 1640) { size = Math.floor(size * 1640 / w); out.font = `600 ${size}px Inter`; w = out.measureText(s).width; }
+  out.save(); out.globalAlpha = k; out.beginPath(); out.roundRect(960 - w / 2 - 28, 1000, w + 56, 58, 29);
+  out.fillStyle = "rgba(11,7,21,0.78)"; out.fill(); out.strokeStyle = "rgba(201,189,230,0.28)"; out.lineWidth = 1.5; out.stroke();
+  out.fillStyle = "#fff"; out.textAlign = "center"; out.textBaseline = "middle"; out.fillText(s, 960, 1030); out.restore();
+}
 function render(t, frame = Math.round(t * 30)) {
   t = clamp(t, 0, DUR - 1e-6);
   background(t);
-  for (const [a, b, fn] of SCENES) {
+  for (const [a, b, speed, fn] of SCENES) {
     if (t < a || t >= b) continue;
-    const lt = t - a, inK = a === 0 ? 1 : eOut(prog(lt, 0, .4)), outK = b === DUR ? 1 : 1 - eIn(prog(lt, b - a - .35, b - a));
+    const rt = t - a, lt = rt * speed, inK = a === 0 ? 1 : eOut(prog(rt, 0, .4)), outK = b === DUR ? 1 : 1 - eIn(prog(rt, b - a - .35, b - a));
     g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, W, H); g.globalAlpha = 1;
-    fn(lt, b - a, t);
+    fn(lt, (b - a) * speed, t);
     const s = (1 + (1 - inK) * .04) * (1 - (1 - outK) * .03);
     out.save(); out.globalAlpha = inK * outK; out.translate(W / 2, H / 2); out.scale(s, s); out.translate(-W / 2, -H / 2); out.drawImage(layer, 0, 0); out.restore();
   }
   finish(t, frame);
+  if (SUBS) subtitles(t);
 }
-window.render = render;
+window.render = render; window.DUR = DUR;
 window.ready = Promise.all([document.fonts.load("800 40px Inter"), document.fonts.load("400 40px Inter"), ...Object.values(IMG).map(i => i.decode().catch(() => { }))]);
 
 /* ---------- preview player ---------- */
-if (location.hash === "#capture") document.body.classList.add("capture");
+if (/capture/.test(location.hash)) document.body.classList.add("capture");
 else {
-  const btn = document.getElementById("play"), sc = document.getElementById("scrub"), tc = document.getElementById("tc");
+  const btn = document.getElementById("play"), sc = document.getElementById("scrub"), tc = document.getElementById("tc"), sb = document.getElementById("subs");
+  sc.max = DUR; SUBS = sb.checked; sb.onchange = () => { SUBS = sb.checked; draw(); };
   let playing = false, t = 0, last = 0;
   const draw = () => { render(t); sc.value = t; tc.textContent = t.toFixed(2) + "s"; };
   btn.onclick = () => { playing = !playing; btn.textContent = playing ? "Pause" : "Play"; last = performance.now(); if (t >= DUR - .05) t = 0; };

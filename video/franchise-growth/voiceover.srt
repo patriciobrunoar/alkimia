@@ -1,57 +1,79 @@
 1
-00:00:00,300 --> 00:00:02,500
+00:00:00,400 --> 00:00:03,400
 Scaling a franchise isn't just about adding locations.
 
 2
-00:00:02,500 --> 00:00:05,000
-It's about developing a clear, scalable model that supports growth
-and brand consistency, while promoting efficiencies amongst teams.
+00:00:03,400 --> 00:00:05,400
+It's building a scalable model that drives growth,
 
 3
-00:00:05,000 --> 00:00:10,000
-As networks expand, the real friction appears between
-corporate vision and local execution based on their needs.
+00:00:05,400 --> 00:00:07,300
+brand consistency and team efficiency.
 
 4
-00:00:10,000 --> 00:00:15,000
-Alkimia builds the bridge, delivering the framework
+00:00:07,900 --> 00:00:10,600
+As networks expand, real friction appears
 
 5
-00:00:15,000 --> 00:00:20,000
-that turns high-level strategy and marketing
-into repeatable local performance.
+00:00:10,600 --> 00:00:13,600
+between corporate vision and local execution.
 
 6
-00:00:20,000 --> 00:00:25,000
-We begin with an end-to-end Assessment, auditing your processes,
-GTM, tools, and franchisee support
+00:00:14,300 --> 00:00:16,600
+Alkimia builds the bridge:
 
 7
-00:00:25,000 --> 00:00:30,000
-to pin down blind spots and map out your strategic roadmap.
+00:00:16,600 --> 00:00:19,600
+a framework that turns high-level strategy and marketing
 
 8
-00:00:30,000 --> 00:00:35,000
-Then, we activate that roadmap: standardized grand and post openings,
-plug and play marketing playbooks,
+00:00:19,600 --> 00:00:22,600
+into repeatable local performance.
 
 9
-00:00:35,000 --> 00:00:40,000
-always-on media campaigns, and continuous franchisee enablement.
+00:00:24,400 --> 00:00:27,200
+We start with an end-to-end Assessment,
 
 10
-00:00:40,000 --> 00:00:45,000
-We work alongside your internal leadership teams, agencies, and franchisees
+00:00:27,200 --> 00:00:30,400
+auditing your GTM, processes, tools and franchisee support,
 
 11
-00:00:45,000 --> 00:00:50,000
-to execute accurately, without disrupting your existing operations.
+00:00:30,400 --> 00:00:33,900
+to uncover blind spots and map your strategic roadmap.
 
 12
-00:00:50,000 --> 00:00:55,000
-One unified marketing ecosystem. Built for consistency.
-Engineered for enterprise and local growth.
+00:00:34,900 --> 00:00:37,400
+Then, we activate that roadmap:
 
 13
-00:00:55,000 --> 00:00:59,500
+00:00:37,400 --> 00:00:40,600
+turnkey grand openings, plug-and-play marketing playbooks,
+
+14
+00:00:40,600 --> 00:00:44,300
+always-on media and continuous franchisee enablement.
+
+15
+00:00:45,400 --> 00:00:48,600
+We work alongside your leadership, agencies and franchisees
+
+16
+00:00:48,600 --> 00:00:52,200
+to execute accurately, without disrupting your operations.
+
+17
+00:00:54,800 --> 00:00:56,600
+One unified marketing ecosystem.
+
+18
+00:00:56,600 --> 00:00:58,300
+Built for consistency.
+
+19
+00:00:58,300 --> 00:01:00,300
+Engineered for enterprise and local growth.
+
+20
+00:01:01,000 --> 00:01:05,000
 Start with your Growth Assessment at myalkimia.com.
