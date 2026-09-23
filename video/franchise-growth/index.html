@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Alkimia — Franchise Growth Systems (video source)</title>
+<style>
+@font-face{font-family:"Inter";src:url("../../assets/fonts/Inter-VariableFont_opsz,wght.ttf") format("truetype-variations");font-weight:100 900;font-style:normal}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{background:#07040d;height:100%}
+body{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;font-family:Inter,sans-serif;color:#e9e4f4}
+canvas{width:min(100vw,calc((100vh - 60px)*16/9));aspect-ratio:16/9;display:block;background:#000}
+.bar{display:flex;gap:12px;align-items:center;width:min(100vw,calc((100vh - 60px)*16/9));padding:0 12px}
+.bar button{background:#6b4fa1;color:#fff;border:0;border-radius:999px;padding:6px 16px;font:600 14px Inter,sans-serif;cursor:pointer}
+.bar input{flex:1;accent-color:#8b6bb8}
+.bar span{font:500 13px Inter,sans-serif;min-width:64px;text-align:right}
+body.capture .bar{display:none}
+body.capture canvas{width:1920px;height:1080px}
+</style>
+</head>
+<body>
+<canvas id="c" width="1920" height="1080"></canvas>
+<div class="bar"><button id="play">Play</button><input id="scrub" type="range" min="0" max="60" step="0.01" value="0"><span id="tc">0.00s</span></div>
+<script src="logo.js"></script>
+<script>
+"use strict";
+const W = 1920, H = 1080, DUR = 60;
+const cv = document.getElementById("c");
+const out = cv.getContext("2d");
+const layer = document.createElement("canvas"); layer.width = W; layer.height = H;
+const g = layer.getContext("2d");
+
+/* ---------- Alkimia palette (from styles.css / index.html) ---------- */
+const C = {
+  ink: "#0b0715", night: "#140c24", deep: "#3a265c", purple: "#6b4fa1", purpleDeep: "#5a4287",
+  purpleLight: "#8b6bb8", header: "#7c6ba6", lav: "#e9e4f4", lav2: "#c9bde6", lav3: "#a996d6",
+  warm: "#FF6B35", gold: "#FFD700", green: "#10B981", cool: "#4A90E2", white: "#ffffff"
+};
+
+/* ---------- helpers ---------- */
+const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+const lerp = (a, b, t) => a + (b - a) * t;
+const prog = (t, a, b) => clamp((t - a) / (b - a));
+const eOut = t => 1 - Math.pow(1 - t, 3);
+const eIn = t => t * t * t;
+const eIO = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+const eBack = t => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2); };
+const eExpo = t => t >= 1 ? 1 : 1 - Math.pow(2, -10 * t);
+function rng(seed) { return function () { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function rgba(hex, a) { const n = parseInt(hex.slice(1), 16); return `rgba(${n >> 16 & 255},${n >> 8 & 255},${n & 255},${a})`; }
+function mix(h1, h2, t) { const a = parseInt(h1.slice(1), 16), b = parseInt(h2.slice(1), 16); const r = Math.round(lerp(a >> 16 & 255, b >> 16 & 255, t)), gg = Math.round(lerp(a >> 8 & 255, b >> 8 & 255, t)), bb = Math.round(lerp(a & 255, b & 255, t)); return "#" + ((1 << 24) + (r << 16) + (gg << 8) + bb).toString(16).slice(1); }
+
+function font(size, weight = 700) { g.font = `${weight} ${size}px Inter`; }
+function text(s, x, y, o = {}) {
+  const { size = 48, weight = 700, color = C.white, align = "left", base = "alphabetic", ls = 0, alpha = 1 } = o;
+  if (alpha <= 0) return 0;
+  g.save(); font(size, weight); g.letterSpacing = ls + "px"; g.textAlign = align; g.textBaseline = base;
+  g.globalAlpha *= alpha; g.fillStyle = color; g.fillText(s, x, y); const w = g.measureText(s).width; g.restore(); return w;
+}
+function measure(s, size, weight = 700, ls = 0) { g.save(); font(size, weight); g.letterSpacing = ls + "px"; const w = g.measureText(s).width; g.restore(); return w; }
+function rrect(x, y, w, h, r) { g.beginPath(); g.roundRect(x, y, w, h, r); }
+function glass(x, y, w, h, r = 22, a = 1) {
+  g.save(); g.globalAlpha *= a;
+  rrect(x, y, w, h, r); const gr = g.createLinearGradient(x, y, x, y + h);
+  gr.addColorStop(0, "rgba(255,255,255,0.075)"); gr.addColorStop(1, "rgba(255,255,255,0.025)");
+  g.fillStyle = gr; g.fill(); g.strokeStyle = "rgba(233,228,244,0.16)"; g.lineWidth = 1.5; g.stroke(); g.restore();
+}
+function glow(x, y, r, color, a) { const gr = g.createRadialGradient(x, y, 0, x, y, r); gr.addColorStop(0, rgba(color, a)); gr.addColorStop(1, rgba(color, 0)); g.fillStyle = gr; g.fillRect(x - r, y - r, r * 2, r * 2); }
+function kicker(s, x, y, a = 1, color = C.lav3, align = "left") { return text(s.toUpperCase(), x, y, { size: 22, weight: 600, ls: 5, color, alpha: a, align }); }
+// word-by-word reveal (slide up + fade). returns total width
+function words(s, x, y, t0, lt, o = {}) {
+  const { size = 80, weight = 800, color = C.white, gap = 0.12, align = "left", ls = -1, colors = {} } = o;
+  const parts = s.split(" "); const sp = measure(" ", size, weight, ls);
+  const total = parts.reduce((a, p) => a + measure(p, size, weight, ls), 0) + sp * (parts.length - 1);
+  let cx = align === "center" ? x - total / 2 : align === "right" ? x - total : x;
+  parts.forEach((p, i) => {
+    const k = eOut(prog(lt, t0 + i * gap, t0 + i * gap + .45));
+    g.save(); g.translate(0, (1 - k) * size * .45);
+    text(p, cx, y, { size, weight, color: colors[i] || color, alpha: k * (o.alpha ?? 1), ls });
+    g.restore(); cx += measure(p, size, weight, ls) + sp;
+  });
+  return total;
+}
+
+/* ---------- logo ---------- */
+const MARK = LOGO_MARK.map(d => new Path2D(d)), WORD = LOGO_WORD.map(d => new Path2D(d));
+// mark center in logo units ≈ (209.84, 52.64), radius 52.64
+function drawMark(cx, cy, size, p = 1, color = C.white, a = 1) {
+  const s = size / 105.28; g.save(); g.globalAlpha *= a; g.translate(cx, cy); g.scale(s, s); g.translate(-209.84, -52.64); g.fillStyle = color;
+  MARK.forEach((m, i) => {
+    const k = clamp(p * 4 - i);
+    if (k <= 0) return;
+    g.save();
+    if (i === 0) { g.beginPath(); g.moveTo(209.84, 52.64); g.arc(209.84, 52.64, 60, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * eIO(k)); g.closePath(); g.clip(); }
+    else { const sc = eBack(k); g.translate(209.84, 55); g.scale(sc, sc); g.translate(-209.84, -55); g.globalAlpha *= clamp(k * 2); }
+    g.fill(m); g.restore();
+  });
+  g.restore();
+}
+function drawLockup(cx, cy, width, markP = 1, wordP = 1, color = C.white, a = 1) {
+  const s = width / 416.29; g.save(); g.globalAlpha *= a;
+  drawMark(cx, cy - (206.88 / 2 - 52.64) * s, 105.28 * s, markP, color);
+  g.translate(cx - width / 2, cy - 206.88 * s / 2); g.scale(s, s); g.fillStyle = color;
+  if (wordP > 0) { g.save(); g.beginPath(); g.rect(208 - 216 * eOut(wordP), 120, 432 * eOut(wordP), 100); g.clip(); WORD.forEach(w => g.fill(w)); g.restore(); }
+  g.restore();
+}
+
+/* ---------- background, grain, images ---------- */
+const IMG = {}; ["bg", "bg3", "bg5"].forEach(n => { const i = new Image(); i.src = `../../assets/${n}.jpg`; IMG[n] = i; });
+const grainC = document.createElement("canvas"); grainC.width = grainC.height = 256;
+{ const gc = grainC.getContext("2d"), id = gc.createImageData(256, 256), r = rng(7); for (let i = 0; i < id.data.length; i += 4) { const v = r() * 255; id.data[i] = id.data[i + 1] = id.data[i + 2] = v; id.data[i + 3] = 255; } gc.putImageData(id, 0, 0); }
+function background(t) {
+  out.fillStyle = C.ink; out.fillRect(0, 0, W, H);
+  const b = (x, y, r, col, a) => { const gr = out.createRadialGradient(x, y, 0, x, y, r); gr.addColorStop(0, rgba(col, a)); gr.addColorStop(1, rgba(col, 0)); out.fillStyle = gr; out.fillRect(0, 0, W, H); };
+  b(W * (.25 + .08 * Math.sin(t * .21)), H * (.2 + .1 * Math.cos(t * .17)), 1100, C.purple, .38);
+  b(W * (.85 + .06 * Math.cos(t * .13)), H * (.95 + .05 * Math.sin(t * .19)), 1000, C.deep, .55);
+  b(W * (.7 + .1 * Math.sin(t * .11)), H * .15, 700, C.purpleLight, .12);
+  // faint drifting grid
+  out.save(); out.strokeStyle = "rgba(233,228,244,0.035)"; out.lineWidth = 1; const off = (t * 6) % 80;
+  out.beginPath(); for (let x = -80 + off; x < W; x += 80) { out.moveTo(x, 0); out.lineTo(x, H); } for (let y = -80 + off; y < H; y += 80) { out.moveTo(0, y); out.lineTo(W, y); } out.stroke(); out.restore();
+}
+function finish(t, frame) {
+  out.save(); out.globalAlpha = .045; out.globalCompositeOperation = "overlay";
+  const ox = (frame * 97) % 256, oy = (frame * 57) % 256; out.translate(-ox, -oy); out.fillStyle = out.createPattern(grainC, "repeat"); out.fillRect(0, 0, W + 256, H + 256); out.restore();
+  const v = out.createRadialGradient(W / 2, H / 2, H * .45, W / 2, H / 2, H * 1.05); v.addColorStop(0, "rgba(0,0,0,0)"); v.addColorStop(1, "rgba(0,0,0,0.55)"); out.fillStyle = v; out.fillRect(0, 0, W, H);
+  const fade = Math.max(1 - prog(t, 0, .35), prog(t, 59.55, 60));
+  if (fade > 0) { out.fillStyle = `rgba(0,0,0,${fade})`; out.fillRect(0, 0, W, H); }
+}
+
+/* =====================================================================
+   SCENE 1 (0–5) — franchise footprints → blueprint wireframes
+   ===================================================================== */
+// primitives: r=rect, p=poly, l=line, c=circle, t=text. y up is negative. roles colour the solid render.
+const BUILD = {
+  storefront: { w: 1000, h: 430, label: "STOREFRONT · UNIT 014", prims: [
+    ["r", 0, -420, 1000, 420, "wall"], ["r", 60, -400, 880, 78, "sign"], ["t", "YOUR BRAND", 500, -350, 40],
+    ["p", [[30, -305], [970, -305], [1000, -235], [0, -235]], "accent"],
+    ...[0, 1, 2, 3, 4, 5, 6, 7, 8].map(i => ["l", 70 + i * 107, -305, 55 + i * 111, -235]),
+    ["r", 80, -210, 330, 190, "glass"], ["r", 590, -210, 330, 190, "glass"], ["r", 440, -215, 120, 215, "door"],
+    ["l", 245, -210, 245, -20], ["l", 755, -210, 755, -20], ["r", 60, -26, 380, 26, "trim"], ["r", 560, -26, 380, 26, "trim"],
+    ["l", -160, 0, 1160, 0]] },
+  drivethru: { w: 1100, h: 640, label: "DRIVE-THRU · PAD SITE 07", prims: [
+    ["r", 180, -320, 560, 320, "wall"], ["p", [[150, -320], [770, -320], [740, -385], [180, -385]], "accent"],
+    ["r", 240, -250, 220, 150, "glass"], ["r", 540, -235, 110, 235, "door"], ["r", 470, -290, 40, 50, "sign"],
+    ["r", 905, -560, 34, 560, "trim"], ["r", 845, -650, 154, 112, "sign"], ["t", "DRIVE", 922, -582, 30],
+    ["r", 40, -210, 92, 120, "sign"], ["l", 86, -90, 86, 0],
+    ["r", -60, -84, 180, 56, "car"], ["c", -20, -24, 22, "trim"], ["c", 80, -24, 22, "trim"],
+    ["l", -200, 0, 1200, 0], ["l", -200, 70, 1200, 70], ["l", 780, 35, 860, 35], ["p", [[860, 22], [890, 35], [860, 48]], "trim"]] },
+  strip: { w: 1100, h: 360, label: "RETAIL STRIP · 3 UNITS", prims: [
+    ["r", 0, -330, 1100, 30, "trim"],
+    ...[0, 1, 2].flatMap(k => [["r", k * 370, -300, 360, 300, "wall"], ["r", k * 370 + 30, -285, 300, 56, "sign"], ["r", k * 370 + 30, -200, 190, 150, "glass"], ["r", k * 370 + 240, -200, 90, 200, "door"]]),
+    ["l", -150, 0, 1250, 0], ...[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(i => ["l", -60 + i * 125, 20, -100 + i * 125, 90])] },
+  kiosk: { w: 900, h: 470, label: "CAFÉ KIOSK · MALL LEVEL 2", prims: [
+    ["p", [[60, -400], [840, -400], [900, -330], [0, -330]], "accent"], ["r", 90, -330, 18, 330, "trim"], ["r", 792, -330, 18, 330, "trim"],
+    ["r", 230, -300, 440, 90, "sign"], ["t", "COFFEE", 450, -242, 40], ["r", 180, -150, 540, 150, "wall"], ["r", 180, -160, 540, 18, "trim"],
+    ["c", 300, -200, 26, "glass"], ["c", 600, -200, 26, "glass"],
+    ["l", -150, 0, 1050, 0]] }
+};
+const SOLID = { wall: "#2a1c48", sign: C.purple, accent: C.purpleLight, glass: null, door: "#140c24", trim: "#3d2b66", car: "#4a3070" };
+function drawBuilding(b, mode, p = 1, a = 1, dims = true) {
+  const n = b.prims.length; const bp = mode === "bp";
+  g.save(); g.globalAlpha *= a; g.lineJoin = "round"; g.lineCap = "round";
+  const sc = g.getTransform().a; g.lineWidth = (bp ? 2.4 : 1.6) / sc;
+  b.prims.forEach((pr, i) => {
+    const k = bp ? clamp(p * n * .7 - i * .7) : 1; if (k <= 0) return;
+    g.save(); g.globalAlpha *= k; const role = pr[pr.length - 1];
+    g.beginPath();
+    if (pr[0] === "r") g.rect(pr[1], pr[2], pr[3], pr[4]);
+    else if (pr[0] === "p") { pr[1].forEach(([x, y], j) => j ? g.lineTo(x, y) : g.moveTo(x, y)); g.closePath(); }
+    else if (pr[0] === "l") { g.moveTo(pr[1], pr[2]); g.lineTo(pr[3], pr[4]); }
+    else if (pr[0] === "c") g.arc(pr[1], pr[2], pr[3], 0, Math.PI * 2);
+    if (pr[0] === "t") {
+      g.font = `800 ${pr[4]}px Inter`; g.letterSpacing = "6px"; g.textAlign = "center"; g.textBaseline = "middle";
+      if (bp) { g.strokeStyle = C.lav2; g.lineWidth = 1.2 / sc; g.strokeText(pr[1], pr[2], pr[3]); } else { g.fillStyle = C.white; g.fillText(pr[1], pr[2], pr[3]); }
+    } else if (bp) { g.strokeStyle = rgba(C.lav2, .95); g.stroke(); }
+    else {
+      if (pr[0] !== "l") {
+        if (role === "glass") { const [y0, y1] = pr[0] === "c" ? [pr[2] - pr[3], pr[2] + pr[3]] : [pr[2], pr[2] + pr[4]]; const gr = g.createLinearGradient(0, y0, 0, y1); gr.addColorStop(0, "#ffb27a"); gr.addColorStop(1, C.warm); g.fillStyle = gr; g.globalAlpha *= .92; }
+        else g.fillStyle = SOLID[role] || "#2a1c48";
+        g.fill();
+      }
+      g.strokeStyle = rgba(C.lav, .32); g.stroke();
+    }
+    g.restore();
+  });
+  if (bp && dims) { // dimension lines
+    const k = clamp(p * 1.4 - .4); g.globalAlpha *= k; g.strokeStyle = rgba(C.lav3, .8); g.lineWidth = 1.4 / sc;
+    const y = 130; g.beginPath(); g.moveTo(0, y); g.lineTo(b.w, y); g.moveTo(0, y - 14); g.lineTo(0, y + 14); g.moveTo(b.w, y - 14); g.lineTo(b.w, y + 14);
+    g.moveTo(-90, 0); g.lineTo(-90, -b.h); g.moveTo(-104, 0); g.lineTo(-76, 0); g.moveTo(-104, -b.h); g.lineTo(-76, -b.h); g.stroke();
+    g.font = `600 ${22 / sc * 1.4}px Inter`; g.fillStyle = C.lav3; g.textAlign = "center"; g.letterSpacing = "3px";
+    g.fillText(`${Math.round(b.w / 16)}'-0"`, b.w / 2, y - 16); g.textAlign = "left"; g.fillText(b.label, 0, y + 58);
+  }
+  g.restore();
+}
+function blueprintGrid(a) {
+  g.save(); g.globalAlpha *= a; g.fillStyle = "rgba(20,14,48,0.55)"; g.fillRect(0, 0, W, H);
+  g.strokeStyle = rgba(C.lav3, .10); g.lineWidth = 1; g.beginPath();
+  for (let x = 0; x < W; x += 40) { g.moveTo(x, 0); g.lineTo(x, H); } for (let y = 0; y < H; y += 40) { g.moveTo(0, y); g.lineTo(W, y); } g.stroke();
+  g.strokeStyle = rgba(C.lav3, .18); g.beginPath(); for (let x = 0; x < W; x += 200) { g.moveTo(x, 0); g.lineTo(x, H); } for (let y = 0; y < H; y += 200) { g.moveTo(0, y); g.lineTo(W, y); } g.stroke(); g.restore();
+}
+const SHOTS = [[0, "storefront", "solid"], [.55, "storefront", "bp"], [1.1, "drivethru", "solid"], [1.6, "drivethru", "bp"], [2.1, "strip", "solid"], [2.55, "strip", "bp"], [3.0, "kiosk", "solid"], [3.3, "kiosk", "bp"]];
+function s1(lt) {
+  if (lt < 3.65) {
+    let i = SHOTS.length - 1; while (SHOTS[i][0] > lt) i--;
+    const [st, type, mode] = SHOTS[i], end = i + 1 < SHOTS.length ? SHOTS[i + 1][0] : 3.65, sp = prog(lt, st, end);
+    const b = BUILD[type];
+    if (mode === "bp") blueprintGrid(1);
+    else { glow(960, 640, 700, C.warm, .10); }
+    const sc = Math.min(1100 / b.w, 500 / b.h) * (1 + .07 * sp) * (mode === "bp" ? 1 : 1.02);
+    g.save(); g.translate(960 - b.w * sc / 2 + (mode === "bp" ? -20 : 20) * sp, 640); g.scale(sc, sc);
+    drawBuilding(b, mode, mode === "bp" ? eOut(prog(lt, st, st + .38)) : 1); g.restore();
+    const f = 1 - prog(lt, st, st + .09); if (f > 0 && i > 0) { g.fillStyle = rgba(C.lav, .22 * f); g.fillRect(0, 0, W, H); }
+  } else { // pull back: footprint replicates into a scalable grid
+    const k = eIO(prog(lt, 3.65, 5)); blueprintGrid(1);
+    const types = ["storefront", "drivethru", "strip", "kiosk"], cols = 9, rows = 7, tw = 1300, th = 820;
+    const cam = lerp(.82, .2, k);
+    g.save(); g.translate(960, 560); g.scale(cam, cam);
+    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+      const cx = (c - (cols - 1) / 2) * tw, cy = (r - (rows - 1) / 2) * th, d = Math.hypot(c - (cols - 1) / 2, r - (rows - 1) / 2);
+      const p = prog(lt, 3.65 + d * .1, 4.1 + d * .1); if (p <= 0) continue;
+      const b = BUILD[types[(r * 3 + c) % 4]], s = Math.min(1000 / b.w, 520 / b.h);
+      g.save(); g.translate(cx - b.w * s / 2, cy + b.h * s / 2); g.scale(s, s); drawBuilding(b, "bp", eOut(p), 1, false); g.restore();
+    }
+    g.restore();
+  }
+  // title
+  const ta = eOut(prog(lt, .9, 1.5));
+  const gr = g.createLinearGradient(0, H - 380, 0, H); gr.addColorStop(0, "rgba(11,7,21,0)"); gr.addColorStop(1, "rgba(11,7,21,0.88)"); g.fillStyle = gr; g.globalAlpha = ta; g.fillRect(0, H - 380, W, 380); g.globalAlpha = 1;
+  kicker("Franchise growth", 120, 880, ta);
+  words("Scale your framework.", 120, 970, .95, lt, { size: 96, weight: 800 });
+  g.fillStyle = C.purpleLight; g.fillRect(120, 895, 90 * ta, 4);
+}
+
+/* =====================================================================
+   SCENE 2 & 7 — dot-matrix national map
+   ===================================================================== */
+const US = [[-124.7, 48.4], [-123.8, 46.2], [-124.2, 42], [-124.4, 40.4], [-122.5, 37.5], [-120.6, 34.5], [-117.1, 32.5], [-114.7, 32.7], [-111, 31.3], [-108.2, 31.3], [-106.5, 31.8], [-104.5, 29.6], [-103.1, 29], [-101.4, 29.8], [-99.5, 27.5], [-97.4, 25.9], [-97.2, 27.8], [-94.7, 29.4], [-91, 29.2], [-89.4, 28.9], [-89, 30.2], [-86.5, 30.4], [-85.1, 29.7], [-84, 30], [-82.8, 28.9], [-82.6, 27.5], [-81.7, 25.9], [-80.4, 25.2], [-80, 26.8], [-80.6, 28.5], [-81.3, 30.5], [-81, 31.9], [-79.2, 33.2], [-77.9, 34], [-75.5, 35.2], [-76, 36.9], [-75.9, 38.2], [-75, 38.8], [-74, 40.5], [-72, 41], [-70, 41.8], [-70.7, 42.8], [-70.2, 43.7], [-67, 44.8], [-67.8, 47.1], [-69.2, 47.4], [-71.5, 45], [-74.9, 45], [-76.5, 44], [-79, 43.3], [-79.2, 42.6], [-82.5, 41.7], [-83.3, 42.3], [-82.4, 43], [-82.6, 45.4], [-84.6, 46.5], [-88.4, 48.3], [-95.2, 49], [-123, 49]];
+const CITIES = [["Kansas City", -94.6, 39.1], ["Seattle", -122.3, 47.6], ["San Francisco", -122.4, 37.8], ["Los Angeles", -118.2, 34], ["Phoenix", -112, 33.4], ["Denver", -105, 39.7], ["Dallas", -96.8, 32.8], ["Houston", -95.4, 29.8], ["Chicago", -87.6, 41.9], ["Minneapolis", -93.3, 45], ["Atlanta", -84.4, 33.7], ["Miami", -80.2, 25.8], ["New York", -74, 40.7], ["Boston", -71, 42.4], ["Nashville", -86.8, 36.2], ["Charlotte", -80.8, 35.2], ["Salt Lake City", -111.9, 40.8], ["Detroit", -83, 42.3], ["Portland", -122.7, 45.5], ["San Antonio", -98.5, 29.4], ["Orlando", -81.4, 28.5], ["Washington", -77, 38.9]];
+const proj = (lon, lat) => [(lon + 125) / 58, (49.5 - lat) / 25];  // normalised 0..1
+function inPoly(x, y, poly) { let c = false; for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) { const [xi, yi] = poly[i], [xj, yj] = poly[j]; if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) c = !c; } return c; }
+const USN = US.map(([a, b]) => proj(a, b)), DOTS = [];
+{ const r = rng(3); for (let y = 0; y <= 1; y += 1 / 42) for (let x = 0; x <= 1; x += 1 / 74) if (inPoly(x, y, USN)) DOTS.push([x, y, r()]); }
+const CN = CITIES.map(([n, a, b]) => [n, ...proj(a, b)]);
+function mapDots(mx, my, mw, mh, a, lit = null) {
+  const dr = clamp(mw / 74 * .2, 1.6, 5.5);
+  for (const [x, y, r] of DOTS) {
+    const px = mx + x * mw, py = my + y * mh; if (px < -20 || px > W + 20 || py < -20 || py > H + 20) continue;
+    let al = (.22 + r * .18) * a; if (lit) al += lit(px, py);
+    g.fillStyle = rgba(C.lav3, clamp(al)); g.beginPath(); g.arc(px, py, dr, 0, Math.PI * 2); g.fill();
+  }
+}
+function pin(x, y, color, a, pulse = 0, r = 9) {
+  g.save(); g.globalAlpha *= a;
+  if (pulse > 0) { g.strokeStyle = rgba(color, (1 - pulse) * .8); g.lineWidth = 2; g.beginPath(); g.arc(x, y, r + pulse * 34, 0, Math.PI * 2); g.stroke(); }
+  glow(x, y, r * 4, color, .35); g.fillStyle = color; g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.fill();
+  g.fillStyle = C.white; g.beginPath(); g.arc(x, y, r * .38, 0, Math.PI * 2); g.fill(); g.restore();
+}
+function arcPath(x1, y1, x2, y2, lift = .25) { const mx = (x1 + x2) / 2, my = (y1 + y2) / 2 - Math.hypot(x2 - x1, y2 - y1) * lift; return t => [(1 - t) * (1 - t) * x1 + 2 * (1 - t) * t * mx + t * t * x2, (1 - t) * (1 - t) * y1 + 2 * (1 - t) * t * my + t * t * y2]; }
+function strokeArc(f, t0, t1, color, w, a, dash) { g.save(); g.globalAlpha *= a; g.strokeStyle = color; g.lineWidth = w; if (dash) g.setLineDash(dash); g.beginPath(); for (let i = 0; i <= 40; i++) { const t = lerp(t0, t1, i / 40); const [x, y] = f(t); i ? g.lineTo(x, y) : g.moveTo(x, y); } g.stroke(); g.restore(); }
+
+// brand-standard card (crisp at corporate, degraded locally)
+function brandCard(x, y, w, h, deg = 0, seed = 1, a = 1) {
+  const r = rng(seed); g.save(); g.globalAlpha *= a; g.translate(x + w / 2, y + h / 2); g.rotate((r() - .5) * .22 * deg); g.translate(-w / 2 + (r() - .5) * 10 * deg, -h / 2);
+  rrect(0, 0, w, h, w * .06); g.fillStyle = mix("#1d1336", "#2b1d18", deg * .6); g.fill(); g.strokeStyle = mix(C.lav3, C.warm, deg); g.lineWidth = Math.max(1, w / 160); g.stroke();
+  const chips = [C.purple, C.purpleLight, C.lav, C.warm], cw = w * .16;
+  chips.forEach((c, i) => { if (deg > .3 && r() < deg * .5) return; const cc = mix(c, ["#3aa0a0", "#c9b458", "#7d7d7d", "#d64f8a"][i], deg * r()); g.fillStyle = cc; rrect(w * .08 + i * (cw + w * .04), h * .52, cw, h * .2, w * .02); g.fill(); });
+  drawMark(w * .17, h * .27, h * .28, 1, mix(C.white, "#9a8f7a", deg), 1 - deg * .35);
+  g.fillStyle = rgba(C.lav, .8 - deg * .4); g.fillRect(w * .34, h * .18, w * .5 * (1 - deg * r() * .6), h * .06); g.fillRect(w * .34, h * .3, w * .34, h * .045);
+  g.fillStyle = rgba(C.lav, .35); g.fillRect(w * .08, h * .8, w * .84 * (1 - deg * .5), h * .04);
+  if (deg > .35) { g.fillStyle = rgba(C.warm, .5 * deg); for (let i = 0; i < 3; i++) { const yy = r() * h; g.fillRect(-4, yy, w * (.3 + r() * .7), 2 + r() * 4); } }
+  g.restore();
+}
+function s2(lt) {
+  // left: corporate vision
+  const la = eOut(prog(lt, 0, .5));
+  kicker("Corporate vision", 120, 250, la);
+  g.save(); g.translate(0, (1 - la) * 30); glass(110, 280, 560, 470, 26, la);
+  text("BRAND STANDARD v1.0", 150, 336, { size: 20, weight: 700, ls: 3, color: C.lav3, alpha: la });
+  brandCard(150, 366, 480, 300, 0, 1, la);
+  text("✓ Approved", 150, 718, { size: 22, weight: 600, color: C.green, alpha: la });
+  g.restore();
+  // right: local reality (map)
+  const mx = 780, my = 240, mw = 1040, mh = 1040 / 1.78 * 1.0;
+  const ma = eOut(prog(lt, .15, .8));
+  kicker("Local reality", mx, 250 - 30, ma);
+  mapDots(mx, my, mw, mh, ma);
+  const [_, hx0, hy0] = CN[0], hx = mx + hx0 * mw, hy = my + hy0 * mh;
+  const tags = { 1: "+3 wk lag", 3: "Off-brand", 4: "Outdated kit", 11: "Missed launch", 13: "Off-brand", 7: "Local promo ≠ HQ", 18: "No assets" };
+  CN.slice(1).forEach(([n, x0, y0], i) => {
+    const px = mx + x0 * mw, py = my + y0 * mh, d = Math.hypot(px - hx, py - hy);
+    const t0 = .7 + i * .12, travel = .5 + d / 1400, p = prog(lt, t0, t0 + travel);
+    if (p <= 0) return;
+    const f = arcPath(hx, hy, px, py, .22), deg = clamp(d / 700) * .8 + .2;
+    strokeArc(f, 0, eOut(p), mix(C.lav3, C.warm, deg * prog(lt, t0 + travel, t0 + travel + .6)), 1.6, .55, [6, 7]);
+    if (p < 1) { const [qx, qy] = f(eIO(p)); brandCard(qx - 18, qy - 12, 36, 24, deg * p, i + 5, .9); }
+    else {
+      const k = prog(lt, t0 + travel, t0 + travel + .4), bad = deg > .55;
+      pin(px, py, bad ? C.warm : C.purpleLight, 1, bad ? (lt * 1.3 + i * .3) % 1 : 0, 7);
+      brandCard(px + 12, py - 44, 54, 36, deg * eOut(k), i + 5, eOut(k));
+      if (tags[i + 1] && k > .5) text(tags[i + 1], px + 12, py + 26, { size: 17, weight: 600, color: C.warm, alpha: eOut(prog(lt, t0 + travel + .3, t0 + travel + .7)) });
+    }
+  });
+  pin(hx, hy, C.lav, ma, (lt * .8) % 1, 11); text("HQ", hx - 16, hy - 20, { size: 18, weight: 800, ls: 2, alpha: ma, align: "right" });
+  // title
+  const y = 960; words("Corporate Vision ≠ Local Reality", 960, y, 1.3, lt, { size: 84, weight: 800, align: "center", gap: .1, colors: { 2: C.warm } });
+}
+
+/* =====================================================================
+   SCENE 3 (10–20) — the bridge → brand mark → modular 3D grid
+   ===================================================================== */
+const REG = [[3, -2], [-3, 2], [-3, -3], [4, 3], [0, 4], [1, -4], [-4, 0], [4, 0]];
+function project(x, y, z, cam) {
+  const cy = Math.cos(cam.yaw), sy = Math.sin(cam.yaw), cp = Math.cos(cam.pitch), sp = Math.sin(cam.pitch);
+  let X = x * cy - z * sy, Z = x * sy + z * cy; let Y = y * cp - Z * sp; Z = y * sp + Z * cp;
+  const s = cam.f / (Z + cam.d); return [cam.cx + X * s, cam.cy - Y * s, Z];
+}
+function cube(x, z, w, h, cam, top, side, edge, a) {
+  const P = [[x - w / 2, 0, z - w / 2], [x + w / 2, 0, z - w / 2], [x + w / 2, 0, z + w / 2], [x - w / 2, 0, z + w / 2]];
+  const B = P.map(p => project(...p, cam)), T = P.map(p => project(p[0], h, p[2], cam));
+  const faces = [[B[0], B[1], T[1], T[0]], [B[1], B[2], T[2], T[1]], [B[2], B[3], T[3], T[2]], [B[3], B[0], T[0], T[3]]].map(f => ({ f, z: f.reduce((s, p) => s + p[2], 0) / 4 }));
+  faces.sort((p, q) => q.z - p.z);
+  g.save(); g.globalAlpha *= a; g.lineWidth = 1.4; g.strokeStyle = edge;
+  faces.forEach(({ f }, i) => { g.beginPath(); f.forEach(([px, py], j) => j ? g.lineTo(px, py) : g.moveTo(px, py)); g.closePath(); g.fillStyle = i % 2 ? side : mix(side, "#000000", .25); g.fill(); g.stroke(); });
+  g.beginPath(); T.forEach(([px, py], j) => j ? g.lineTo(px, py) : g.moveTo(px, py)); g.closePath(); g.fillStyle = top; g.fill(); g.stroke(); g.restore();
+  return T;
+}
+function route(ax, az, bx, bz) { return t => t < .5 ? [lerp(ax, bx, t * 2), az] : [bx, lerp(az, bz, (t - .5) * 2)]; }
+function s3(lt) {
+  // Part A — kinetic type + bridge
+  if (lt < 3.6) {
+    const fa = 1 - eIn(prog(lt, 3.1, 3.6));
+    g.save(); g.globalAlpha = fa;
+    words("Alkimia builds the bridge.", 960, 300, 0, lt, { size: 92, weight: 800, align: "center", gap: .16, colors: { 0: C.lav2 } });
+    const L = [680, 640], R = [1240, 640], ap = eIO(prog(lt, .6, 1.7));
+    text("HIGH-LEVEL", 630, 628, { size: 26, weight: 600, ls: 5, color: C.lav3, alpha: eOut(prog(lt, .4, .8)), align: "right" });
+    text("STRATEGY", 630, 670, { size: 40, weight: 800, ls: 2, alpha: eOut(prog(lt, .4, .8)), align: "right" });
+    text("REPEATABLE", 1290, 628, { size: 26, weight: 600, ls: 5, color: C.lav3, alpha: eOut(prog(lt, 1.5, 1.9)) });
+    text("LOCAL PERFORMANCE", 1290, 670, { size: 40, weight: 800, ls: 2, alpha: eOut(prog(lt, 1.5, 1.9)) });
+    [L, R].forEach(([x, y], i) => pin(x, y, i ? C.green : C.lav, eOut(prog(lt, .4 + i * 1.1, .7 + i * 1.1)), 0, 10));
+    const f = t => [lerp(L[0], R[0], t), L[1] - Math.sin(Math.PI * t) * 170];
+    strokeArc(f, 0, ap, C.lav, 4, 1);
+    g.strokeStyle = rgba(C.lav3, .5); g.lineWidth = 1.5; g.beginPath(); g.moveTo(L[0], L[1]); g.lineTo(lerp(L[0], R[0], ap), L[1]); g.stroke();
+    for (let i = 1; i < 16; i++) { const t = i / 16; if (t > ap) break; const [x, y] = f(t); g.beginPath(); g.moveTo(x, y); g.lineTo(x, L[1]); g.stroke(); }
+    // packets crossing
+    for (let i = 0; i < 5; i++) { const t = ((lt - 1.2) * .45 + i / 5) % 1; if (lt < 1.2 || t > ap) continue; const [x, y] = f(t); glow(x, y, 26, C.lav, .8); g.fillStyle = C.white; g.beginPath(); g.arc(x, y, 4, 0, 7); g.fill(); }
+    drawMark(960, 390 + 20, 90, prog(lt, 1.2, 2.2), C.white, 1);
+    words("strategy + marketing  →  repeatable local performance", 960, 800, 2.0, lt, { size: 34, weight: 500, align: "center", gap: .05, color: C.lav2, ls: 0 });
+    g.restore();
+  }
+  // Part B — mark takes centre, lockup reveal
+  if (lt >= 3.1 && lt < 6.4) {
+    const k = eIO(prog(lt, 3.1, 4.0)), outk = eIO(prog(lt, 5.6, 6.4));
+    const y = lerp(410, 470, k), size = lerp(90, 250, k);
+    glow(960, 540, 700 * (1 - outk * .5), C.purple, .35 * (1 - outk));
+    g.save(); g.globalAlpha = 1 - outk;
+    const s = 560 / 416.29;
+    const markY = lerp(y, 540 - (206.88 / 2 - 52.64) * s, eIO(prog(lt, 4.0, 4.6)));
+    const msize = lerp(size, 105.28 * s, eIO(prog(lt, 4.0, 4.6)));
+    if (lt < 4.6) drawMark(960, markY, msize, 1);
+    else drawLockup(960, 540, 560, 1, prog(lt, 4.6, 5.3));
+    g.restore();
+  }
+  // Part C — modular 3D grid linking HQ to regional nodes
+  if (lt >= 5.6) {
+    const t = lt - 5.6, ga = eOut(prog(t, 0, .8));
+    const cam = { yaw: .55 + t * .09, pitch: .6, d: lerp(20, 15.5, eIO(prog(t, 0, 4.4))), f: 1450, cx: 1160, cy: 540 };
+    g.save(); g.globalAlpha = ga;
+    for (let i = -6; i <= 6; i++) for (let j = -6; j <= 6; j++) {
+      const r = Math.hypot(i, j), p = eOut(prog(t, r * .06, r * .06 + .5)); if (p <= 0 || r > 6.6) continue;
+      const q = [[i - .44, j - .44], [i + .44, j - .44], [i + .44, j + .44], [i - .44, j + .44]].map(([x, z]) => project(x, 0, z, cam));
+      g.beginPath(); q.forEach(([x, y], k) => k ? g.lineTo(x, y) : g.moveTo(x, y)); g.closePath();
+      g.fillStyle = rgba(C.purple, .10 * p * (1 - r / 8)); g.fill(); g.strokeStyle = rgba(C.lav3, .28 * p * (1 - r / 7.5)); g.lineWidth = 1; g.stroke();
+    }
+    // routes HQ -> regional -> local
+    REG.forEach(([rx, rz], i) => {
+      const rt = route(0, 0, rx, rz), p = eIO(prog(t, .5 + i * .12, 1.3 + i * .12));
+      g.strokeStyle = rgba(C.lav, .75); g.lineWidth = 2.4; g.beginPath();
+      for (let s = 0; s <= 30; s++) { const tt = s / 30 * p; const [x, z] = rt(tt); const [px, py] = project(x, .02, z, cam); s ? g.lineTo(px, py) : g.moveTo(px, py); } g.stroke();
+      if (p >= 1) for (let k = 0; k < 2; k++) {
+        const tt = ((t * .5 + k * .5 + i * .13) % 1); const [x, z] = rt(tt); const [px, py] = project(x, .05, z, cam); glow(px, py, 22, C.lav, .9);
+      }
+      // local tiles lit by each regional node
+      [[1, 0], [0, 1], [-1, 0], [0, -1]].forEach(([dx, dz], j) => {
+        const lp = prog(t, 1.6 + i * .12 + j * .1, 2.0 + i * .12 + j * .1); if (lp <= 0) return;
+        const lx = rx + dx, lz = rz + dz, a1 = project(rx, .02, rz, cam), a2 = project(lx, .02, lz, cam);
+        g.strokeStyle = rgba(C.lav3, .6 * lp); g.lineWidth = 1.4; g.beginPath(); g.moveTo(a1[0], a1[1]); g.lineTo(lerp(a1[0], a2[0], lp), lerp(a1[1], a2[1], lp)); g.stroke();
+        const q = [[lx - .36, lz - .36], [lx + .36, lz - .36], [lx + .36, lz + .36], [lx - .36, lz + .36]].map(([x, z]) => project(x, .01, z, cam));
+        g.beginPath(); q.forEach(([x, y], k) => k ? g.lineTo(x, y) : g.moveTo(x, y)); g.closePath(); g.fillStyle = rgba(C.purpleLight, .45 * lp); g.fill();
+      });
+    });
+    // cubes (sorted far → near)
+    const items = [{ x: 0, z: 0, w: 1.1, h: 1.8 * eBack(prog(t, .2, .9)), hq: 1 }, ...REG.map(([x, z], i) => ({ x, z, w: .7, h: .75 * eBack(prog(t, 1.0 + i * .12, 1.5 + i * .12)) }))];
+    items.forEach(it => it.d = project(it.x, 0, it.z, cam)[2]); items.sort((a, b) => b.d - a.d);
+    items.forEach(it => { if (it.h <= .01) return; const T = cube(it.x, it.z, it.w, it.h, cam, it.hq ? C.purpleLight : "#4a3480", it.hq ? C.purple : "#2d1f52", rgba(C.lav, .7), 1);
+      if (it.hq) { const cx = T.reduce((s, p) => s + p[0], 0) / 4, cy = T.reduce((s, p) => s + p[1], 0) / 4; glow(cx, cy, 90, C.lav, .35); drawMark(cx, cy - 4, 46, 1); } });
+    g.restore();
+    // overlay
+    const oa = eOut(prog(t, .8, 1.4));
+    kicker("Introducing", 120, 745, oa);
+    g.save(); g.globalAlpha = oa; drawLockup(120 + 150, 850, 300, 1, 1); g.restore();
+    words("Franchise Growth Systems™", 120, 990, 1.1 + 5.6, lt, { size: 64, weight: 700, gap: .1 });
+  }
+}
+
+/* =====================================================================
+   SCENES 4 & 5 — assessment dashboard / enablement modules
+   ===================================================================== */
+function sectionTitle(lt, num, title, items) {
+  const a = eOut(prog(lt, .1, .6));
+  g.save(); const gr = g.createLinearGradient(120, 180, 420, 380); gr.addColorStop(0, C.lav); gr.addColorStop(1, C.purpleLight);
+  font(170, 800); g.letterSpacing = "-6px"; g.globalAlpha = a; g.fillStyle = gr; g.fillText(num, 110 - (1 - a) * 40, 330); g.restore();
+  const tl = title.split("|"); tl.forEach((s, i) => words(s, 120, 420 + i * 62, .4 + i * .15, lt, { size: 50, weight: 800, ls: 1.5, gap: .08 }));
+  const y0 = 420 + tl.length * 62 + 24;
+  g.fillStyle = C.purpleLight; g.fillRect(120, y0 - 20, 90 * eOut(prog(lt, .7, 1.2)), 4);
+  items.forEach((s, i) => {
+    const k = eOut(prog(lt, 1.1 + i * .35, 1.5 + i * .35)), y = y0 + 40 + i * 64;
+    g.save(); g.globalAlpha = k; g.translate((1 - k) * -30, 0);
+    g.fillStyle = C.purpleLight; g.beginPath(); g.arc(132, y - 9, 6, 0, 7); g.fill();
+    text(s, 158, y, { size: 32, weight: 600, color: C.lav });
+    g.restore();
+  });
+}
+const SCAT = (() => { const r = rng(11), a = []; for (let i = 0; i < 70; i++) a.push([r(), clamp(.15 + r() * .75 + (r() - .5) * .1), r() < .09]); return a; })();
+function s4(lt) {
+  sectionTitle(lt, "01.", "THE INITIAL|ASSESSMENT", ["GTM", "Research", "Tools", "Workflows", "Roadmap"]);
+  const pa = eOut(prog(lt, .3, 1.0)), X = 760, Y = 140, PW = 1040, PH = 800;
+  g.save(); g.globalAlpha = pa; g.translate((1 - pa) * 60, 0);
+  glass(X, Y, PW, PH, 26);
+  [C.warm, C.gold, C.green].forEach((c, i) => { g.fillStyle = rgba(c, .7); g.beginPath(); g.arc(X + 36 + i * 22, Y + 36, 6, 0, 7); g.fill(); });
+  text("Growth Assessment  ·  Diagnostics", X + 110, Y + 44, { size: 22, weight: 600, color: C.lav2 });
+  const done = lt > 8.6, blink = Math.floor(lt * 3) % 2;
+  text(done ? "● COMPLETE" : "● SCANNING", X + PW - 36, Y + 44, { size: 18, weight: 700, ls: 3, color: done ? C.green : C.warm, align: "right", alpha: done ? 1 : .55 + .45 * blink });
+  g.fillStyle = "rgba(233,228,244,0.1)"; g.fillRect(X, Y + 72, PW, 1);
+  // maturity bars
+  const rows = [["GTM", .74], ["Research", .46], ["Tools", .58], ["Workflows", .34], ["Roadmap", .88]];
+  text("MATURITY BY AREA", X + 40, Y + 124, { size: 16, weight: 700, ls: 3, color: C.lav3 });
+  rows.forEach(([n, v], i) => {
+    const y = Y + 170 + i * 66, k = eOut(prog(lt, 1.5 + i * .55, 2.6 + i * .55)), gap = v < .5;
+    text(n, X + 40, y + 8, { size: 22, weight: 600, color: C.lav });
+    rrect(X + 180, y - 8, 250, 14, 7); g.fillStyle = "rgba(233,228,244,0.08)"; g.fill();
+    rrect(X + 180, y - 8, Math.max(14, 250 * v * k), 14, 7); g.fillStyle = gap ? C.warm : (i === 4 ? C.green : C.purpleLight); g.fill();
+    if (gap && k > .9) text("GAP", X + 450, y + 7, { size: 15, weight: 800, ls: 2, color: C.warm, alpha: prog(k, .9, 1) * 10 });
+  });
+  // scatter + scan line
+  const SX = X + 530, SY = Y + 110, SW = 470, SH = 330;
+  text("FRANCHISEE TOUCHPOINTS", SX, Y + 124, { size: 16, weight: 700, ls: 3, color: C.lav3 });
+  g.strokeStyle = "rgba(233,228,244,0.12)"; g.lineWidth = 1; g.beginPath(); for (let i = 0; i <= 4; i++) { g.moveTo(SX, SY + 40 + i * SH / 4 * .85); g.lineTo(SX + SW, SY + 40 + i * SH / 4 * .85); } g.stroke();
+  const scan = prog(lt, 1.4, 6.8), sx = SX + scan * SW;
+  SCAT.forEach(([x, y, blind]) => {
+    const px = SX + 10 + x * (SW - 20), py = SY + 40 + (1 - y) * SH * .85, hit = px < sx;
+    g.fillStyle = hit ? (blind ? C.warm : C.lav) : "rgba(233,228,244,0.25)"; g.beginPath(); g.arc(px, py, hit ? 5 : 3.5, 0, 7); g.fill();
+    if (hit && blind) { g.strokeStyle = rgba(C.warm, .8); g.lineWidth = 2; g.beginPath(); g.arc(px, py, 14 + 4 * Math.sin(lt * 6), 0, 7); g.stroke(); }
+  });
+  if (scan > 0 && scan < 1) { const gr = g.createLinearGradient(sx - 80, 0, sx, 0); gr.addColorStop(0, rgba(C.lav, 0)); gr.addColorStop(1, rgba(C.lav, .22)); g.fillStyle = gr; g.fillRect(sx - 80, SY + 30, 80, SH * .9); g.fillStyle = C.lav; g.fillRect(sx - 1, SY + 30, 2, SH * .9); }
+  const blindA = prog(lt, 4.2, 4.8); if (blindA > 0) { g.fillStyle = C.warm; g.beginPath(); g.arc(SX + 8, SY + SH + 22, 6, 0, 7); g.fill(); text("Blind spots detected", SX + 24, SY + SH + 29, { size: 20, weight: 600, color: C.warm, alpha: blindA }); }
+  // progress line
+  g.fillStyle = "rgba(233,228,244,0.1)"; g.fillRect(X, Y + 540, PW, 1);
+  const steps = ["Audit", "Gaps", "Roadmap"], lx0 = X + 140, lx1 = X + PW - 140, ly = Y + 660, lp = eIO(prog(lt, 2.2, 8.6));
+  text("DIAGNOSTIC PATH", X + 40, Y + 590, { size: 16, weight: 700, ls: 3, color: C.lav3 });
+  g.strokeStyle = "rgba(233,228,244,0.15)"; g.lineWidth = 4; g.beginPath(); g.moveTo(lx0, ly); g.lineTo(lx1, ly); g.stroke();
+  const gr2 = g.createLinearGradient(lx0, 0, lx1, 0); gr2.addColorStop(0, C.purpleLight); gr2.addColorStop(.5, C.warm); gr2.addColorStop(1, C.green);
+  g.strokeStyle = gr2; g.beginPath(); g.moveTo(lx0, ly); g.lineTo(lerp(lx0, lx1, lp), ly); g.stroke();
+  if (lp > 0 && lp < 1) glow(lerp(lx0, lx1, lp), ly, 40, C.lav, .8);
+  steps.forEach((s, i) => {
+    const x = lerp(lx0, lx1, i / 2), on = lp >= i / 2 - .001, k = on ? eBack(prog(lt, 2.2 + i * 3.2, 2.6 + i * 3.2)) : 0;
+    g.fillStyle = "#1d1336"; g.strokeStyle = on ? [C.purpleLight, C.warm, C.green][i] : "rgba(233,228,244,0.3)"; g.lineWidth = 3;
+    g.beginPath(); g.arc(x, ly, 24, 0, 7); g.fill(); g.stroke();
+    if (k > 0) { g.fillStyle = [C.purpleLight, C.warm, C.green][i]; g.beginPath(); g.arc(x, ly, 13 * k, 0, 7); g.fill(); }
+    text(s, x, ly + 66, { size: 28, weight: 700, align: "center", color: on ? C.white : C.lav3 });
+    if (i < 2) text("→", lerp(x, lerp(lx0, lx1, (i + 1) / 2), .5), ly - 22, { size: 30, weight: 500, align: "center", color: C.lav3 });
+  });
+  g.restore();
+}
+function lockIn(lt, t0, x, y, w, h, fn) {
+  const k = prog(lt, t0, t0 + .6); if (k <= 0) return;
+  const e = eBack(k); g.save(); g.globalAlpha = clamp(k * 2); g.translate(x + w / 2 + (1 - e) * 90, y + h / 2 + (1 - e) * 30); g.rotate((1 - e) * .06); g.translate(-w / 2, -h / 2);
+  glass(0, 0, w, h, 22); fn(w, h);
+  const fl = 1 - prog(lt, t0 + .55, t0 + 1.1); if (k >= 1 && fl > 0) { rrect(0, 0, w, h, 22); g.strokeStyle = rgba(C.lav, fl); g.lineWidth = 3; g.stroke(); }
+  // lock glyph
+  if (k >= 1) { const la = prog(lt, t0 + .55, t0 + .8); g.globalAlpha = la; g.strokeStyle = C.lav3; g.lineWidth = 2; g.beginPath(); g.arc(w - 38, 34, 7, Math.PI, 0); g.stroke(); rrect(w - 48, 34, 20, 15, 3); g.fillStyle = C.lav3; g.fill(); }
+  g.restore();
+}
+function check(x, y, k, color = C.green) { if (k <= 0) return; g.save(); g.strokeStyle = color; g.lineWidth = 3.5; g.lineCap = "round"; g.lineJoin = "round"; g.beginPath(); const p = [[x - 8, y], [x - 2, y + 7], [x + 10, y - 8]]; g.moveTo(...p[0]); if (k < .5) g.lineTo(lerp(p[0][0], p[1][0], k * 2), lerp(p[0][1], p[1][1], k * 2)); else { g.lineTo(...p[1]); g.lineTo(lerp(p[1][0], p[2][0], (k - .5) * 2), lerp(p[1][1], p[2][1], (k - .5) * 2)); } g.stroke(); g.restore(); }
+function s5(lt) {
+  sectionTitle(lt, "02.", "THE ENABLEMENT", ["Turnkey Grand Openings", "Scalable Marketing Playbooks", "Local Market Growth"]);
+  const X = 760;
+  lockIn(lt, .5, X, 140, 505, 390, (w, h) => {
+    text("GRAND OPENING CHECKLIST", 32, 50, { size: 17, weight: 700, ls: 3, color: C.lav3 });
+    ["Site & signage ready", "Pre-opening buzz campaign", "Local partnerships", "Opening-day event", "Post-opening follow-up"].forEach((s, i) => {
+      const y = 104 + i * 56, k = prog(lt, 1.4 + i * .45, 1.75 + i * .45);
+      rrect(32, y - 22, 30, 30, 8); g.fillStyle = k > 0 ? rgba(C.green, .18) : "rgba(233,228,244,0.06)"; g.fill(); g.strokeStyle = k > 0 ? C.green : "rgba(233,228,244,0.25)"; g.lineWidth = 1.5; g.stroke();
+      check(47, y - 7, k); text(s, 80, y, { size: 22, weight: 500, color: k >= 1 ? C.white : C.lav2 });
+    });
+  });
+  lockIn(lt, 1.0, X + 535, 140, 505, 390, (w, h) => {
+    text("CAMPAIGN TEMPLATES", 32, 50, { size: 17, weight: 700, ls: 3, color: C.lav3 });
+    ["Social", "Email", "Local ads"].forEach((s, i) => {
+      const sx = 32 + i * 152, k = eBack(prog(lt, 2.0 + i * .4, 2.5 + i * .4));
+      rrect(sx, 80, 136, 190, 12); g.setLineDash([5, 5]); g.strokeStyle = "rgba(233,228,244,0.2)"; g.lineWidth = 1.5; g.stroke(); g.setLineDash([]);
+      if (k > 0) {
+        g.save(); g.globalAlpha *= clamp(k); g.translate(0, (1 - k) * -60);
+        rrect(sx, 80, 136, 190, 12); const gr = g.createLinearGradient(0, 80, 0, 270); gr.addColorStop(0, C.purple); gr.addColorStop(1, C.deep); g.fillStyle = gr; g.fill();
+        drawMark(sx + 32, 116, 30, 1); g.fillStyle = rgba(C.lav, .8); g.fillRect(sx + 16, 160, 100, 10); g.fillRect(sx + 16, 180, 70, 8);
+        rrect(sx + 16, 222, 70, 26, 13); g.fillStyle = C.warm; g.fill(); g.restore();
+      }
+      text(s, sx + 68, 300, { size: 18, weight: 600, align: "center", color: C.lav2 });
+    });
+    const on = eOut(prog(lt, 3.6, 3.9));
+    text("Always-on media", 32, 355, { size: 22, weight: 600 });
+    rrect(w - 100, 332, 64, 32, 16); g.fillStyle = mix("#3a2f55", C.green, on); g.fill();
+    g.fillStyle = C.white; g.beginPath(); g.arc(w - 84 + on * 32, 348, 12, 0, 7); g.fill();
+  });
+  lockIn(lt, 1.6, X, 550, 1040, 390, (w, h) => {
+    text("LOCAL PERFORMANCE", 32, 50, { size: 17, weight: 700, ls: 3, color: C.lav3 });
+    text("Franchisee enablement: continuous", w - 76, 50, { size: 18, weight: 600, color: C.lav2, align: "right" });
+    const cx = 60, cy = 90, cw = w - 110, ch = 240, pts = [];
+    for (let i = 0; i <= 24; i++) { const x = i / 24; const base = .18 + .05 * Math.sin(i * 1.3) + (x > .45 ? Math.pow((x - .45) / .55, 1.6) * .68 : 0); pts.push([cx + x * cw, cy + ch - base * ch]); }
+    g.strokeStyle = "rgba(233,228,244,0.08)"; g.lineWidth = 1; g.beginPath(); for (let i = 0; i <= 4; i++) { g.moveTo(cx, cy + i * ch / 4); g.lineTo(cx + cw, cy + i * ch / 4); } g.stroke();
+    const p = eIO(prog(lt, 2.6, 8.8)), n = Math.max(1, Math.floor(p * 24)), fr = p * 24 - n;
+    const vis = pts.slice(0, n + 1); if (n < 24) vis.push([lerp(pts[n][0], pts[n + 1][0], fr), lerp(pts[n][1], pts[n + 1][1], fr)]);
+    const gr = g.createLinearGradient(0, cy, 0, cy + ch); gr.addColorStop(0, rgba(C.green, .35)); gr.addColorStop(1, rgba(C.green, 0));
+    g.beginPath(); vis.forEach(([x, y], i) => i ? g.lineTo(x, y) : g.moveTo(x, y)); g.lineTo(vis[vis.length - 1][0], cy + ch); g.lineTo(cx, cy + ch); g.closePath(); g.fillStyle = gr; g.fill();
+    g.beginPath(); vis.forEach(([x, y], i) => i ? g.lineTo(x, y) : g.moveTo(x, y)); g.strokeStyle = C.green; g.lineWidth = 4; g.lineJoin = "round"; g.stroke();
+    const [ex, ey] = vis[vis.length - 1]; glow(ex, ey, 40, C.green, .7); g.fillStyle = C.white; g.beginPath(); g.arc(ex, ey, 6, 0, 7); g.fill();
+    ["Wk 1", "Wk 4", "Wk 8", "Wk 12"].forEach((s, i) => text(s, cx + i / 3 * cw, cy + ch + 34, { size: 16, weight: 600, color: C.lav3, align: i ? (i === 3 ? "right" : "center") : "left" }));
+    const ga = prog(lt, 7.2, 7.6); text("▲ Growing", ex - 10, ey - 26, { size: 22, weight: 800, color: C.green, alpha: ga, align: "right" });
+  });
+}
+
+/* =====================================================================
+   SCENE 6 (40–50) — command centre + aligned execution
+   ===================================================================== */
+function miniScreen(x, y, w, h, kind, t, seed) {
+  const r = rng(seed); rrect(x, y, w, h, 10); g.fillStyle = "#0e0a1a"; g.fill(); g.strokeStyle = rgba(C.lav, .35); g.lineWidth = 1.5; g.stroke();
+  g.save(); rrect(x, y, w, h, 10); g.clip();
+  if (kind === 0) { for (let i = 0; i < 7; i++) { const bh = (.3 + .6 * r()) * (h - 40) * (.6 + .4 * Math.sin(t * 2 + i)); g.fillStyle = i % 3 ? C.purpleLight : C.lav; g.fillRect(x + 20 + i * (w - 40) / 7, y + h - 16 - bh, (w - 40) / 7 - 8, bh); } }
+  else if (kind === 1) { g.strokeStyle = C.green; g.lineWidth = 3; g.beginPath(); for (let i = 0; i <= 20; i++) { const xx = x + 16 + i / 20 * (w - 32), yy = y + h * .7 - Math.sin(i * .5 + t * 1.5) * h * .15 - i / 20 * h * .3; i ? g.lineTo(xx, yy) : g.moveTo(xx, yy); } g.stroke(); }
+  else if (kind === 2) { for (let i = 0; i < 4; i++) { g.fillStyle = rgba(C.lav, .8); g.fillRect(x + 50, y + 26 + i * (h - 40) / 4, (w - 80) * (.4 + .5 * r()), 8); check(x + 28, y + 30 + i * (h - 40) / 4, clamp(t * 1.2 - i * .3 - r() * .2)); } }
+  else if (kind === 3) { const s = Math.min(w, h * 1.78) * .9; const mx = x + (w - s) / 2, my = y + (h - s / 1.78) / 2; for (let i = 0; i < DOTS.length; i += 3) { const [dx, dy] = DOTS[i]; g.fillStyle = rgba(C.lav3, .5); g.fillRect(mx + dx * s, my + dy * s / 1.78 * .98, 2, 2); } CN.forEach(([_, cx, cy], i) => { if (i % 2) return; g.fillStyle = C.warm; g.beginPath(); g.arc(mx + cx * s, my + cy * s / 1.78, 3, 0, 7); g.fill(); }); }
+  else if (kind === 4) { for (let i = 0; i < 5; i++) for (let j = 0; j < 7; j++) { g.fillStyle = r() < .3 ? C.purpleLight : "rgba(233,228,244,0.12)"; g.fillRect(x + 16 + j * (w - 32) / 7, y + 18 + i * (h - 30) / 5, (w - 32) / 7 - 5, (h - 30) / 5 - 5); } }
+  else { const v = Math.floor(40 + t * 9 + seed * 3); text("LIVE", x + 20, y + 36, { size: 16, weight: 800, ls: 3, color: C.green }); text(String(v % 100).padStart(2, "0") + " sites", x + 20, y + h - 26, { size: Math.min(44, h * .32), weight: 800 }); }
+  g.restore();
+}
+const ICON = {
+  corp: (x, y, s) => { g.strokeStyle = C.white; g.lineWidth = 3; g.strokeRect(x - s * .3, y - s * .45, s * .6, s * .9); for (let i = 0; i < 3; i++) for (let j = 0; j < 2; j++) g.fillRect(x - s * .18 + j * s * .22, y - s * .32 + i * s * .24, s * .14, s * .12); g.fillStyle = C.white; },
+  store: (x, y, s) => { g.strokeStyle = C.white; g.lineWidth = 3; g.strokeRect(x - s * .42, y - s * .1, s * .84, s * .52); g.beginPath(); g.moveTo(x - s * .5, y - s * .1); g.lineTo(x - s * .4, y - s * .42); g.lineTo(x + s * .4, y - s * .42); g.lineTo(x + s * .5, y - s * .1); g.closePath(); g.stroke(); g.strokeRect(x - s * .1, y + s * .12, s * .2, s * .3); },
+  agency: (x, y, s) => { g.fillStyle = C.white; g.beginPath(); for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4 - Math.PI / 2, r = i % 2 ? s * .14 : s * .46; g.lineTo(x + Math.cos(a) * r, y + Math.sin(a) * r); } g.closePath(); g.fill(); }
+};
+function s6(lt) {
+  // command-centre wall
+  const wallDim = eIO(prog(lt, 3.6, 4.6)), cam = lerp(1.12, 1.0, eOut(prog(lt, 0, 4))) * lerp(1, .82, wallDim);
+  g.save(); g.globalAlpha = lerp(1, .09, wallDim) * eOut(prog(lt, 0, .5)); g.translate(960, 500); g.scale(cam, cam); g.translate(-960, -500);
+  const cols = 4, rows = 3, sw = 390, sh = 210, gx = 24;
+  for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+    const i = r * cols + c, k = eOut(prog(lt, .1 + i * .06, .6 + i * .06)); if (k <= 0) continue;
+    const x = 960 - (cols * sw + (cols - 1) * gx) / 2 + c * (sw + gx), y = 150 + r * (sh + gx);
+    g.save(); g.globalAlpha *= k; g.translate(0, (1 - k) * 30); miniScreen(x, y, sw, sh, (i * 5 + 1) % 6, lt, i + 3); g.restore();
+  }
+  g.restore();
+  // workflow uniting teams
+  const teams = [["Corporate", "corp", 330], ["Franchisees", "store", 540], ["Agencies", "agency", 750]];
+  const fx = 470, mx = 1080, my = 540, ex = 1250;
+  teams.forEach(([n, ic, y], i) => {
+    const k = eBack(prog(lt, 4.2 + i * .25, 4.8 + i * .25)); if (k <= 0) return;
+    const col = [C.purpleLight, C.warm, C.cool][i];
+    const f = t => { const u = 1 - t; return [u * u * u * fx + 3 * u * u * t * (fx + 330) + 3 * u * t * t * (mx - 300) + t * t * t * mx, u * u * u * y + 3 * u * u * t * y + 3 * u * t * t * my + t * t * t * my]; };
+    const lp = eIO(prog(lt, 5.0 + i * .2, 6.2 + i * .2));
+    strokeArc(f, 0, lp, rgba(col, .8), 4, 1);
+    if (lp >= 1) for (let q = 0; q < 3; q++) { const tt = (lt * .6 + q / 3 + i * .1) % 1; const [px, py] = f(tt); glow(px, py, 20, col, .9); }
+    g.save(); g.translate(360, y); g.scale(k, k);
+    g.fillStyle = "#1d1336"; g.beginPath(); g.arc(0, 0, 62, 0, 7); g.fill(); g.strokeStyle = col; g.lineWidth = 3; g.stroke(); glow(0, 0, 110, col, .18);
+    g.fillStyle = C.white; ICON[ic](0, 0, 58); g.restore();
+    text(n, 250, y + 8, { size: 30, weight: 700, align: "right", alpha: clamp(k) });
+  });
+  const mk = eBack(prog(lt, 6.2, 6.8));
+  if (mk > 0) {
+    g.save(); g.translate(mx, my); g.scale(mk, mk); glow(0, 0, 140, C.lav, .35); g.fillStyle = C.purple; g.beginPath(); g.arc(0, 0, 50, 0, 7); g.fill(); g.strokeStyle = C.lav; g.lineWidth = 3; g.stroke(); drawMark(0, 0, 58, 1); g.restore();
+    const ap = eIO(prog(lt, 6.6, 7.2));
+    g.strokeStyle = C.lav; g.lineWidth = 6; g.beginPath(); g.moveTo(mx + 52, my); g.lineTo(lerp(mx + 52, ex, ap), my); g.stroke();
+    const ck = eOut(prog(lt, 7.0, 7.6));
+    if (ck > 0) {
+      g.save(); g.globalAlpha = ck; g.translate((1 - ck) * 40, 0);
+      rrect(ex, my - 90, 520, 180, 26); const gr = g.createLinearGradient(ex, 0, ex + 520, 0); gr.addColorStop(0, C.purple); gr.addColorStop(1, C.purpleDeep); g.fillStyle = gr; g.fill(); g.strokeStyle = rgba(C.lav, .6); g.lineWidth = 2; g.stroke();
+      text("ALIGNED", ex + 40, my - 22, { size: 26, weight: 600, ls: 6, color: C.lav2 }); text("Execution", ex + 40, my + 40, { size: 56, weight: 800 });
+      g.fillStyle = rgba(C.green, .2); g.beginPath(); g.arc(ex + 448, my, 36, 0, 7); g.fill(); check(ex + 448, my + 2, prog(lt, 7.4, 7.9)); g.restore();
+    }
+  }
+  // headline
+  const hy = lt < 4.2 ? 1000 : lerp(1000, 150, eIO(prog(lt, 4.2, 4.9)));
+  words("Corporate + Franchisees + Agencies", 960, hy, .6, lt, { size: 60, weight: 800, align: "center", gap: .22, colors: { 1: C.lav3, 3: C.lav3 } });
+  kicker("Working alongside your teams — without disrupting operations", 960, hy + 50, eOut(prog(lt, 5.2, 5.8)) * (lt > 4.9 ? 1 : 0), C.lav3, "center");
+}
+
+/* =====================================================================
+   SCENE 7 (50–55) — zoom-out of the connected network
+   ===================================================================== */
+function s7(lt) {
+  const z = lerp(3.4, 1, eIO(prog(lt, 0, 3.0)));
+  const mw = 1500 * z, mh = mw / 1.78, [_, hx0, hy0] = CN[0];
+  const fx = 960, fy = 470, mx = fx - hx0 * mw + (hx0 - .5) * 1500 * (1 - (z - 1) / 2.4) * 0, my = fy - hy0 * mh;
+  const ox = lerp(0, (.5 - hx0) * 1500, eIO(prog(lt, 0, 3.0))), oy = lerp(0, (.5 - hy0) * 1500 / 1.78, eIO(prog(lt, 0, 3.0)));
+  const MX = mx + ox, MY = my + oy;
+  const pos = CN.map(([n, x, y]) => [MX + x * mw, MY + y * mh]);
+  const lock = eOut(prog(lt, 3.0, 3.6));
+  mapDots(MX, MY, mw, mh, 1, (px, py) => { let s = 0; pos.forEach(([x, y], i) => { const d = Math.hypot(px - x, py - y); const on = prog(lt, .2 + i * .08, .6 + i * .08); s += on * Math.max(0, 1 - d / 90) * .6; }); return s; });
+  const [hx, hy] = pos[0];
+  pos.slice(1).forEach(([x, y], i) => { const p = eIO(prog(lt, .3 + i * .07, 1.1 + i * .07)); if (p <= 0) return; const f = arcPath(hx, hy, x, y, .2); strokeArc(f, 0, p, C.lav, 1.8 + lock, .5 + lock * .3);
+    if (p >= 1) { const tt = (lt * .7 + i * .21) % 1; const [px, py] = f(tt); glow(px, py, 14, C.lav, .8); } });
+  // mesh between neighbours
+  const mesh = [[1, 18], [18, 2], [2, 3], [3, 4], [4, 16], [16, 5], [5, 0], [6, 7], [7, 19], [19, 6], [8, 17], [8, 9], [10, 14], [10, 15], [15, 21], [21, 12], [12, 13], [11, 20], [20, 10], [14, 8]];
+  mesh.forEach(([a, b], i) => { const p = eIO(prog(lt, 1.2 + i * .04, 2.0 + i * .04)); if (p <= 0) return; const [x1, y1] = pos[a], [x2, y2] = pos[b]; g.strokeStyle = rgba(C.lav3, .45); g.lineWidth = 1.2; g.beginPath(); g.moveTo(x1, y1); g.lineTo(lerp(x1, x2, p), lerp(y1, y2, p)); g.stroke(); });
+  pos.forEach(([x, y], i) => { const on = eBack(prog(lt, .2 + i * .08, .6 + i * .08)); if (on > 0) pin(x, y, i ? C.purpleLight : C.lav, clamp(on), 0, i ? 6 * on : 10); });
+  if (lock > 0) { // system locks: frame closes
+    g.save(); g.globalAlpha = lock; g.strokeStyle = rgba(C.lav, .55); g.lineWidth = 2; const fw = lerp(1800, 1560, lock), fh = lerp(980, 830, lock);
+    rrect(960 - fw / 2, 470 - fh / 2 - 30, fw, fh, 30); g.stroke();
+    const flash = 1 - prog(lt, 3.0, 3.8); g.fillStyle = rgba(C.lav, flash * .12 * lock); g.fillRect(0, 0, W, H); g.restore();
+  }
+  const gr = g.createLinearGradient(0, H - 300, 0, H); gr.addColorStop(0, "rgba(11,7,21,0)"); gr.addColorStop(1, "rgba(11,7,21,0.9)"); g.fillStyle = gr; g.fillRect(0, H - 300, W, 300);
+  words("Assess. Enable. Scale.", 960, 990, .8, lt, { size: 100, weight: 800, align: "center", gap: .85, colors: { 2: C.lav2 } });
+}
+
+/* =====================================================================
+   SCENE 8 (55–60) — end card
+   ===================================================================== */
+function s8(lt) {
+  const img = IMG.bg5;
+  if (img.complete && img.naturalWidth) { g.save(); g.globalAlpha = .22; const s = 1.08 + lt * .012, iw = W * s, ih = iw * img.naturalHeight / img.naturalWidth; g.drawImage(img, (W - iw) / 2, (H - ih) / 2, iw, ih); g.restore(); }
+  const ov = g.createLinearGradient(0, 0, W, H); ov.addColorStop(0, "rgba(58,38,92,0.78)"); ov.addColorStop(1, "rgba(11,7,21,0.94)"); g.fillStyle = ov; g.fillRect(0, 0, W, H);
+  glow(960, 360, 620, C.purpleLight, .22);
+  drawLockup(960, 330, 520, prog(lt, .05, .9), prog(lt, .7, 1.3));
+  const a1 = eOut(prog(lt, 1.0, 1.5));
+  text("FRANCHISE GROWTH SYSTEMS™", 960, 520, { size: 34, weight: 600, ls: 12, color: C.lav2, align: "center", alpha: a1 });
+  g.fillStyle = rgba(C.lav, .35 * a1); g.fillRect(960 - 60 * a1, 562, 120 * a1, 2);
+  const b = eBack(prog(lt, 1.4, 2.0));
+  if (b > 0) {
+    g.save(); g.translate(960, 680); g.scale(b, b); const bw = measure("Book Your Growth Assessment", 40, 700) + 110;
+    rrect(-bw / 2, -46, bw, 92, 46); g.fillStyle = C.white; g.fill();
+    const sh = prog(lt, 2.6, 3.6); if (sh > 0 && sh < 1) { g.save(); rrect(-bw / 2, -46, bw, 92, 46); g.clip(); const sx = lerp(-bw / 2 - 120, bw / 2 + 120, sh); const gr = g.createLinearGradient(sx - 80, 0, sx + 80, 0); gr.addColorStop(0, "rgba(201,189,230,0)"); gr.addColorStop(.5, "rgba(201,189,230,0.7)"); gr.addColorStop(1, "rgba(201,189,230,0)"); g.fillStyle = gr; g.fillRect(-bw / 2, -46, bw, 92); g.restore(); }
+    text("Book Your Growth Assessment", 0, 14, { size: 40, weight: 700, color: C.purpleDeep, align: "center" }); g.restore();
+  }
+  const a2 = eOut(prog(lt, 1.9, 2.4));
+  g.save(); g.translate(0, (1 - a2) * 20); text("myalkimia.com", 960, 850, { size: 58, weight: 800, align: "center", alpha: a2, ls: 1 }); g.restore();
+}
+
+/* ---------- timeline ---------- */
+const SCENES = [[0, 5, s1], [5, 10, s2], [10, 20, s3], [20, 30, s4], [30, 40, s5], [40, 50, s6], [50, 55, s7], [55, 60, s8]];
+function render(t, frame = Math.round(t * 30)) {
+  t = clamp(t, 0, DUR - 1e-6);
+  background(t);
+  for (const [a, b, fn] of SCENES) {
+    if (t < a || t >= b) continue;
+    const lt = t - a, inK = a === 0 ? 1 : eOut(prog(lt, 0, .4)), outK = b === DUR ? 1 : 1 - eIn(prog(lt, b - a - .35, b - a));
+    g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, W, H); g.globalAlpha = 1;
+    fn(lt, b - a, t);
+    const s = (1 + (1 - inK) * .04) * (1 - (1 - outK) * .03);
+    out.save(); out.globalAlpha = inK * outK; out.translate(W / 2, H / 2); out.scale(s, s); out.translate(-W / 2, -H / 2); out.drawImage(layer, 0, 0); out.restore();
+  }
+  finish(t, frame);
+}
+window.render = render;
+window.ready = Promise.all([document.fonts.load("800 40px Inter"), document.fonts.load("400 40px Inter"), ...Object.values(IMG).map(i => i.decode().catch(() => { }))]);
+
+/* ---------- preview player ---------- */
+if (location.hash === "#capture") document.body.classList.add("capture");
+else {
+  const btn = document.getElementById("play"), sc = document.getElementById("scrub"), tc = document.getElementById("tc");
+  let playing = false, t = 0, last = 0;
+  const draw = () => { render(t); sc.value = t; tc.textContent = t.toFixed(2) + "s"; };
+  btn.onclick = () => { playing = !playing; btn.textContent = playing ? "Pause" : "Play"; last = performance.now(); if (t >= DUR - .05) t = 0; };
+  sc.oninput = () => { t = +sc.value; draw(); };
+  (function loop(now) { if (playing) { t += (now - last) / 1000; last = now; if (t >= DUR) { t = DUR - .01; playing = false; btn.textContent = "Play"; } draw(); } requestAnimationFrame(loop); })(0);
+  window.ready.then(draw);
+}
+</script>
+</body>
+</html>
