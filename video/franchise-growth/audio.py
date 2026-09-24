@@ -138,7 +138,8 @@ add(blip(1560, .15, .002, .06), T(33.7), 0.05)
 for k in range(3): add(blip(330 * (k + 2), .4, .005, .2), T(44.4 + k * 0.25), 0.07)
 add(whoosh(1.2, 1500), T(45.2), 0.09); add(blip(880, 1.0, .01, .5), T(46.3), 0.06); add(blip(1320, .6, .01, .3), T(47.5), 0.06)
 for k, lt in enumerate((0.35, 2.1, 3.85)):  # "Assess. Enable. Scale." word hits
-    add(impact(1.0) * .5, S(6) + lt, 0.3); add(blip(440 * (k + 2), .6, .005, .25), S(6) + lt, 0.09)
+    at = S(6) + lt / SCENES[6][2]  # scene-local time -> seconds
+    add(impact(1.0) * .5, at, 0.3); add(blip(440 * (k + 2), .6, .005, .25), at, 0.09)
 add(blip(2640, 1.2, .01, .6), T(53.0), 0.03)
 add(impact(3.5), S(7), 0.45)
 for k, f in enumerate((1047, 1319, 1568)): add(blip(f, 1.8, .02, .9), T(56.4 + k * 0.12), 0.03)
@@ -148,6 +149,21 @@ fade = np.clip((DUR - t) / 1.2, 0, 1) * np.clip(t / 0.08, 0, 1)
 st = np.stack([L * fade, R * fade], 1)
 st = np.tanh(st * 1.4) / 1.4  # soft clip
 st *= 0.89 / np.max(np.abs(st))
+
+# ---- voiceover (voiceover/voice-aligned.wav from voiceover/align.py): music ducks under the voice ----
+VO = os.path.join(os.path.dirname(os.path.abspath(__file__)), "voiceover", "voice-aligned.wav")
+if os.path.exists(VO):
+    with wave.open(VO) as w:
+        vo = np.frombuffer(w.readframes(w.getnframes()), "<i2").astype(float).reshape(-1, 2) / 32768
+    vo = np.concatenate([vo, np.zeros((max(0, N - len(vo)), 2))])[:N]
+    lvl = np.abs(vo[:, 0])
+    k = int(0.03 * SR); lvl = np.convolve(lvl, np.ones(k) / k, "same")          # voice envelope
+    on = (lvl > 0.01).astype(float)
+    k = int(0.35 * SR); on = np.convolve(on, np.ones(k) / k, "same")            # smooth attack/release
+    duck = 1 - 0.55 * np.clip(on * 1.5, 0, 1)
+    st = st * 0.55 * duck[:, None] + vo * 0.95
+    st = np.tanh(st * 1.1) / 1.1
+    st *= 0.95 / np.max(np.abs(st))
 out = (st * 32767).astype("<i2")
 with wave.open(sys.argv[1] if len(sys.argv) > 1 else "soundtrack.wav", "wb") as w:
     w.setnchannels(2); w.setsampwidth(2); w.setframerate(SR); w.writeframes(out.tobytes())

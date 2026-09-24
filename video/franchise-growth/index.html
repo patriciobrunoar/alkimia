@@ -228,7 +228,7 @@ function s1(lt) {
   }
   // title
   const ta = eOut(prog(lt, .9, 1.5));
-  const gr = g.createLinearGradient(0, H - 420, 0, H); gr.addColorStop(0, "rgba(11,7,21,0)"); gr.addColorStop(1, "rgba(11,7,21,0.9)"); g.fillStyle = gr; g.globalAlpha = ta; g.fillRect(0, H - 420, W, 420); g.globalAlpha = 1;
+  const gr = g.createLinearGradient(0, H - 480, 0, H); gr.addColorStop(0, "rgba(11,7,21,0)"); gr.addColorStop(.35, "rgba(11,7,21,0.82)"); gr.addColorStop(1, "rgba(11,7,21,0.96)"); g.fillStyle = gr; g.globalAlpha = ta; g.fillRect(0, H - 480, W, 480); g.globalAlpha = 1;
   kicker("Franchise growth", 120, 790, ta);
   words("Scale your framework.", 120, 925, .95, lt, { size: 96, weight: 800 });
   g.fillStyle = C.purpleLight; g.fillRect(120, 808, 90 * ta, 4);
