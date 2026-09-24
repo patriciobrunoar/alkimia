@@ -209,8 +209,8 @@ function s1(lt) {
     const b = BUILD[type];
     if (mode === "bp") blueprintGrid(1);
     else { glow(960, 640, 700, C.warm, .10); }
-    const sc = Math.min(1100 / b.w, 500 / b.h) * (1 + .07 * sp) * (mode === "bp" ? 1 : 1.02);
-    g.save(); g.translate(960 - b.w * sc / 2 + (mode === "bp" ? -20 : 20) * sp, 640); g.scale(sc, sc);
+    const sc = Math.min(1060 / b.w, 440 / b.h) * (1 + .07 * sp) * (mode === "bp" ? 1 : 1.02);
+    g.save(); g.translate(960 - b.w * sc / 2 + (mode === "bp" ? -20 : 20) * sp, 540); g.scale(sc, sc);
     drawBuilding(b, mode, mode === "bp" ? eOut(prog(lt, st, st + .38)) : 1); g.restore();
     const f = 1 - prog(lt, st, st + .09); if (f > 0 && i > 0) { g.fillStyle = rgba(C.lav, .22 * f); g.fillRect(0, 0, W, H); }
   } else { // pull back: footprint replicates into a scalable grid
@@ -229,9 +229,9 @@ function s1(lt) {
   // title
   const ta = eOut(prog(lt, .9, 1.5));
   const gr = g.createLinearGradient(0, H - 420, 0, H); gr.addColorStop(0, "rgba(11,7,21,0)"); gr.addColorStop(1, "rgba(11,7,21,0.9)"); g.fillStyle = gr; g.globalAlpha = ta; g.fillRect(0, H - 420, W, 420); g.globalAlpha = 1;
-  kicker("Franchise growth", 120, 835, ta);
+  kicker("Franchise growth", 120, 790, ta);
   words("Scale your framework.", 120, 925, .95, lt, { size: 96, weight: 800 });
-  g.fillStyle = C.purpleLight; g.fillRect(120, 850, 90 * ta, 4);
+  g.fillStyle = C.purpleLight; g.fillRect(120, 808, 90 * ta, 4);
 }
 
 /* =====================================================================
@@ -399,7 +399,7 @@ function s3(lt) {
     g.restore();
     // overlay
     const oa = eOut(prog(t, .8, 1.4));
-    kicker("Introducing", 120, 700, oa);
+    kicker("Introducing", 120, 650, oa);
     g.save(); g.globalAlpha = oa; drawLockup(120 + 150, 805, 300, 1, 1); g.restore();
     words("Franchise Growth Systems™", 120, 945, 1.1 + 5.6, lt, { size: 64, weight: 700, gap: .1 });
   }
@@ -410,23 +410,23 @@ function s3(lt) {
    ===================================================================== */
 function sectionTitle(lt, num, title, items) {
   const a = eOut(prog(lt, .1, .6));
-  g.save(); const gr = g.createLinearGradient(120, 180, 420, 380); gr.addColorStop(0, C.lav); gr.addColorStop(1, C.purpleLight);
-  font(170, 800); g.letterSpacing = "-6px"; g.globalAlpha = a; g.fillStyle = gr; g.fillText(num, 110 - (1 - a) * 40, 330); g.restore();
-  const tl = title.split("|"); tl.forEach((s, i) => words(s, 120, 420 + i * 62, .4 + i * .15, lt, { size: 50, weight: 800, ls: 1.5, gap: .08 }));
-  const y0 = 420 + tl.length * 62 + 24;
-  g.fillStyle = C.purpleLight; g.fillRect(120, y0 - 20, 90 * eOut(prog(lt, .7, 1.2)), 4);
+  g.save(); const gr = g.createLinearGradient(120, 150, 420, 350); gr.addColorStop(0, C.lav); gr.addColorStop(1, C.purpleLight);
+  font(190, 800); g.letterSpacing = "-6px"; g.globalAlpha = a; g.fillStyle = gr; g.fillText(num, 110 - (1 - a) * 40, 310); g.restore();
+  const tl = title.split("|"); tl.forEach((s, i) => words(s, 120, 400 + i * 74, .4 + i * .15, lt, { size: 60, weight: 800, ls: 1, gap: .08 }));
+  const y0 = 400 + tl.length * 74 + 26;
+  g.fillStyle = C.purpleLight; g.fillRect(120, y0 - 22, 90 * eOut(prog(lt, .7, 1.2)), 4);
   items.forEach((s, i) => {
-    const k = eOut(prog(lt, 1.1 + i * .35, 1.5 + i * .35)), y = y0 + 40 + i * 64;
+    const k = eOut(prog(lt, 1.1 + i * .35, 1.5 + i * .35)), y = y0 + 46 + i * 78;
     g.save(); g.globalAlpha = k; g.translate((1 - k) * -30, 0);
-    g.fillStyle = C.purpleLight; g.beginPath(); g.arc(132, y - 9, 6, 0, 7); g.fill();
-    text(s, 158, y, { size: 32, weight: 600, color: C.lav });
+    g.fillStyle = C.purpleLight; g.beginPath(); g.arc(134, y - 11, 7, 0, 7); g.fill();
+    text(s, 162, y, { size: 40, weight: 600, color: C.lav });
     g.restore();
   });
 }
 const SCAT = (() => { const r = rng(11), a = []; for (let i = 0; i < 70; i++) a.push([r(), clamp(.15 + r() * .75 + (r() - .5) * .1), r() < .09]); return a; })();
 function s4(lt) {
   sectionTitle(lt, "01.", "THE INITIAL|ASSESSMENT", ["GTM", "Research", "Tools", "Workflows", "Roadmap"]);
-  const pa = eOut(prog(lt, .3, 1.0)), X = 760, Y = 140, PW = 1040, PH = 800;
+  const pa = eOut(prog(lt, .3, 1.0)), X = 760, Y = 96, PW = 1040, PH = 800;
   g.save(); g.globalAlpha = pa; g.translate((1 - pa) * 60, 0);
   glass(X, Y, PW, PH, 26);
   [C.warm, C.gold, C.green].forEach((c, i) => { g.fillStyle = rgba(c, .7); g.beginPath(); g.arc(X + 36 + i * 22, Y + 36, 6, 0, 7); g.fill(); });
@@ -487,7 +487,7 @@ function check(x, y, k, color = C.green) { if (k <= 0) return; g.save(); g.strok
 function s5(lt) {
   sectionTitle(lt, "02.", "THE ENABLEMENT", ["Turnkey Grand Openings", "Scalable Marketing Playbooks", "Local Market Growth"]);
   const X = 760;
-  lockIn(lt, .5, X, 140, 505, 390, (w, h) => {
+  lockIn(lt, .5, X, 96, 505, 390, (w, h) => {
     text("GRAND OPENING CHECKLIST", 32, 50, { size: 17, weight: 700, ls: 3, color: C.lav3 });
     ["Site & signage ready", "Pre-opening buzz campaign", "Local partnerships", "Opening-day event", "Post-opening follow-up"].forEach((s, i) => {
       const y = 104 + i * 56, k = prog(lt, 1.4 + i * .45, 1.75 + i * .45);
@@ -495,7 +495,7 @@ function s5(lt) {
       check(47, y - 7, k); text(s, 80, y, { size: 22, weight: 500, color: k >= 1 ? C.white : C.lav2 });
     });
   });
-  lockIn(lt, 1.0, X + 535, 140, 505, 390, (w, h) => {
+  lockIn(lt, 1.0, X + 535, 96, 505, 390, (w, h) => {
     text("CAMPAIGN TEMPLATES", 32, 50, { size: 17, weight: 700, ls: 3, color: C.lav3 });
     ["Social", "Email", "Local ads"].forEach((s, i) => {
       const sx = 32 + i * 152, k = eBack(prog(lt, 2.0 + i * .4, 2.5 + i * .4));
@@ -513,7 +513,7 @@ function s5(lt) {
     rrect(w - 100, 332, 64, 32, 16); g.fillStyle = mix("#3a2f55", C.green, on); g.fill();
     g.fillStyle = C.white; g.beginPath(); g.arc(w - 84 + on * 32, 348, 12, 0, 7); g.fill();
   });
-  lockIn(lt, 1.6, X, 550, 1040, 390, (w, h) => {
+  lockIn(lt, 1.6, X, 500, 1040, 390, (w, h) => {
     text("LOCAL PERFORMANCE", 32, 50, { size: 17, weight: 700, ls: 3, color: C.lav3 });
     text("Franchisee enablement: continuous", w - 76, 50, { size: 18, weight: 600, color: C.lav2, align: "right" });
     const cx = 60, cy = 90, cw = w - 110, ch = 240, pts = [];
@@ -652,9 +652,9 @@ function subtitles(t) {
   const [a, b, s] = cue, k = Math.min(prog(t, a, a + .15), 1 - prog(t, b - .15, b));
   let size = 36; out.font = `600 ${size}px Inter`; out.letterSpacing = "0px"; let w = out.measureText(s).width;
   if (w > 1640) { size = Math.floor(size * 1640 / w); out.font = `600 ${size}px Inter`; w = out.measureText(s).width; }
-  out.save(); out.globalAlpha = k; out.beginPath(); out.roundRect(960 - w / 2 - 28, 1000, w + 56, 58, 29);
-  out.fillStyle = "rgba(11,7,21,0.78)"; out.fill(); out.strokeStyle = "rgba(201,189,230,0.28)"; out.lineWidth = 1.5; out.stroke();
-  out.fillStyle = "#fff"; out.textAlign = "center"; out.textBaseline = "middle"; out.fillText(s, 960, 1030); out.restore();
+  out.save(); out.globalAlpha = k; out.beginPath(); out.roundRect(960 - w / 2 - 28, 988, w + 56, 58, 29);
+  out.fillStyle = "rgba(11,7,21,0.78)"; out.fill();
+  out.fillStyle = "#fff"; out.textAlign = "center"; out.textBaseline = "middle"; out.fillText(s, 960, 1018); out.restore();
 }
 function render(t, frame = Math.round(t * 30)) {
   t = clamp(t, 0, DUR - 1e-6);
