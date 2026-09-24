@@ -209,15 +209,15 @@ function s1(lt) {
     const b = BUILD[type];
     if (mode === "bp") blueprintGrid(1);
     else { glow(960, 640, 700, C.warm, .10); }
-    const sc = Math.min(1060 / b.w, 440 / b.h) * (1 + .07 * sp) * (mode === "bp" ? 1 : 1.02);
-    g.save(); g.translate(960 - b.w * sc / 2 + (mode === "bp" ? -20 : 20) * sp, 540); g.scale(sc, sc);
+    const sc = Math.min(1000 / b.w, 380 / b.h) * (1 + .07 * sp) * (mode === "bp" ? 1 : 1.02);
+    g.save(); g.translate(960 - b.w * sc / 2 + (mode === "bp" ? -20 : 20) * sp, 745); g.scale(sc, sc);
     drawBuilding(b, mode, mode === "bp" ? eOut(prog(lt, st, st + .38)) : 1); g.restore();
     const f = 1 - prog(lt, st, st + .09); if (f > 0 && i > 0) { g.fillStyle = rgba(C.lav, .22 * f); g.fillRect(0, 0, W, H); }
   } else { // pull back: footprint replicates into a scalable grid
     const k = eIO(prog(lt, 3.65, 5)); blueprintGrid(1);
     const types = ["storefront", "drivethru", "strip", "kiosk"], cols = 9, rows = 7, tw = 1300, th = 820;
     const cam = lerp(.82, .2, k);
-    g.save(); g.translate(960, 560); g.scale(cam, cam);
+    g.save(); g.translate(960, 640); g.scale(cam, cam);
     for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
       const cx = (c - (cols - 1) / 2) * tw, cy = (r - (rows - 1) / 2) * th, d = Math.hypot(c - (cols - 1) / 2, r - (rows - 1) / 2);
       const p = prog(lt, 3.65 + d * .1, 4.1 + d * .1); if (p <= 0) continue;
@@ -228,10 +228,10 @@ function s1(lt) {
   }
   // title
   const ta = eOut(prog(lt, .9, 1.5));
-  const gr = g.createLinearGradient(0, H - 480, 0, H); gr.addColorStop(0, "rgba(11,7,21,0)"); gr.addColorStop(.35, "rgba(11,7,21,0.82)"); gr.addColorStop(1, "rgba(11,7,21,0.96)"); g.fillStyle = gr; g.globalAlpha = ta; g.fillRect(0, H - 480, W, 480); g.globalAlpha = 1;
-  kicker("Franchise growth", 120, 790, ta);
-  words("Scale your framework.", 120, 925, .95, lt, { size: 96, weight: 800 });
-  g.fillStyle = C.purpleLight; g.fillRect(120, 808, 90 * ta, 4);
+  const gr = g.createLinearGradient(0, 0, 0, 340); gr.addColorStop(0, "rgba(11,7,21,0.96)"); gr.addColorStop(.6, "rgba(11,7,21,0.82)"); gr.addColorStop(1, "rgba(11,7,21,0)"); g.fillStyle = gr; g.globalAlpha = ta; g.fillRect(0, 0, W, 340); g.globalAlpha = 1;
+  kicker("Franchise growth", 120, 110, ta);
+  words("Scale your framework.", 120, 245, .95, lt, { size: 96, weight: 800 });
+  g.fillStyle = C.purpleLight; g.fillRect(120, 128, 90 * ta, 4);
 }
 
 /* =====================================================================
@@ -274,7 +274,7 @@ function brandCard(x, y, w, h, deg = 0, seed = 1, a = 1) {
   g.restore();
 }
 function s2(lt) {
-  g.save(); g.translate(0, -110);  // content sits high; title + subtitle own the bottom
+  g.save(); g.translate(0, 40);  // title on top, content below it
   // left: corporate vision
   const la = eOut(prog(lt, 0, .5));
   kicker("Corporate vision", 120, 250, la);
@@ -307,7 +307,7 @@ function s2(lt) {
   pin(hx, hy, C.lav, ma, (lt * .8) % 1, 11); text("HQ", hx - 16, hy - 20, { size: 18, weight: 800, ls: 2, alpha: ma, align: "right" });
   // title
   g.restore();
-  const y = 890; words("Corporate Vision ≠ Local Reality", 960, y, 1.3, lt, { size: 84, weight: 800, align: "center", gap: .1, colors: { 2: C.warm } });
+  const y = 150; words("Corporate Vision ≠ Local Reality", 960, y, 1.3, lt, { size: 84, weight: 800, align: "center", gap: .1, colors: { 2: C.warm } });
 }
 
 /* =====================================================================
@@ -368,7 +368,7 @@ function s3(lt) {
   // Part C — modular 3D grid linking HQ to regional nodes
   if (lt >= 5.6) {
     const t = lt - 5.6, ga = eOut(prog(t, 0, .8));
-    const cam = { yaw: .55 + t * .09, pitch: .6, d: lerp(20, 15.5, eIO(prog(t, 0, 4.4))), f: 1450, cx: 1160, cy: 540 };
+    const cam = { yaw: .55 + t * .09, pitch: .6, d: lerp(20, 15.5, eIO(prog(t, 0, 4.4))), f: 1450, cx: 1230, cy: 650 };
     g.save(); g.globalAlpha = ga;
     for (let i = -6; i <= 6; i++) for (let j = -6; j <= 6; j++) {
       const r = Math.hypot(i, j), p = eOut(prog(t, r * .06, r * .06 + .5)); if (p <= 0 || r > 6.6) continue;
@@ -401,9 +401,9 @@ function s3(lt) {
     g.restore();
     // overlay
     const oa = eOut(prog(t, .8, 1.4));
-    kicker("Introducing", 120, 650, oa);
-    g.save(); g.globalAlpha = oa; drawLockup(120 + 150, 805, 300, 1, 1); g.restore();
-    words("Franchise Growth Systems™", 120, 945, 1.1 + 5.6, lt, { size: 64, weight: 700, gap: .1 });
+    kicker("Introducing", 120, 110, oa);
+    g.save(); g.globalAlpha = oa; drawLockup(120 + 150, 245, 300, 1, 1); g.restore();
+    words("Franchise Growth Systems™", 120, 400, 1.1 + 5.6, lt, { size: 64, weight: 700, gap: .1 });
   }
 }
 
@@ -553,12 +553,12 @@ const ICON = {
 };
 function s6(lt) {
   // command-centre wall
-  const wallDim = eIO(prog(lt, 3.6, 4.6)), cam = lerp(1.12, 1.0, eOut(prog(lt, 0, 4))) * lerp(1, .82, wallDim);
-  g.save(); g.globalAlpha = lerp(1, .09, wallDim) * eOut(prog(lt, 0, .5)); g.translate(960, 500); g.scale(cam, cam); g.translate(-960, -500);
+  const wallDim = eIO(prog(lt, 3.6, 4.6)), cam = lerp(1.06, 1.0, eOut(prog(lt, 0, 4))) * lerp(1, .82, wallDim);
+  g.save(); g.globalAlpha = lerp(1, .09, wallDim) * eOut(prog(lt, 0, .5)); g.translate(960, 600); g.scale(cam, cam); g.translate(-960, -600);
   const cols = 4, rows = 3, sw = 390, sh = 210, gx = 24;
   for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
     const i = r * cols + c, k = eOut(prog(lt, .1 + i * .06, .6 + i * .06)); if (k <= 0) continue;
-    const x = 960 - (cols * sw + (cols - 1) * gx) / 2 + c * (sw + gx), y = 150 + r * (sh + gx);
+    const x = 960 - (cols * sw + (cols - 1) * gx) / 2 + c * (sw + gx), y = 260 + r * (sh + gx);
     g.save(); g.globalAlpha *= k; g.translate(0, (1 - k) * 30); miniScreen(x, y, sw, sh, (i * 5 + 1) % 6, lt, i + 3); g.restore();
   }
   g.restore();
@@ -591,7 +591,7 @@ function s6(lt) {
     }
   }
   // headline
-  const hy = lt < 4.2 ? 950 : lerp(950, 150, eIO(prog(lt, 4.2, 4.9)));
+  const hy = 150;
   words("Corporate + Franchisees + Agencies", 960, hy, .6, lt, { size: 60, weight: 800, align: "center", gap: .22, colors: { 1: C.lav3, 3: C.lav3 } });
   kicker("Working alongside your teams — without disrupting operations", 960, hy + 50, eOut(prog(lt, 5.2, 5.8)) * (lt > 4.9 ? 1 : 0), C.lav3, "center");
 }
@@ -603,10 +603,10 @@ function s7(lt) {
   // zoom out from HQ and settle with the dot map centred inside the locked frame (frame centre 960,450; 1560x770)
   const k = eIO(prog(lt, 0, 3.0)), [_, hx0, hy0] = CN[0];
   const DX0 = Math.min(...DOTS.map(d => d[0])), DX1 = Math.max(...DOTS.map(d => d[0])), DY0 = Math.min(...DOTS.map(d => d[1])), DY1 = Math.max(...DOTS.map(d => d[1]));
-  const fitW = Math.min(1400 / (DX1 - DX0), 660 * 1.78 / (DY1 - DY0));  // map width at rest, with margin inside the frame
+  const fitW = Math.min(1400 / (DX1 - DX0), 600 * 1.78 / (DY1 - DY0));  // map width at rest, with margin inside the frame
   const mw = fitW * lerp(3.4, 1, k), mh = mw / 1.78;
   const nx = lerp(hx0, (DX0 + DX1) / 2, k), ny = lerp(hy0, (DY0 + DY1) / 2, k);  // map point held at the focus
-  const MX = 960 - nx * mw, MY = lerp(470, 450, k) - ny * mh;
+  const MX = 960 - nx * mw, MY = lerp(560, 590, k) - ny * mh;
   const pos = CN.map(([n, x, y]) => [MX + x * mw, MY + y * mh]);
   const lock = eOut(prog(lt, 3.0, 3.6));
   mapDots(MX, MY, mw, mh, 1, (px, py) => { let s = 0; pos.forEach(([x, y], i) => { const d = Math.hypot(px - x, py - y); const on = prog(lt, .2 + i * .08, .6 + i * .08); s += on * Math.max(0, 1 - d / 90) * .6; }); return s; });
@@ -618,12 +618,12 @@ function s7(lt) {
   mesh.forEach(([a, b], i) => { const p = eIO(prog(lt, 1.2 + i * .04, 2.0 + i * .04)); if (p <= 0) return; const [x1, y1] = pos[a], [x2, y2] = pos[b]; g.strokeStyle = rgba(C.lav3, .45); g.lineWidth = 1.2; g.beginPath(); g.moveTo(x1, y1); g.lineTo(lerp(x1, x2, p), lerp(y1, y2, p)); g.stroke(); });
   pos.forEach(([x, y], i) => { const on = eBack(prog(lt, .2 + i * .08, .6 + i * .08)); if (on > 0) pin(x, y, i ? C.purpleLight : C.lav, clamp(on), 0, i ? 6 * on : 10); });
   if (lock > 0) { // system locks: frame closes
-    g.save(); g.globalAlpha = lock; g.strokeStyle = rgba(C.lav, .55); g.lineWidth = 2; const fw = lerp(1800, 1560, lock), fh = lerp(900, 770, lock);
-    rrect(960 - fw / 2, 450 - fh / 2, fw, fh, 30); g.stroke();
+    g.save(); g.globalAlpha = lock; g.strokeStyle = rgba(C.lav, .55); g.lineWidth = 2; const fw = lerp(1800, 1560, lock), fh = lerp(820, 700, lock);
+    rrect(960 - fw / 2, 590 - fh / 2, fw, fh, 30); g.stroke();
     const flash = 1 - prog(lt, 3.0, 3.8); g.fillStyle = rgba(C.lav, flash * .12 * lock); g.fillRect(0, 0, W, H); g.restore();
   }
-  const gr = g.createLinearGradient(0, H - 340, 0, H); gr.addColorStop(0, "rgba(11,7,21,0)"); gr.addColorStop(1, "rgba(11,7,21,0.9)"); g.fillStyle = gr; g.fillRect(0, H - 340, W, 340);
-  words("Assess. Enable. Scale.", 960, 935, .35, lt, { size: 100, weight: 800, align: "center", gap: 1.75, colors: { 2: C.lav2 } });
+  const gr = g.createLinearGradient(0, 0, 0, 260); gr.addColorStop(0, "rgba(11,7,21,0.9)"); gr.addColorStop(1, "rgba(11,7,21,0)"); g.fillStyle = gr; g.fillRect(0, 0, W, 260);
+  words("Assess. Enable. Scale.", 960, 170, .35, lt, { size: 100, weight: 800, align: "center", gap: 1.75, colors: { 2: C.lav2 } });
 }
 
 /* =====================================================================
