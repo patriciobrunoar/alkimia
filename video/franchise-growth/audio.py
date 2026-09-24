@@ -89,13 +89,13 @@ for k in range(int((S(6) - S(2)) / beat)):
 # ---- riser (0–5s) ------------------------------------------------------------------------------
 RL = T(5); n = int(RL * SR); rt = np.arange(n) / SR
 riser = np.sin(2 * np.pi * np.cumsum(np.interp(rt, [0, RL], [38, 110])) / SR) * (rt / RL) ** 1.5
-riser += lowpass(noise(RL), 900)[:n] * 3 * (rt / RL) ** 2
+riser += lowpass(noise(RL), 900)[:n] * 1.5 * (rt / RL) ** 2
 add(riser, 0, 0.22)
 
 
 # ---- sound-design one-shots -----------------------------------------------------------------------
 def whoosh(sec=0.7, fc=1400):
-    x = lowpass(noise(sec), fc) * 4; k = np.arange(len(x)) / len(x)
+    x = lowpass(noise(sec), fc) * 1.4; k = np.arange(len(x)) / len(x)  # kept low: sits under the music bed
     return x * np.sin(np.pi * k) ** 2
 
 
