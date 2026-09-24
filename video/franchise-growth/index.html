@@ -600,11 +600,13 @@ function s6(lt) {
    SCENE 7 (50–55) — zoom-out of the connected network
    ===================================================================== */
 function s7(lt) {
-  const z = lerp(3.4, 1, eIO(prog(lt, 0, 3.0)));
-  const mw = 1500 * z, mh = mw / 1.78, [_, hx0, hy0] = CN[0];
-  const fx = 960, fy = 470, mx = fx - hx0 * mw + (hx0 - .5) * 1500 * (1 - (z - 1) / 2.4) * 0, my = fy - hy0 * mh;
-  const ox = lerp(0, (.5 - hx0) * 1500, eIO(prog(lt, 0, 3.0))), oy = lerp(0, (.5 - hy0) * 1500 / 1.78, eIO(prog(lt, 0, 3.0)));
-  const MX = mx + ox, MY = my + oy;
+  // zoom out from HQ and settle with the dot map centred inside the locked frame (frame centre 960,450; 1560x770)
+  const k = eIO(prog(lt, 0, 3.0)), [_, hx0, hy0] = CN[0];
+  const DX0 = Math.min(...DOTS.map(d => d[0])), DX1 = Math.max(...DOTS.map(d => d[0])), DY0 = Math.min(...DOTS.map(d => d[1])), DY1 = Math.max(...DOTS.map(d => d[1]));
+  const fitW = Math.min(1400 / (DX1 - DX0), 660 * 1.78 / (DY1 - DY0));  // map width at rest, with margin inside the frame
+  const mw = fitW * lerp(3.4, 1, k), mh = mw / 1.78;
+  const nx = lerp(hx0, (DX0 + DX1) / 2, k), ny = lerp(hy0, (DY0 + DY1) / 2, k);  // map point held at the focus
+  const MX = 960 - nx * mw, MY = lerp(470, 450, k) - ny * mh;
   const pos = CN.map(([n, x, y]) => [MX + x * mw, MY + y * mh]);
   const lock = eOut(prog(lt, 3.0, 3.6));
   mapDots(MX, MY, mw, mh, 1, (px, py) => { let s = 0; pos.forEach(([x, y], i) => { const d = Math.hypot(px - x, py - y); const on = prog(lt, .2 + i * .08, .6 + i * .08); s += on * Math.max(0, 1 - d / 90) * .6; }); return s; });
