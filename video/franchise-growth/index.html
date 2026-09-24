@@ -274,6 +274,7 @@ function brandCard(x, y, w, h, deg = 0, seed = 1, a = 1) {
   g.restore();
 }
 function s2(lt) {
+  g.save(); g.translate(0, -110);  // content sits high; title + subtitle own the bottom
   // left: corporate vision
   const la = eOut(prog(lt, 0, .5));
   kicker("Corporate vision", 120, 250, la);
@@ -305,7 +306,8 @@ function s2(lt) {
   });
   pin(hx, hy, C.lav, ma, (lt * .8) % 1, 11); text("HQ", hx - 16, hy - 20, { size: 18, weight: 800, ls: 2, alpha: ma, align: "right" });
   // title
-  const y = 915; words("Corporate Vision ≠ Local Reality", 960, y, 1.3, lt, { size: 84, weight: 800, align: "center", gap: .1, colors: { 2: C.warm } });
+  g.restore();
+  const y = 890; words("Corporate Vision ≠ Local Reality", 960, y, 1.3, lt, { size: 84, weight: 800, align: "center", gap: .1, colors: { 2: C.warm } });
 }
 
 /* =====================================================================
@@ -332,7 +334,7 @@ function s3(lt) {
   // Part A — kinetic type + bridge
   if (lt < 3.6) {
     const fa = 1 - eIn(prog(lt, 3.1, 3.6));
-    g.save(); g.globalAlpha = fa;
+    g.save(); g.globalAlpha = fa; g.translate(0, -110);
     words("Alkimia builds the bridge.", 960, 300, 0, lt, { size: 92, weight: 800, align: "center", gap: .16, colors: { 0: C.lav2 } });
     const L = [680, 640], R = [1240, 640], ap = eIO(prog(lt, .6, 1.7));
     text("HIGH-LEVEL", 630, 628, { size: 26, weight: 600, ls: 5, color: C.lav3, alpha: eOut(prog(lt, .4, .8)), align: "right" });
@@ -347,13 +349,13 @@ function s3(lt) {
     // packets crossing
     for (let i = 0; i < 5; i++) { const t = ((lt - 1.2) * .45 + i / 5) % 1; if (lt < 1.2 || t > ap) continue; const [x, y] = f(t); glow(x, y, 26, C.lav, .8); g.fillStyle = C.white; g.beginPath(); g.arc(x, y, 4, 0, 7); g.fill(); }
     drawMark(960, 390 + 20, 90, prog(lt, 1.2, 2.2), C.white, 1);
-    words("strategy + marketing  →  repeatable local performance", 960, 800, 2.0, lt, { size: 34, weight: 500, align: "center", gap: .05, color: C.lav2, ls: 0 });
+    words("strategy + marketing  →  repeatable local performance", 960, 810, 2.0, lt, { size: 48, weight: 500, align: "center", gap: .05, color: C.lav2, ls: 0 });
     g.restore();
   }
   // Part B — mark takes centre, lockup reveal
   if (lt >= 3.1 && lt < 6.4) {
     const k = eIO(prog(lt, 3.1, 4.0)), outk = eIO(prog(lt, 5.6, 6.4));
-    const y = lerp(410, 470, k), size = lerp(90, 250, k);
+    const y = lerp(300, 470, k), size = lerp(90, 250, k);
     glow(960, 540, 700 * (1 - outk * .5), C.purple, .35 * (1 - outk));
     g.save(); g.globalAlpha = 1 - outk;
     const s = 560 / 416.29;
@@ -411,9 +413,9 @@ function s3(lt) {
 function sectionTitle(lt, num, title, items) {
   const a = eOut(prog(lt, .1, .6));
   g.save(); const gr = g.createLinearGradient(120, 150, 420, 350); gr.addColorStop(0, C.lav); gr.addColorStop(1, C.purpleLight);
-  font(190, 800); g.letterSpacing = "-6px"; g.globalAlpha = a; g.fillStyle = gr; g.fillText(num, 110 - (1 - a) * 40, 310); g.restore();
-  const tl = title.split("|"); tl.forEach((s, i) => words(s, 120, 400 + i * 74, .4 + i * .15, lt, { size: 60, weight: 800, ls: 1, gap: .08 }));
-  const y0 = 400 + tl.length * 74 + 26;
+  font(190, 800); g.letterSpacing = "-6px"; g.globalAlpha = a; g.fillStyle = gr; g.fillText(num, 110 - (1 - a) * 40, 250); g.restore();
+  const tl = title.split("|"); tl.forEach((s, i) => words(s, 120, 340 + i * 74, .4 + i * .15, lt, { size: 60, weight: 800, ls: 1, gap: .08 }));
+  const y0 = 340 + tl.length * 74 + 26;
   g.fillStyle = C.purpleLight; g.fillRect(120, y0 - 22, 90 * eOut(prog(lt, .7, 1.2)), 4);
   items.forEach((s, i) => {
     const k = eOut(prog(lt, 1.1 + i * .35, 1.5 + i * .35)), y = y0 + 46 + i * 78;
@@ -426,7 +428,7 @@ function sectionTitle(lt, num, title, items) {
 const SCAT = (() => { const r = rng(11), a = []; for (let i = 0; i < 70; i++) a.push([r(), clamp(.15 + r() * .75 + (r() - .5) * .1), r() < .09]); return a; })();
 function s4(lt) {
   sectionTitle(lt, "01.", "THE INITIAL|ASSESSMENT", ["GTM", "Research", "Tools", "Workflows", "Roadmap"]);
-  const pa = eOut(prog(lt, .3, 1.0)), X = 760, Y = 96, PW = 1040, PH = 800;
+  const pa = eOut(prog(lt, .3, 1.0)), X = 760, Y = 56, PW = 1040, PH = 800;
   g.save(); g.globalAlpha = pa; g.translate((1 - pa) * 60, 0);
   glass(X, Y, PW, PH, 26);
   [C.warm, C.gold, C.green].forEach((c, i) => { g.fillStyle = rgba(c, .7); g.beginPath(); g.arc(X + 36 + i * 22, Y + 36, 6, 0, 7); g.fill(); });
@@ -487,7 +489,7 @@ function check(x, y, k, color = C.green) { if (k <= 0) return; g.save(); g.strok
 function s5(lt) {
   sectionTitle(lt, "02.", "THE ENABLEMENT", ["Turnkey Grand Openings", "Scalable Marketing Playbooks", "Local Market Growth"]);
   const X = 760;
-  lockIn(lt, .5, X, 96, 505, 390, (w, h) => {
+  lockIn(lt, .5, X, 56, 505, 390, (w, h) => {
     text("GRAND OPENING CHECKLIST", 32, 50, { size: 17, weight: 700, ls: 3, color: C.lav3 });
     ["Site & signage ready", "Pre-opening buzz campaign", "Local partnerships", "Opening-day event", "Post-opening follow-up"].forEach((s, i) => {
       const y = 104 + i * 56, k = prog(lt, 1.4 + i * .45, 1.75 + i * .45);
@@ -495,7 +497,7 @@ function s5(lt) {
       check(47, y - 7, k); text(s, 80, y, { size: 22, weight: 500, color: k >= 1 ? C.white : C.lav2 });
     });
   });
-  lockIn(lt, 1.0, X + 535, 96, 505, 390, (w, h) => {
+  lockIn(lt, 1.0, X + 535, 56, 505, 390, (w, h) => {
     text("CAMPAIGN TEMPLATES", 32, 50, { size: 17, weight: 700, ls: 3, color: C.lav3 });
     ["Social", "Email", "Local ads"].forEach((s, i) => {
       const sx = 32 + i * 152, k = eBack(prog(lt, 2.0 + i * .4, 2.5 + i * .4));
@@ -513,7 +515,7 @@ function s5(lt) {
     rrect(w - 100, 332, 64, 32, 16); g.fillStyle = mix("#3a2f55", C.green, on); g.fill();
     g.fillStyle = C.white; g.beginPath(); g.arc(w - 84 + on * 32, 348, 12, 0, 7); g.fill();
   });
-  lockIn(lt, 1.6, X, 500, 1040, 390, (w, h) => {
+  lockIn(lt, 1.6, X, 460, 1040, 390, (w, h) => {
     text("LOCAL PERFORMANCE", 32, 50, { size: 17, weight: 700, ls: 3, color: C.lav3 });
     text("Franchisee enablement: continuous", w - 76, 50, { size: 18, weight: 600, color: C.lav2, align: "right" });
     const cx = 60, cy = 90, cw = w - 110, ch = 240, pts = [];

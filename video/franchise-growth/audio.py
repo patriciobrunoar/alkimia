@@ -89,13 +89,14 @@ for k in range(int((S(6) - S(2)) / beat)):
 # ---- riser (0–5s) ------------------------------------------------------------------------------
 RL = T(5); n = int(RL * SR); rt = np.arange(n) / SR
 riser = np.sin(2 * np.pi * np.cumsum(np.interp(rt, [0, RL], [38, 110])) / SR) * (rt / RL) ** 1.5
-riser += lowpass(noise(RL), 900)[:n] * 1.5 * (rt / RL) ** 2
-add(riser, 0, 0.22)
+riser += lowpass(noise(RL), 900)[:n] * 0.5 * (rt / RL) ** 2
+riser *= np.clip((RL - rt) / 1.5, 0, 1)  # fade out through the store-grid pull-back instead of peaking
+add(riser, 0, 0.09)
 
 
 # ---- sound-design one-shots -----------------------------------------------------------------------
 def whoosh(sec=0.7, fc=1400):
-    x = lowpass(noise(sec), fc) * 1.4; k = np.arange(len(x)) / len(x)  # kept low: sits under the music bed
+    x = lowpass(noise(sec), fc) * 0.6; k = np.arange(len(x)) / len(x)  # kept low: sits under the music bed
     return x * np.sin(np.pi * k) ** 2
 
 
@@ -117,7 +118,7 @@ def impact(sec=2.5):
 
 for c in (0.55, 1.1, 1.6, 2.1, 2.55, 3.0, 3.3):
     add(whoosh(0.25, 3000), T(c) - 0.08, 0.10, pan=rng.uniform(-.5, .5)); add(blip(1800, .05, .001, .015), T(c), 0.05)
-add(whoosh(1.4, 1200), T(3.4), 0.14)
+add(whoosh(0.7, 1200), T(3.4), 0.08)
 for k in range(14):  # guidelines breaking down across the map
     add(glitch(), T(6.1 + k * 0.23) + rng.uniform(0, .08), 0.06, pan=rng.uniform(-.7, .7))
 add(impact(), S(2), 0.5)
