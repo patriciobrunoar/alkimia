@@ -161,7 +161,7 @@ img{max-width:100%;display:block}
 
 /* Detailed service blocks */
 .services-detail{background:var(--alk-lavender-2)}
-.service{max-width:1100px;margin:0 auto;padding:78px 48px;display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start;border-bottom:1px solid rgba(107,79,161,.13)}
+.service{max-width:1100px;margin:0 auto;padding:78px 48px;display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start;border-bottom:1px solid rgba(107,79,161,.13);scroll-margin-top:110px}
 .service:last-child{border-bottom:none}
 .service .s-name{font-size:clamp(24px,2.6vw,34px);font-weight:700;color:var(--alk-heading);line-height:1.15;letter-spacing:-.01em;margin-bottom:18px}
 .service blockquote{border-left:3px solid var(--alk-purple);padding-left:18px;font-size:18px;font-style:italic;line-height:1.5;color:var(--alk-heading);margin-bottom:22px}
@@ -172,8 +172,13 @@ img{max-width:100%;display:block}
 .cap-list li{font-size:16px;font-weight:500;color:var(--alk-heading);padding:14px 0;border-bottom:1px solid rgba(107,79,161,.14);display:flex;align-items:center;gap:12px}
 .cap-list li:last-child{border-bottom:none}
 .cap-list li::before{content:"";width:8px;height:8px;background:var(--alk-purple);border-radius:2px;flex:0 0 auto;transform:rotate(45deg)}
-.service-video{max-width:1100px;margin:0 auto;padding:0 48px 78px;scroll-margin-top:110px}
-.service-video video{width:100%;display:block;aspect-ratio:16/9;background:#000;border-radius:18px;box-shadow:var(--shadow-lg)}
+.service-video{max-width:1100px;margin:0 auto;padding:0 48px 78px}
+.video-player{position:relative;border-radius:18px;overflow:hidden;box-shadow:var(--shadow-lg)}
+.video-player video{width:100%;display:block;aspect-ratio:16/9;background:#000}
+.video-play-btn{position:absolute;inset:0;margin:auto;width:84px;height:84px;padding:0;border-radius:50%;background:rgba(20,10,35,.55);border:2px solid rgba(255,255,255,.85);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s ease,transform .2s ease;backdrop-filter:blur(2px)}
+.video-play-btn:hover{background:var(--alk-purple);transform:scale(1.06)}
+.video-play-btn svg{width:30px;height:30px;margin-left:4px;fill:#fff}
+.video-player.is-playing .video-play-btn{display:none}
 
 /* Our Experience */
 .experience .exp-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 60px;margin-top:32px;max-width:820px}
@@ -492,7 +497,7 @@ img{max-width:100%;display:block}
 </section>
 
 <section class="services-detail">
-  <div class="service reveal">
+  <div class="service reveal" id="franchisegrwothsystems">
     <div>
       <div class="s-name">Franchise Growth Systems™</div>
       <blockquote>“Grow your franchise network while maintaining brand consistency, operational excellence, and local relevance.”</blockquote>
@@ -510,10 +515,15 @@ img{max-width:100%;display:block}
     </div>
   </div>
 
-  <div class="service-video reveal" id="franchisegrwothsystems">
-    <video controls playsinline preload="none">
-      <source src="assets/videos/alkimia-franchise-growth-systems-subtitled.mp4" type="video/mp4">
-    </video>
+  <div class="service-video reveal">
+    <div class="video-player" id="fgsPlayer">
+      <video id="fgsVideo" playsinline preload="none" poster="assets/videos/franchise-growth-systems-poster.jpg">
+        <source src="assets/videos/alkimia-franchise-growth-systems-subtitled.mp4" type="video/mp4">
+      </video>
+      <button type="button" class="video-play-btn" aria-label="Play video">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+      </button>
+    </div>
   </div>
 
   <div class="service reveal">
@@ -787,6 +797,18 @@ if(canHover&&!reduceMotion){
       card.style.transform=`perspective(800px) rotateX(${(-py*10).toFixed(2)}deg) rotateY(${(px*10).toFixed(2)}deg) translateY(-4px) scale(1.02)`;
     });
     card.addEventListener('mouseleave',()=>{card.style.transform='';});
+  });
+}
+
+// Franchise Growth Systems video — big center play button
+const fgsPlayer=document.getElementById('fgsPlayer');
+if(fgsPlayer){
+  const fgsVideo=document.getElementById('fgsVideo');
+  const fgsPlayBtn=fgsPlayer.querySelector('.video-play-btn');
+  fgsPlayBtn.addEventListener('click',()=>{
+    fgsVideo.setAttribute('controls','');
+    fgsPlayer.classList.add('is-playing');
+    fgsVideo.play();
   });
 }
 
