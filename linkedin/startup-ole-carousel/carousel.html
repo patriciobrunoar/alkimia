@@ -1,0 +1,72 @@
+<!DOCTYPE html><meta charset=utf-8><style>
+@font-face{font-family:Inter;src:url(Inter.ttf);font-weight:100 900}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#222;font-family:Inter,sans-serif}
+.s{width:1080px;height:1350px;position:relative;overflow:hidden;color:#fff;padding:64px 72px;
+ background:linear-gradient(150deg,rgba(107,79,161,.9),rgba(43,29,68,.97)),url(bg.jpg) center/cover #3a265c;display:flex;flex-direction:column}
+.s::after{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 100%,rgba(0,0,0,.3),transparent 60%);pointer-events:none}
+.s>*{position:relative;z-index:1}
+.top{display:flex;justify-content:space-between;align-items:center}
+.logo{width:150px;fill:#fff}
+.n{font-size:22px;font-weight:600;letter-spacing:.06em;opacity:.85}
+.who{display:flex;gap:44px;margin-top:44px;align-items:flex-end}
+.ph{width:400px;height:470px;border-radius:32px;border:3px solid rgba(255,255,255,.35);box-shadow:0 24px 60px rgba(0,0,0,.35);flex:none;background-color:#e9e4f4;background-repeat:no-repeat}
+.id{padding-bottom:6px}
+.eb{font-size:20px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#e3b256;margin-bottom:16px}
+.name{font-size:60px;font-weight:800;line-height:1.05;letter-spacing:-.01em}
+.role{font-size:26px;font-weight:500;opacity:.85;margin-top:14px}
+.chip{display:inline-block;margin-top:26px;padding:10px 22px;border-radius:999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);font-size:20px;font-weight:600}
+.card{margin-top:48px;padding:44px 48px;border-radius:32px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.22);flex:1;display:flex;flex-direction:column;justify-content:center}
+.when{display:flex;gap:22px;align-items:baseline;font-size:32px;font-weight:700}
+.when .t{color:#e3b256}
+.room{font-size:23px;font-weight:600;opacity:.8;margin-top:12px}
+.title{font-weight:800;letter-spacing:-.015em;line-height:1.08;margin-top:26px}
+.band{margin-top:34px;display:flex;align-items:center;gap:30px;padding:26px 36px;border-radius:26px;background:rgba(20,10,40,.45);border:1px solid rgba(255,255,255,.14)}
+.band img{width:230px;height:auto;flex:none}
+.sep{width:1px;align-self:stretch;background:rgba(255,255,255,.25)}
+.stat{font-size:50px;font-weight:800;color:#e3b256;line-height:1}
+.statl{font-size:20px;font-weight:500;opacity:.85;margin-top:6px;line-height:1.25}
+.meta{font-size:17px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;opacity:.7;margin-top:8px}
+</style><svg width=0 height=0 style="position:absolute"><symbol id="alkimiaLockup" viewBox="0 0 416.29 206.88">
+    <g>
+    <path d="M209.84,3.18c13.21,0,25.63,5.14,34.97,14.49,9.34,9.34,14.49,21.76,14.49,34.97s-5.14,25.63-14.49,34.97c-9.34,9.34-21.76,14.49-34.97,14.49s-25.63-5.14-34.97-14.49c-9.34-9.34-14.49-21.76-14.49-34.97s5.14-25.63,14.49-34.97c9.34-9.34,21.76-14.49,34.97-14.49M209.84,0c-29.07,0-52.64,23.57-52.64,52.64s23.57,52.64,52.64,52.64,52.64-23.57,52.64-52.64S238.92,0,209.84,0h0Z"/>
+    <path d="M209.89,9.06l38.76,67.13h-77.52L209.89,9.06M209.89,2.7l-44.27,76.68h88.54L209.89,2.7h0Z"/>
+    <path d="M227.26,41.65v34.57h-34.57v-34.57h34.57M230.44,38.47h-40.93v40.93h40.93v-40.93h0Z"/>
+    <path d="M209.84,46.2c7.12,0,12.92,5.8,12.92,12.92s-5.8,12.92-12.92,12.92-12.92-5.8-12.92-12.92,5.8-12.92,12.92-12.92M209.84,43.01c-8.89,0-16.1,7.21-16.1,16.1s7.21,16.1,16.1,16.1,16.1-7.21,16.1-16.1-7.21-16.1-16.1-16.1h0Z"/>
+    <path d="M84.84,136.01h10.12v62.06h38.37v8.81h-48.5v-70.87Z"/>
+    <path d="M166.8,175.4l-12.96,13.16v18.33h-10.12v-70.87h10.12v39.59l38.47-39.59h11.54l-30.27,31.89,32.2,38.98h-11.85l-27.13-31.49Z"/>
+    <path d="M215.87,136.01h10.12v70.87h-10.12v-70.87Z"/>
+    <path d="M301.61,206.88l-.1-57.94-25.61,15.9h-4.66l-25.61-15.59v57.64h-9.72v-70.87h8.3l29.56,18.26,29.16-18.26h8.3l.1,70.87h-9.72Z"/>
+    <path d="M321.23,136.01h10.12v70.87h-10.12v-70.87Z"/>
+    <polygon points="42.12 136.01 32.09 136.01 0 206.88 10.43 206.88 21.78 181.07 21.77 181.07 37.06 146.34 52.34 181.07 52.33 181.07 63.68 206.88 74.31 206.88 42.12 136.01"/>
+    <polygon points="384.1 136.01 374.07 136.01 341.98 206.88 352.41 206.88 363.76 181.07 363.75 181.07 379.03 146.34 394.32 181.07 394.31 181.07 405.66 206.88 416.29 206.88 384.1 136.01"/>
+    </g>
+  </symbol></svg><section class="s" id="s1">
+<div class="top"><svg class="logo" viewBox="0 0 416.29 206.88"><use href="#alkimiaLockup"/></svg><div class="n">1 / 4</div></div>
+<div class="who"><div class="ph" style="background-image:url(maru.jpeg);background-position:50% 8%;background-size:cover"></div>
+<div class="id"><div class="eb">Keynote at Startup Olé</div><div class="name">Mariela<br>Guarino</div><div class="role">Founder · Alkimia</div><div class="chip">Women Invest in Women</div></div></div>
+<div class="card"><div class="when"><span>Wednesday 14 Oct</span><span class="t">18:30 — 19:00</span></div><div class="room">Sala Ensayos | Palacio de Congresos</div>
+<div class="title" style="font-size:76px">From Connection to Impact</div></div>
+<div class="band"><img src="startup-ole-logo.png"><div class="sep"></div><div><div class="stat">~4,000</div><div class="statl">attendees took over Salamanca</div><div class="meta">Salamanca · 13–15 Oct 2026</div></div></div>
+</section><section class="s" id="s2">
+<div class="top"><svg class="logo" viewBox="0 0 416.29 206.88"><use href="#alkimiaLockup"/></svg><div class="n">2 / 4</div></div>
+<div class="who"><div class="ph" style="background-image:url(maru.jpeg);background-position:62% 14%;background-size:170%"></div>
+<div class="id"><div class="eb">Keynote at Startup Olé</div><div class="name">Mariela<br>Guarino</div><div class="role">Founder · Alkimia</div></div></div>
+<div class="card"><div class="when"><span>Thursday 15 Oct</span><span class="t">09:30 — 10:00</span></div><div class="room">Sala Autoridades | Palacio de Congresos</div>
+<div class="title" style="font-size:52px">El Factor Humano en la Empresa: Estrategia, Talento y Transformación</div></div>
+<div class="band"><img src="startup-ole-logo.png"><div class="sep"></div><div><div class="stat">550</div><div class="statl">speakers across 3 days</div><div class="meta">Salamanca · 13–15 Oct 2026</div></div></div>
+</section><section class="s" id="s3">
+<div class="top"><svg class="logo" viewBox="0 0 416.29 206.88"><use href="#alkimiaLockup"/></svg><div class="n">3 / 4</div></div>
+<div class="who"><div class="ph" style="background-image:url(maru-florida.jpg);background-position:96% 22%;background-size:175%"></div>
+<div class="id"><div class="eb">Keynote at Startup Olé</div><div class="name">Mariela<br>Guarino</div><div class="role">Founder · Alkimia</div><div class="chip">Women Invest in Women</div></div></div>
+<div class="card"><div class="when"><span>Thursday 15 Oct</span><span class="t">12:10 — 12:40</span></div><div class="room">Sala Menor | Palacio de Congresos</div>
+<div class="title" style="font-size:76px">Women in MarTech</div></div>
+<div class="band"><img src="startup-ole-logo.png"><div class="sep"></div><div><div class="stat">520+</div><div class="statl">companies in the room</div><div class="meta">Salamanca · 13–15 Oct 2026</div></div></div>
+</section><section class="s" id="s4">
+<div class="top"><svg class="logo" viewBox="0 0 416.29 206.88"><use href="#alkimiaLockup"/></svg><div class="n">4 / 4</div></div>
+<div class="who"><div class="ph" style="background-image:url(maru.jpeg);background-position:35% 0%;background-size:135%"></div>
+<div class="id"><div class="eb">Keynote at Startup Olé</div><div class="name">Mariela<br>Guarino</div><div class="role">Founder · Alkimia</div><div class="chip">Women Invest in Women</div></div></div>
+<div class="card"><div class="when"><span>Thursday 15 Oct</span><span class="t">12:40 — 13:00</span></div><div class="room">Sala Menor | Palacio de Congresos</div>
+<div class="title" style="font-size:76px">Personal Branding with Mariela Guarino</div></div>
+<div class="band"><img src="startup-ole-logo.png"><div class="sep"></div><div><div class="stat">200</div><div class="statl">investors from 40 countries</div><div class="meta">Salamanca · 13–15 Oct 2026</div></div></div>
+</section>
