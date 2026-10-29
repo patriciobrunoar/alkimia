@@ -29,3 +29,19 @@ jobs:
           remote_host: ${{ secrets.DEPLOY_HOST }}
           remote_user: ${{ secrets.DEPLOY_USER }}
           remote_key: ${{ secrets.DEPLOY_SSH_KEY }}
+
+      - name: Disable directory listings
+        env:
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+        run: |
+          install -m 600 /dev/null ~/deploy_key
+          printf '%s\n' "$DEPLOY_SSH_KEY" > ~/deploy_key
+          ssh -i ~/deploy_key -o BatchMode=yes -o StrictHostKeyChecking=accept-new \
+            "$DEPLOY_USER@$DEPLOY_HOST" "cd '$DEPLOY_PATH' && touch .htaccess && \
+            (grep -qxF 'Options -Indexes' .htaccess || \
+             { cp .htaccess .htaccess.bak-\$(date +%Y%m%d%H%M%S) && printf '\nOptions -Indexes\n' >> .htaccess; }) && \
+            cat .htaccess"
+          rm -f ~/deploy_key
