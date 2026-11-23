@@ -127,11 +127,12 @@ def text(s, x, y, w, h, content, size=20, color=WHITE, bold=False, align=PP_ALIG
         p.alignment = d.get("align", align)
         p.line_spacing = line
         p.space_after = Pt(d.get("after", space_after))
-        r = p.add_run(); r.text = d["t"]
-        f = r.font; f.name = FONT; f.size = Pt(d.get("size", size)); f.bold = d.get("bold", bold)
-        f.italic = italic; f.color.rgb = rgb(d.get("color", color))
-        sp = d.get("spacing", spacing)
-        if sp: r._r.get_or_add_rPr().set("spc", str(int(sp * 100)))
+        for rt, rb in (d["runs"] if "runs" in d else [(d["t"], d.get("bold", bold))]):
+            r = p.add_run(); r.text = rt
+            f = r.font; f.name = FONT; f.size = Pt(d.get("size", size)); f.bold = rb
+            f.italic = italic; f.color.rgb = rgb(d.get("color", color))
+            sp = d.get("spacing", spacing)
+            if sp: r._r.get_or_add_rPr().set("spc", str(int(sp * 100)))
         if d.get("bullet"):
             pPr = p._p.get_or_add_pPr()
             ind = int(Pt(d.get("size", size)).emu * 1.1)
@@ -302,9 +303,49 @@ for i, (n, tag, d) in enumerate([
     text(s, x + 0.35, 5.15, 3.2, 1.4, d, 15, LAV, line=1.3)
 
 # 8-9 — original slides 5 & 6 (image only in source)
-for n in (5, 6):
-    s = new_slide(footer=False)
-    place_slots(s, n, 0, 0, W, H, "")
+def runs(txt):
+    """'plain **bold** plain' -> [(text, bold)]"""
+    out = []
+    for i, part in enumerate(txt.split("**")):
+        if part: out.append((part, i % 2 == 1))
+    return out
+
+
+def feature(s, icon, x, y, w, head, body=None, hs=22, bs=16, iw=0.8):
+    pic(s, icon, x, y, w=iw)
+    tx = x + iw + 0.3
+    text(s, tx, y - 0.05, w - iw - 0.3, 1.0, head, hs, WHITE, bold=True, line=1.1)
+    if body:
+        text(s, tx, y + 0.85, w - iw - 0.3, 2.2, [{"runs": runs(body)}], bs, LAV, line=1.25)
+
+
+# 8 - Wellness for Everyone (original slide 5, rebuilt as editable)
+s = new_slide(footer=False)
+pic(s, "wellness_art.png", 7.6, 0.0, h=H)
+rect(s, 0.0, 1.25, 7.0, 1.05, fill=WHITE, line=None, shape=MSO_SHAPE.RECTANGLE)
+text(s, 0.6, 1.25, 6.4, 1.05, "Wellness for Everyone", 38, PURPLE, bold=True, anchor=MSO_ANCHOR.MIDDLE)
+text(s, 0.6, 2.75, 6.5, 3.8, [{"runs": runs("We believe health is a **journey of simplicity, clarity, and accessibility**. Our content is designed to fit seamlessly into any lifestyle, empowering our readers with **practical, expert-backed guidance** on mental health, physical fitness, nutrition, relationships, sleep, cognitive health, and more.")}],
+     21, WHITE, line=1.3)
+
+# 9 - original slide 6, rebuilt as editable (split over two slides)
+s = new_slide()
+feature(s, "ic_bilingual.png", 0.6, 1.0, 5.9, "Bilingual & Culturally Relevant Content",
+        "Available in **English and Spanish**, our content is crafted to address the specific needs and priorities of **Hispanic and Latinx communities in the U.S.**, with an open approach that can both include the general U.S. market and Latin American audiences.", bs=14)
+feature(s, "ic_board.png", 6.9, 1.0, 5.9, "A Board of Specialists Ensuring Accuracy",
+        "Our **multidisciplinary team**—including doctors, nutritionists, mental health professionals, and fitness experts—**reviews and validates every piece of content**, aligning with the highest medical and scientific standards.", bs=14)
+feature(s, "ic_expert.png", 0.6, 4.05, 5.9, "Expert-Vetted, Evidence-Based Information",
+        "Every article is **crafted by qualified writers and reviewed by specialists**, ensuring content is **accurate, up-to-date, and backed by scientific research**. No fads, no misinformation—just **trustworthy, actionable insights.**", bs=14)
+feature(s, "ic_conscious.png", 6.9, 4.05, 5.9, "Conscious Language for Inclusive Communication",
+        "Our **Compassion-First Approach** ensures clarity, inclusivity, and respect. We avoid jargon, reduce stigma, and prioritize **language that empowers and represents everyone**, making health and wellness **accessible to all.**", bs=14)
+
+s = new_slide()
+feature(s, "ic_integrity.png", 0.6, 1.0, 6.2, "Integrity & Transparency at Our Core",
+        "We uphold **strict editorial independence and source only from credible, primary research**. Our commitment to **honesty and trustworthiness** means that every recommendation is grounded in **fact, not influence.**", bs=15)
+feature(s, "ic_ethical.png", 0.6, 4.2, 6.2, "Ethical & Responsible Use of AI",
+        "We integrate **AI technology responsibly** to enhance quality while maintaining **strict human oversight.** Our editorial process ensures AI-assisted content meets the highest standards of accuracy, empathy, and reliability.", bs=15)
+feature(s, "ic_gdpr.png", 7.4, 1.0, 5.3, "General Data Protection Regulation (GDPR) Compliance", None, hs=20)
+rect(s, 7.4, 2.5, 5.3, 4.1, fill=WHITE, line=None, radius=0.04)
+pic(s, "devices.png", 7.4 + (5.3 - 4.1 * 458 / 630) / 2, 2.5, h=4.1)
 
 # 10 — The Case (section)
 s = section("The Case", "Jewish Community Services",
