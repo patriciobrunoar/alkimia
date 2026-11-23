@@ -47,14 +47,31 @@ LAV, GOLD, WHITE, MUTED = "E9E4F4", "E3B256", "FFFFFF", "C9BFE0"
 FONT = "Inter"
 
 
-def rgb(h): return RGBColor.from_string(h)
+INV = "FFFFFE"     # white that is never remapped (text/fills that sit on coloured shapes)
+
+# Dark slides = "moments" (cover, section dividers, big statements, video, closing).
+# Light slides = everything that informs (data, cards, lists, charts, creatives).
+DARK = {1, 4, 8, 11, 20, 21, 25, 30, 31, 35, 36, 45}
+
+LIGHT_MAP = {WHITE: "2A1B45", LAV: "4B4366", MUTED: "6F6890", CARD: "F5F2FB", CARD_LINE: "DDD4EE",
+             GOLD: "6B4FA1", "B79CE0": "6B4FA1", "BADGE": "FFFFFE"}
+DARK_MAP = {"BADGE": BG1}
+LOGO_LIGHT = {"alk_white.png": "alk_purple.png", "cm_white.png": "cm_dark.png", "cmf_white.png": "cmf_dark.png"}
+
+
+def th(c):
+    if c is None: return c
+    return (DARK_MAP if state["dark"] else LIGHT_MAP).get(c, c)
+
+
+def rgb(h): return RGBColor.from_string(th(h))
 
 
 prs = Presentation()
 prs.slide_width, prs.slide_height = Inches(13.333), Inches(7.5)
 BLANK = prs.slide_layouts[6]
 W, H = 13.333, 7.5
-state = {"n": 0, "xf": True}
+state = {"n": 0, "xf": True, "dark": True}
 S = 0.92                       # content is scaled into a safe area (margins all round)
 FSC = S * 0.93                 # type is also scaled down
 OX, OY = W * (1 - S) / 2, H * (1 - S) / 2
@@ -74,16 +91,19 @@ def img(name):
 def new_slide(footer=True, light=False):
     s = prs.slides.add_slide(BLANK)
     state["n"] += 1
+    dark = state["n"] in DARK
+    state["dark"] = dark
     f = s.background.fill
     f.gradient(); f.gradient_angle = 315
-    f.gradient_stops[0].color.rgb = rgb(BG1)
-    f.gradient_stops[1].color.rgb = rgb(BG2)
+    f.gradient_stops[0].color.rgb = RGBColor.from_string(BG1 if dark else "FFFFFF")
+    f.gradient_stops[1].color.rgb = RGBColor.from_string(BG2 if dark else "F6F2FC")
     # soft glow, echoes the purple haze of the Alkimia cover
     g = s.shapes.add_shape(MSO_SHAPE.OVAL, Inches(8.8), Inches(-3.2), Inches(8), Inches(8))
     g.fill.gradient(); g.fill.gradient_angle = 90
-    g.fill.gradient_stops[0].color.rgb = rgb("5B3F94"); g.fill.gradient_stops[1].color.rgb = rgb(BG1)
+    g.fill.gradient_stops[0].color.rgb = RGBColor.from_string("5B3F94" if dark else "E4DAF5")
+    g.fill.gradient_stops[1].color.rgb = RGBColor.from_string(BG1 if dark else "FFFFFF")
     g.line.fill.background()
-    _alpha(g, 28)
+    _alpha(g, 28 if dark else 55)
     s.shapes._spTree.remove(g._element); s.shapes._spTree.insert(2, g._element)
     s._num = state["n"]
     if footer:
@@ -105,6 +125,7 @@ def add_footer(s):
 
 
 def pic(s, name, x, y, w=None, h=None, path=None):
+    if not state["dark"] and name in LOGO_LIGHT: name = LOGO_LIGHT[name]
     p = path or img(name)
     im = Image.open(p)
     r = im.width / im.height
@@ -165,7 +186,7 @@ def title(s, t, y=1.05, size=36, w=11.6, h=1.4):
 
 def chip_logo(s, name, x, y, h):
     im = Image.open(img(name)); w = h * im.width / im.height
-    rect(s, x, y, w + 0.3, h + 0.2, fill=WHITE, line=None, radius=0.12)
+    rect(s, x, y, w + 0.3, h + 0.2, fill=INV, line=CARD_LINE, radius=0.12)
     pic(s, name, x + 0.15, y + 0.1, h=h)
     return w + 0.3
 
@@ -179,7 +200,7 @@ def partner_strip(s, y=6.55, names=("mdc.png", "jcs.png", "l988.png"), h=0.42, r
 
 def card_header(s, x, y, w, label, fill=PURPLE):
     r = rect(s, x, y, w, 0.62, fill=fill, line=None, radius=0.2)
-    text(s, x + 0.3, y, w - 0.6, 0.62, label, 15, WHITE, bold=True, anchor=MSO_ANCHOR.MIDDLE, spacing=1.5)
+    text(s, x + 0.3, y, w - 0.6, 0.62, label, 15, INV, bold=True, anchor=MSO_ANCHOR.MIDDLE, spacing=1.5)
 
 
 def slot(s, n, k, x, y, w, h, label, crop=None):
@@ -283,7 +304,7 @@ def element_card(s, x, y, w, h, head, items, badge=None):
     text(s, x + 0.4, y + 0.3, w - 0.8, 0.8, head, 22, WHITE, bold=True, line=1.1)
     if badge:
         b = rect(s, x + w - 1.3, y + 0.32, 0.9, 0.34, fill=GOLD, line=None, radius=0.5)
-        text(s, x + w - 1.3, y + 0.32, 0.9, 0.34, badge, 13, BG1, bold=True, align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+        text(s, x + w - 1.3, y + 0.32, 0.9, 0.34, badge, 13, "BADGE", bold=True, align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
     text(s, x + 0.4, y + 1.15, w - 0.8, h - 1.3, [{"t": i, "bullet": True, "after": 6} for i in items], 18, LAV, line=1.15)
 
 s = new_slide()
@@ -314,9 +335,9 @@ for i, (n, tag, d) in enumerate([
         ("Growth Studio™", "Senior strategy, seamlessly integrated with your team.", "Senior strategic and creative expertise without increasing permanent overhead.")]):
     x = 0.6 + i * 4.1
     rect(s, x, 3.1, 3.9, 3.5, fill=PURPLE if i == 1 else CARD, line=None if i == 1 else CARD_LINE)
-    text(s, x + 0.35, 3.4, 3.2, 0.9, n, 22, WHITE, bold=True, line=1.1)
-    text(s, x + 0.35, 4.35, 3.2, 0.8, tag, 16, GOLD if i != 1 else "FFE9B8", bold=True, line=1.2)
-    text(s, x + 0.35, 5.15, 3.2, 1.4, d, 15, LAV, line=1.3)
+    text(s, x + 0.35, 3.4, 3.2, 0.9, n, 22, INV if i == 1 else WHITE, bold=True, line=1.1)
+    text(s, x + 0.35, 4.35, 3.2, 0.8, tag, 16, "FFE9B8" if i == 1 else GOLD, bold=True, line=1.2)
+    text(s, x + 0.35, 5.15, 3.2, 1.4, d, 15, "EDE8F8" if i == 1 else LAV, line=1.3)
 
 # 8-9 — original slides 5 & 6 (image only in source)
 def runs(txt):
@@ -338,7 +359,7 @@ def feature(s, icon, x, y, w, head, body=None, hs=22, bs=17, iw=0.8):
 # 8 - Wellness for Everyone (original slide 5, rebuilt as editable)
 s = new_slide(footer=False)
 pic(s, "wellness_art.png", 7.6, 0.0, h=H)
-rect(s, 0.0, 1.25, 7.0, 1.05, fill=WHITE, line=None, shape=MSO_SHAPE.RECTANGLE)
+rect(s, 0.0, 1.25, 7.0, 1.05, fill=INV, line=None, shape=MSO_SHAPE.RECTANGLE)
 text(s, 0.6, 1.25, 6.4, 1.05, "Wellness for Everyone", 38, PURPLE, bold=True, anchor=MSO_ANCHOR.MIDDLE)
 text(s, 0.6, 2.75, 6.5, 3.8, [{"runs": runs("We believe health is a **journey of simplicity, clarity, and accessibility**. Our content is designed to fit seamlessly into any lifestyle, empowering our readers with **practical, expert-backed guidance** on mental health, physical fitness, nutrition, relationships, sleep, cognitive health, and more.")}],
      21, WHITE, line=1.3)
@@ -361,7 +382,7 @@ feature(s, "ic_ethical.png", 0.6, 4.2, 6.2, "Ethical & Responsible Use of AI",
         "We integrate **AI technology responsibly** to enhance quality while maintaining **strict human oversight.** Our editorial process ensures AI-assisted content meets the highest standards of accuracy, empathy, and reliability.", bs=17)
 feature(s, "ic_gdpr.png", 7.4, 1.0, 5.3, "General Data Protection Regulation (GDPR) Compliance", None, hs=20)
 _dw = 4.1 * 458 / 630
-rect(s, 7.4 + (5.3 - _dw) / 2 - 0.1, 2.4, _dw + 0.2, 4.3, fill=WHITE, line=None, radius=0.04)
+rect(s, 7.4 + (5.3 - _dw) / 2 - 0.1, 2.4, _dw + 0.2, 4.3, fill=INV, line=None, radius=0.04)
 pic(s, "devices.png", 7.4 + (5.3 - 4.1 * 458 / 630) / 2, 2.5, h=4.1)
 
 # 10 — The Case (section)
@@ -465,12 +486,12 @@ cols = [("English", ["Depression", "Mental Health Issues", "Gender Identity Issu
 for ci, (hd, items) in enumerate(cols):
     x = 0.6 + ci * 6.3
     pill = rect(s, x, 2.05, 5.8, 0.65, fill=PURPLE, line=None, radius=0.5)
-    text(s, x, 2.05, 5.8, 0.65, hd, 18, WHITE, bold=True, align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+    text(s, x, 2.05, 5.8, 0.65, hd, 18, INV, bold=True, align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
     for i, it in enumerate(items):
         y = 3.0 + i * 0.77
         rect(s, x, y, 5.8, 0.62, fill=CARD, line=CARD_LINE, radius=0.5)
         rect(s, x, y, 0.62, 0.62, fill=ACC, line=None, shape=MSO_SHAPE.OVAL)
-        text(s, x, y, 0.62, 0.62, str(i + 1), 16, BG1, bold=True, align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+        text(s, x, y, 0.62, 0.62, str(i + 1), 16, "BADGE", bold=True, align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
         text(s, x + 0.9, y, 4.7, 0.62, it, 17, WHITE, anchor=MSO_ANCHOR.MIDDLE)
 
 # 18 - cultures similarities (native; original slide 14)
@@ -506,7 +527,7 @@ text(s, 1.0, 1.7, 11.3, 2.2, "WE BUILT A COMPREHENSIVE STRATEGY TO REACH THE COR
 for i, t in enumerate(["Identify 988 Target", "Reach 988 Target", "Generate Awareness"]):
     x = 1.2 + i * 3.9
     o = rect(s, x, 4.9, 0.95, 0.95, fill=PURPLE, line=PURPLE_L, shape=MSO_SHAPE.OVAL)
-    text(s, x, 4.9, 0.95, 0.95, str(i + 1), 28, WHITE, bold=True, align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+    text(s, x, 4.9, 0.95, 0.95, str(i + 1), 28, INV, bold=True, align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
     text(s, x + 1.15, 4.9, 2.7, 0.95, t, 19, WHITE, bold=True, anchor=MSO_ANCHOR.MIDDLE)
 
 # 19 — target statement
@@ -528,7 +549,7 @@ cards = [("13-17 YO", ["Requires legally enabled platforms for underage audience
 for i, (a, ps) in enumerate(cards):
     x = 0.6 + i * 4.1
     rect(s, x, 1.8, 3.9, 4.95)
-    pic(s, "", x + 0.3, 2.1, h=0.78, path=img("age%d.png" % (i + 1)))
+    pic(s, "", x + 0.3, 2.1, h=0.78, path=img(("age%d.png" if state["dark"] else "ageL%d.png") % (i + 1)))
     text(s, x + 1.6, 2.05, 2.2, 0.9, a, 26, WHITE, bold=True, anchor=MSO_ANCHOR.MIDDLE)
     text(s, x + 0.3, 3.2, 3.35, 3.4, [{"t": p, "after": 10, "bold": j == 0} for j, p in enumerate(ps)], 17, LAV, line=1.2)
 
@@ -540,7 +561,7 @@ phases = [("1.", "BRANDING", "Through a holistic social media campaign we will a
 for num, head, para, items in phases:
     s = new_slide(); eyebrow(s, "STRATEGY - IMPLEMENTATION PHASES")
     o = rect(s, 0.6, 1.2, 1.0, 1.0, fill=PURPLE, line=PURPLE_L, shape=MSO_SHAPE.OVAL)
-    text(s, 0.6, 1.2, 1.0, 1.0, num, 26, WHITE, bold=True, align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+    text(s, 0.6, 1.2, 1.0, 1.0, num, 26, INV, bold=True, align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
     text(s, 1.9, 1.2, 8, 1.0, head, 44, WHITE, bold=True, anchor=MSO_ANCHOR.MIDDLE)
     text(s, 0.6, 2.7, 6.4, 3.5, para, 22, LAV, line=1.35)
     rect(s, 7.6, 2.5, 5.1, 3.9)
@@ -590,30 +611,39 @@ text(s, 0.6, 3.1, 11.5, 3, [{"t": t, "bullet": True, "after": 16} for t in [
     "Message reached diverse audiences with empathy and consistency. ",
     "Meta and TikTok drove strong engagement and connection, especially among younger audiences.",
     "Basis delivered broad visibility at scale."]], 26, LAV, line=1.25)
-# 28 - platform bubbles (native; original chart)
+# 29 - platform bubbles (native; original chart). Callouts sit in side columns with clean leader lines.
 s = new_slide(); eyebrow(s, "CAMPAIGN RESULTS")
 text(s, 0.6, 1.05, 12, 0.5, "WHERE EACH PLATFORM MADE ITS IMPACT  ", 20, GOLD, bold=True, spacing=2)
-K = 0.0064; BX, BY = 2.3, 1.7           # inches per source pixel, origin of the 1236x780 canvas
-def bx(v): return BX + v * K
-def by(v): return BY + v * K
-for name, val_, cx, cy, rr, fill in [("Google", "48,277", 440, 100, 85, "A8E0FA"), ("YouTube", "1,252,281", 618, 160, 95, "C4B1EE"),
-                                     ("Meta", "5,692,658", 435, 370, 172, "C3EBFC"), ("Basis DSP", "7,610,545", 770, 370, 155, "94C3C9"),
-                                     ("TikTok", "1,839,382", 620, 625, 135, "9DBDF8")]:
-    rect(s, bx(cx - rr), by(cy - rr), 2 * rr * K, 2 * rr * K, fill=fill, line=None, shape=MSO_SHAPE.OVAL)
-    text(s, bx(cx - rr), by(cy - 0.34 * rr), 2 * rr * K, 0.4 + 0.0006 * rr * 40, [
-        {"t": name, "size": 9 + rr / 30, "bold": True, "color": "1B1030", "after": 2},
-        {"t": val_, "size": 11 + rr / 26, "bold": True, "color": "1B1030"}], align=PP_ALIGN.CENTER)
-def callout(t, x0, y0, w0, align, arrow):
-    text(s, bx(x0), by(y0), w0 * K, 0.9, t, 13, WHITE, bold=True, align=align, line=1.15)
-    (ax1, ay1), (ax2, ay2) = arrow
-    cn = s.shapes.add_connector(1, Inches(X(bx(ax1))), Inches(Y(by(ay1))), Inches(X(bx(ax2))), Inches(Y(by(ay2))))
-    cn.line.color.rgb = rgb(GOLD); cn.line.width = Pt(1.75)
-    ln = cn.line._get_or_add_ln(); te = etree.SubElement(ln, qn("a:tailEnd")); te.set("type", "triangle")
-callout("Restricted reach under policy filters, yet valuable insight into how to navigate sensitive mental health topics online.", 20, 100, 260, PP_ALIGN.RIGHT, ((352, 72), (250, 88)))
-callout("Limited delivery due to content sensitivity, but strong potential for future storytelling once policies are addressed", 840, 85, 330, PP_ALIGN.LEFT, ((716, 140), (815, 118)))
-callout("Strong reach and cost efficiency across both segments", 40, 450, 230, PP_ALIGN.RIGHT, ((272, 405), (238, 440)))
-callout("Best performance for overall visibility and awareness", 995, 345, 240, PP_ALIGN.LEFT, ((930, 360), (985, 360)))
-callout("Highest engagement among Gen Z", 830, 640, 280, PP_ALIGN.LEFT, ((757, 630), (820, 652)))
+BUBBLES = {"Google": ("48,277", 5.75, 2.55, 0.55, "A8E0FA"), "YouTube": ("1,252,281", 6.9, 2.95, 0.62, "C4B1EE"),
+           "Meta": ("5,692,658", 5.7, 4.3, 1.08, "BFE9FB"), "Basis DSP": ("7,610,545", 7.85, 4.3, 0.98, "94C3C9"),
+           "TikTok": ("1,839,382", 6.9, 5.95, 0.82, "9DBDF8")}
+for name, (val_, cx, cy, rr, fill) in BUBBLES.items():
+    rect(s, cx - rr, cy - rr, 2 * rr, 2 * rr, fill=fill, line=None, shape=MSO_SHAPE.OVAL)
+    text(s, cx - rr, cy - 0.3 - rr * 0.08, 2 * rr, 0.7, [
+        {"t": name, "size": 10 + rr * 2.2, "bold": True, "color": "2A1B45", "after": 2},
+        {"t": val_, "size": 12 + rr * 3.2, "bold": True, "color": "2A1B45"}], align=PP_ALIGN.CENTER)
+import math
+def leader(cx, cy, rr, ty, tx, side):
+    """line from the bubble edge (at height ty) horizontally to the text column, dot on the bubble end"""
+    dx = math.sqrt(max(rr * rr - (ty - cy) ** 2, 0)) * (1 if side == "R" else -1)
+    x1, x2 = cx + dx, tx
+    cn = s.shapes.add_connector(1, Inches(X(x1)), Inches(Y(ty)), Inches(X(x2)), Inches(Y(ty)))
+    cn.line.color.rgb = rgb(GOLD); cn.line.width = Pt(1.25)
+    ln = cn.line._get_or_add_ln(); te = etree.SubElement(ln, qn("a:headEnd")); te.set("type", "oval")
+LX, RX = 4.15, 9.55      # text columns: left ends at LX, right starts at RX
+for (t, bub, ty, side, ty2) in [
+        ("Restricted reach under policy filters, yet valuable insight into how to navigate sensitive mental health topics online.", "Google", 2.55, "L", None),
+        ("Strong reach and cost efficiency across both segments", "Meta", 5.0, "L", None),
+        ("Limited delivery due to content sensitivity, but strong potential for future storytelling once policies are addressed", "YouTube", 2.95, "R", None),
+        ("Best performance for overall visibility and awareness", "Basis DSP", 4.3, "R", None),
+        ("Highest engagement among Gen Z", "TikTok", 5.95, "R", None)]:
+    _, cx, cy, rr, _ = BUBBLES[bub]
+    if side == "L":
+        leader(cx, cy, rr, ty, LX + 0.15, "L")
+        text(s, 0.7, ty - 0.55, LX - 0.7, 1.1, t, 14, WHITE, bold=True, align=PP_ALIGN.RIGHT, anchor=MSO_ANCHOR.MIDDLE, line=1.2)
+    else:
+        leader(cx, cy, rr, ty, RX - 0.15, "R")
+        text(s, RX, ty - 0.55, 13.0 - RX, 1.1, t, 14, WHITE, bold=True, anchor=MSO_ANCHOR.MIDDLE, line=1.2)
 
 # 28 — statement
 s = new_slide(); eyebrow(s, "CAMPAIGN RESULTS")
@@ -687,7 +717,7 @@ for k, (pc, ins) in enumerate([("c1.png", "The creative that humanized the invis
     s = new_slide(); eyebrow(s, "CAMPAIGN RESULTS")
     text(s, 0.6, 1.05, 12, 0.5, "BEST PERFORMING CREATIVES", 20, GOLD, bold=True, spacing=2)
     im = Image.open(img(pc)); hh = 5.0; ww = hh * im.width / im.height
-    rect(s, 0.9, 1.7, ww + 0.2, hh + 0.2, fill=WHITE, line=None, radius=0.03)
+    rect(s, 0.9, 1.7, ww + 0.2, hh + 0.2, fill=INV, line=None, radius=0.03)
     pic(s, "", 1.0, 1.8, h=hh, path=img(pc))
     rect(s, 5.2, 1.7, 7.5, 5.2)
     text(s, 5.6, 2.1, 6.7, 0.4, "INSIGHT", 15, GOLD, bold=True, spacing=3)
@@ -705,7 +735,7 @@ chip_logo(s, "jcs.png", 11.2, 6.28, 0.55) if False else None
 for k in ("post1.png", "post2.png"):
     s = new_slide(footer=False)
     im = Image.open(img(k)); hh = 7.0; ww = hh * im.width / im.height
-    rect(s, (W - ww) / 2 - 0.05, 0.2, ww + 0.1, hh + 0.1, fill=WHITE, line=None, radius=0.01)
+    rect(s, (W - ww) / 2 - 0.05, 0.2, ww + 0.1, hh + 0.1, fill=INV, line=None, radius=0.01)
     pic(s, "", (W - ww) / 2, 0.25, h=hh, path=img(k))
 
 prs.save(OUT)
