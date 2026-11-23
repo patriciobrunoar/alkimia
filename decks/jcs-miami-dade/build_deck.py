@@ -164,6 +164,21 @@ def slot(s, n, k, x, y, w, h, label, crop=None):
          align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE, space_after=4)
 
 
+def place_slots(s, n, x, y, w, h, label, gap=0.3):
+    """Places every extracted image of original slide n side by side, scaled to a common height."""
+    fs = sorted(glob.glob(os.path.join(SLOTS, "slide_%s_*.png" % n)), key=lambda f: int(f.rsplit("_", 1)[1][:-4]))
+    if not fs:
+        return slot(s, n, 1, x, y, w, h, label)
+    ims = [Image.open(f) for f in fs]
+    ratios = [i.width / i.height for i in ims]
+    hh = min(h, (w - gap * (len(ims) - 1)) / sum(ratios))
+    tot = sum(r_ * hh for r_ in ratios) + gap * (len(ims) - 1)
+    cx = x + (w - tot) / 2
+    cy = y + (h - hh) / 2
+    for f, r_ in zip(fs, ratios):
+        s.shapes.add_picture(f, Inches(cx), Inches(cy), Inches(r_ * hh), Inches(hh)); cx += r_ * hh + gap
+
+
 def section(label, big, sub=None, sub2=None, logos=("jcs.png",), left_logos=()):
     s = new_slide(footer=False)
     rect(s, 0.9, 2.55, 1.0, 0.07, fill=GOLD, line=None, shape=MSO_SHAPE.RECTANGLE)
@@ -268,9 +283,8 @@ for i, (n, tag, d) in enumerate([
 
 # 8-9 — original slides 5 & 6 (image only in source)
 for n in (5, 6):
-    s = new_slide()
-    title(s, "Core Capabilities", y=0.6, size=34, h=0.8)
-    slot(s, n, 1, 0.6, 1.5, 12.1, 5.2, "Re-insert the original slide image here")
+    s = new_slide(footer=False)
+    place_slots(s, n, 0, 0, W, H, "")
 
 # 10 — The Case (section)
 s = section("The Case", "Jewish Community Services",
@@ -282,7 +296,7 @@ s = section("The Case", "Jewish Community Services",
 # 11-13 — digital strategy / methodology (image-only in source)
 for n, label in [(8, "JCS - 988 DIGITAL STRATEGY PROPOSAL"), (9, "JCS - METHODOLOGY & APPROACH"), (10, "JCS - METHODOLOGY & APPROACH")]:
     s = new_slide(); eyebrow(s, label)
-    slot(s, n, 1, 0.6, 1.2, 12.1, 5.4, "Re-insert the original slide image here")
+    place_slots(s, n, 0.6, 1.2, 12.1, 5.4, "Re-insert the original slide image here")
     partner_strip(s, 6.9 - 0.05, h=0.3) if False else None
 
 # 14-17 — research
@@ -292,7 +306,7 @@ for n, t in [(11, "How the conversation around suicide breaksdown in Miami Dade 
              (14, "Across social media, the cultures similarities outgrow the differences around suicide")]:
     s = new_slide(); eyebrow(s, "RESEARCH")
     title(s, t, y=1.05, size=30, h=1.0)
-    slot(s, n, 1, 0.6, 2.2, 12.1, 4.45, "Re-insert the original chart / image here")
+    place_slots(s, n, 0.6, 2.2, 12.1, 4.45, "Re-insert the original chart / image here")
 
 # 18 — strategy statement
 s = new_slide()
@@ -404,7 +418,7 @@ section("JSC - Donate Campaign", "Jewish Community Services", [{"t": "Multicultu
 # 30-32 — multicultural outreach (image-only in source)
 for n in (23, 24, 25):
     s = new_slide(); eyebrow(s, "MULTICULTURAL COMMUNITY OUTREACH")
-    slot(s, n, 1, 0.6, 1.2, 12.1, 5.4, "Re-insert the original creative image here")
+    place_slots(s, n, 0.6, 1.2, 12.1, 5.4, "Re-insert the original creative image here")
     chip_logo(s, "jcs.png", W / 2 - 1.0, 6.55, 0.38) if False else None
 
 # 33 — Food Security (section)
@@ -434,7 +448,7 @@ text(s, 1.2, 1.5, 11, 5, [
 # 36-38 — food security creatives (image-only in source)
 for n in (28, 29, 30):
     s = new_slide(); eyebrow(s, "FOOD SECURITY CAMPAIGN")
-    slot(s, n, 1, 0.6, 1.2, 12.1, 5.4, "Re-insert the original creative image here")
+    place_slots(s, n, 0.6, 1.2, 12.1, 5.4, "Re-insert the original creative image here")
 
 # 39-40 — food security results
 s = new_slide(); eyebrow(s, "CAMPAIGN RESULTS")
