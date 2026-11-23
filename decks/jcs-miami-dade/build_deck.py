@@ -21,6 +21,24 @@ IMG = os.path.join(HERE, "build", "img")
 SLOTS = os.path.join(HERE, "build", "slots")
 OUT = os.path.join(HERE, "JCS-Case-Miami-Dade-Alkimia.pptx")
 
+if os.environ.get("SMALL"):  # lighter build for Google Slides import (connector upload limit)
+    OUT = os.path.join(HERE, "build", "JCS-Case-Miami-Dade-Alkimia-small.pptx")
+    for src, dst, mx in ((IMG, IMG + "_s", 1300), (SLOTS, SLOTS + "_s", 1500)):
+        os.makedirs(dst, exist_ok=True)
+        for f in glob.glob(os.path.join(src, "*.png")):
+            im = Image.open(f)
+            im.thumbnail((mx, mx))
+            alpha = src == IMG and im.mode == "RGBA" and im.getchannel("A").getextrema()[0] < 250
+            if not alpha and im.mode == "RGBA":
+                bg = Image.new("RGB", im.size, "white"); bg.paste(im, mask=im.getchannel("A")); im = bg
+            out = os.path.join(dst, os.path.basename(f))
+            if alpha:
+                im.save(out, optimize=True)
+            else:
+                im.convert("RGB").save(out[:-4] + ".jpg", quality=80, optimize=True)
+                im.convert("RGB").save(out[:-4] + ".png") if False else None
+    IMG, SLOTS = IMG + "_s", SLOTS + "_s"
+
 # ---- Alkimia palette (styles.css / salamancadeck) -------------------------
 BG1, BG2 = "1B1030", "3A265C"
 PURPLE, PURPLE_L, PURPLE_D = "6B4FA1", "8B6BB8", "4A3070"
@@ -39,7 +57,9 @@ W, H = 13.333, 7.5
 state = {"n": 0}
 
 
-def img(name): return os.path.join(IMG, name)
+def img(name):
+    p = os.path.join(IMG, name)
+    return p if os.path.exists(p) else p[:-4] + ".jpg"
 
 
 def new_slide(footer=True, light=False):
@@ -166,7 +186,7 @@ def slot(s, n, k, x, y, w, h, label, crop=None):
 
 def place_slots(s, n, x, y, w, h, label, gap=0.3):
     """Places every extracted image of original slide n side by side, scaled to a common height."""
-    fs = sorted(glob.glob(os.path.join(SLOTS, "slide_%s_*.png" % n)), key=lambda f: int(f.rsplit("_", 1)[1][:-4]))
+    fs = sorted(glob.glob(os.path.join(SLOTS, "slide_%s_*.*" % n)), key=lambda f: int(os.path.splitext(f)[0].rsplit("_", 1)[1]))
     if not fs:
         return slot(s, n, 1, x, y, w, h, label)
     ims = [Image.open(f) for f in fs]
@@ -361,7 +381,7 @@ for num, head, para, items in phases:
 # 23 — the case video frame + partners
 s = new_slide(footer=False)
 eyebrow(s, "JCS - THE CASE")
-vid = Image.open(img("still.png")).crop((0, 0, 2048, 1085)); vid.save(img("still_c.png"))
+_v = Image.open(img("still.png")); vid = _v.crop((0, 0, _v.width, int(_v.height * 0.95))); vid.save(img("still_c.png"))
 pic(s, "", 2.3, 1.1, h=4.8, path=img("still_c.png"))
 x = 0.6
 for n in ["cm_white.png"]:
